@@ -1,108 +1,112 @@
 <html>
 <head>
-  <title>Express HTML</title>
+  <title>NovaRally Helper</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script src='./assets/js/waxjs.js'></script>
 </head>
+
 <style>
-  #resultDisplay {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+  :root {
+    --bg-primary: #14141f;
+    --color-primary: #c7c7d1;
+    --color-secondary: #5c5c70;
+    --link: #f5f5a5;
+    --link-hover: #3e738e;
   }
-  
-  #resultDisplay td, #resultDisplay th {
-    border: 1px solid #ddd;
+  body {
+    margin: 0 0 32px;
+    font-family: monospace;
+    background-color: var(--bg-primary);
+    color: var(--color-primary);
+  }
+  .navbar {
+    border-bottom: 1px solid var(--color-secondary);
+    display: flex;
+    flex-flow: row;
+    padding: 6px;
+    margin-bottom: 0px;
+  }
+  .navbar a {
+    padding: 6px;
+    border-right: 1px solid var(--color-secondary);
+  }
+  a {
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--link);
+  }
+  .sub-navbar{
+    padding: 14px 6px;
+  }
+  .spliter{
+    border-right: 1px solid var(--color-secondary);
+    margin: 0 25px;
+  }
+  button{
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-family: monospace;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 4px auto;
     padding: 8px;
   }
-  
-  #resultDisplay tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #resultDisplay tr:hover {background-color: #ddd;}
-  
-  #resultDisplay th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #000000;
-    color: white;
+
+  #login-btn{
+    display: inline-block;
+  }
+  #loader{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+  #resultDisplay{
+    width: 75%;
+    margin: auto;
   }
   </style>
-<body>
-  <div style="margin:100px;">
-    <nav class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li id="account-info" class="active" style="margin-right: 50px;">
-            <p style="display: block;color: #fff;">
-              Account : <span id="account-name"></span>
-            </p>
-            <button id="login" onclick=login()>WAX Login</button>
-          </li>
 
-          <li class="active">
-            <label style="color:#fff;">Choisir ca league</label>
-            <select name="league" id="league-select">
-              <option value="false">Tous</option>
-              <option value="rookie">Rookie</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="veteran">Veteran</option>
-              <option value="master">Master</option>
-            </select>
-            <label style="color:#fff;">Choisir la place</label>
-            <select name="place" id="place-select">
-              <option value="false">Tous</option>
-              <option value="1">1er</option>
-              <option value="2">2eme</option>
-              <option value="3">3eme</option>
-              <option value="4">4eme</option>
-            </select>
-            <label style="color:#fff;">Choisir Ton gear</label>
-            <select name="gear" id="gear-select">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <button onclick="asyncCall()">Get</button>
-          </li>
-          <li>
-            <button onclick="setUpBulkRace()">Set up bulk Race</button>
-          </li>
-          <li>
-            <button onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
-          </li>
-        </ul>
+<body>
+  <div id="root">
+    <div>
+      <div class="navbar">
+        <a href="./index.html">Home</a>
       </div>
-   </nav>
-    <div class="jumbotron"  style="padding:40px;">
-      <table id="resultDisplay">
-        <tr>
-          <th scope="col" >Cars</th>
-          <th scope="col" >Driver</th>
-          <th scope="col" >Copilote</th>
-          <th scope="col" >League</th>
-          <th scope="col" >Status</th>
-        </tr>
+    </div>
+    <div class="sub-navbar">
+      <div id="login-btn">
+        <button id="login" onclick=login()>WAX Login</button>
+        <span class="spliter"></span>  
+      </div>
+      <span>Account : </span>
+      <span id="account-name" style="min-width: 50px;display: inline-block;"></span>
+      <span class="spliter"></span>
+      <button class="hidden" id="btnSetBulk" onclick="setUpBulkRace()">Set up bulk Race</button>
+      <button class="hidden" id="btnLaunchBulk" onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
+    </div>
+    <div>
+      <table class="table" id="resultDisplay">
+        <thead>
+          <tr>
+            <th scope="col" >Cars</th>
+            <th scope="col" >Driver</th>
+            <th scope="col" >Copilote</th>
+            <th scope="col" >League</th>
+            <th scope="col" >Status</th>
+          </tr>  
+        </thead>
       </table>  
-      <div id="loader" style="display: none;">
+      <div id="loader" class="hidden">
         <img src="./assets/medias/step-loader.gif" alt="loader">
       </div>
-      <hr>
-      <div>
-        <br>
-        <code id="response">
-          Transaction Response<br>
-        </code>
-        <code id="loginresponse">
-
-        </code>
-      </div>
-   </div>
+    </div>
   </div>
+
 </body>
 <script type="text/javascript" src="./assets/js/utils.js"></script>
 <script type="text/javascript" src='./assets/js/script.js'></script>
@@ -113,14 +117,17 @@
   var raceArray = []
   
   $(document).ready(() => {
-    login().then(()=> {
+    /*login().then(()=> {
       //GET all passed race
       //asyncCall();
-    })
+    })*/
   });
 
 
 function setUpBulkRace(){
+  loader
+    $("#loader")[0].classList.remove("hidden");
+    $("#btnLaunchBulk")[0].classList.add("hidden");
     //GET all assets 
     laterAssets().then((assetsList) => {
       myAssets = assetsList
@@ -234,6 +241,9 @@ async function randomRacesArray(){
         logDebug("skiped one vehicle "+myAssets.vehicles[i]+" - "+error) 
       }
     }
+    $("#loader")[0].classList.add("hidden");
+    $("#btnLaunchBulk")[0].classList.remove("hidden");
+    $("#btnSetBulk")[0].innerHTML = "Change bulk selection";
 
     sortDisplayRaceArray(raceArray)
     resolve('resolved');

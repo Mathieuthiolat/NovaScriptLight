@@ -12,10 +12,14 @@ async function login() {
     let userAccount = await wax.login();
     sessionStorage.setItem('userAccount',userAccount)
     let pubKeys = wax.pubKeys;
+    $("#login-btn")[0].classList.add("hidden");
+    $("#btnSetBulk")[0].classList.remove("hidden");
+
+    $("#account-name")[0].innerHTML = userAccount;
     let str = '<br>Account: ' + userAccount + '<br/>Active: ' + pubKeys[0] + '<br/>Owner: ' + pubKeys[1]
-    document.getElementById('loginresponse').insertAdjacentHTML('beforeend', str);
+    console.log(str);
   } catch (e) {
-    document.getElementById('loginresponse').append(e.message);
+    console.log(e.message);
   }
 } 
 
