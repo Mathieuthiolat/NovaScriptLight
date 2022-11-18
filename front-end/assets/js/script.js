@@ -56,8 +56,7 @@ async function sign(driver1, driver2, vehicle,league) {
     try {
       if(!wax.api) {
         await login()
-        console.log("DBG : Reconnexion");
-        //return document.getElementById('response').append('* Login first *');
+        logDebug("Reconnexion");
       }
       console.log("Launch : D1 "+driver1+" - D2 "+driver2+" - Vehicle "+vehicle+" league & cost "+oil+' '+fuel+" gear "+gear)
       
@@ -80,7 +79,7 @@ async function sign(driver1, driver2, vehicle,league) {
         blocksBehind: 3,
         expireSeconds: 1200,
       });
-      document.getElementById('response').append("Send "+JSON.stringify(transfer.transaction_id, null, 2))
+      logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
       const result = await wax.api.transact({
       actions: [{
           account: 'iraces.nova',
@@ -103,12 +102,10 @@ async function sign(driver1, driver2, vehicle,league) {
         blocksBehind: 3,
         expireSeconds: 1200,
       });
-      console.log("DBG : Launched !")
-
-      $('#response').html($('#response').html()+"Run launched succes "+vehicle+" - "+driver1+" - "+driver2+" <br>")     
+      logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
 
     } catch(e) {
-      $('#response').html($('#response').html()+" "+e.message+"<br>")     
+      logDebug(e.message)     
     }
     resolve('resolved');
   });

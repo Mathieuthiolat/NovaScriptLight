@@ -125,22 +125,26 @@
 
 
 function setUpBulkRace(){
-  loader
-    $("#loader")[0].classList.remove("hidden");
-    $("#btnLaunchBulk")[0].classList.add("hidden");
-    //GET all assets 
-    laterAssets().then((assetsList) => {
-      myAssets = assetsList
-      //Get assets that are being used and remove them
-      getRunningAssets().then(()=>{
-        //Create Array of bulk race from All assets availible
-        randomRacesArray().then(()=>{
-          logDebug("Array created")
-          console.log(raceArray)
-        })
-
+  if($("#resultDisplay tbody")[0] != undefined){
+    $("#resultDisplay tbody")[0].remove();
+    logDebug("remove tableau")
+  }
+  raceArray = []
+  $("#loader")[0].classList.remove("hidden");
+  $("#btnLaunchBulk")[0].classList.add("hidden");
+  //GET all assets 
+  laterAssets().then((assetsList) => {
+    myAssets = assetsList
+    //Get assets that are being used and remove them
+    getRunningAssets(myAssets).then(()=>{
+      //Create Array of bulk race from All assets availible
+      randomRacesArray().then(()=>{
+        logDebug("Array created")
+        console.log(raceArray)
       })
+
     })
+  })
 }
 
 async function laterAssets(){    
@@ -173,27 +177,27 @@ function getKeyByValue(object, value) {
 }
 
 
-async function getRunningAssets(){
+async function getRunningAssets(assets){
   laterRunningAssets().then((assetsToRemove)=>{
-
     if(assetsToRemove+"" != ""){
       assetsToRemove.forEach(element => {
         //On check driver
-        var vehicleArrayKey = getKeyByValue(myAssets.vehicles,element.vehicle_asset_id)
-        var driver1ArrayKey = getKeyByValue(myAssets.drivers,element.driver1_asset_id)
-        var driver2ArrayKey = getKeyByValue(myAssets.drivers,element.driver2_asset_id)
+        var vehicleArrayKey = getKeyByValue(assets.vehicles,element.vehicle_asset_id)
+        var driver1ArrayKey = getKeyByValue(assets.drivers,element.driver1_asset_id)
+        var driver2ArrayKey = getKeyByValue(assets.drivers,element.driver2_asset_id)
 
         if(vehicleArrayKey != undefined){
-          myAssets.vehicles.splice(vehicleArrayKey,1)
+          assets.vehicles.splice(vehicleArrayKey,1)
         }
         if(driver1ArrayKey != undefined){
-          myAssets.drivers.splice(driver1ArrayKey,1)
+          assets.drivers.splice(driver1ArrayKey,1)
         }
         if(driver2ArrayKey != undefined){
-          myAssets.drivers.splice(driver2ArrayKey,1)
+          assets.drivers.splice(driver2ArrayKey,1)
         }
       });
     }
+    return assets;
   })
 }
 
@@ -256,7 +260,6 @@ function sortDisplayRaceArray(races){
     var x = a.league.toLowerCase(), y = b.league.toLowerCase();
     return x < y ? -1 : x > y ? 1 : 0;
   });
-
   races.forEach(element => {
 
     var vehicleDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.vehicle.img+"' style='width: 100px;' /><br><span>"+element.vehicle.name+"</span><br><span>"+element.vehicle.id+"<span>") ;        
