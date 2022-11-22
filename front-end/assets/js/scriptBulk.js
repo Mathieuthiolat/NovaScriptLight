@@ -1,38 +1,3 @@
-const wax = new waxjs.WaxJS({
-    //https://wax.eosio.online/endpoints
-    rpcEndpoint: 'https://wax.greymass.com',
-    isAutoLoginAvailable: true
-});
-
-//normal login. Triggers a popup for non-whitelisted dapps
-
-async function checkLogin(){
-  if(sessionStorage.getItem("userAccount") != ""){
-    $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
-    return true;
-  }
-  else{
-    return false;
-  }
-}
-function disconect(){
-  sessionStorage.clear();
-}
-
-async function login() {
-  try {
-    //if autologged in, this simply returns the userAccount w/no popup
-    let userAccount = await wax.login();
-    sessionStorage.setItem('userAccount',userAccount)
-    let pubKeys = wax.pubKeys;
-    let str = '<br>Account: ' + userAccount + '<br/>Active: ' + pubKeys[0] + '<br/>Owner: ' + pubKeys[1]
-    console.log(str);
-    checkLogin()
-  } catch (e) {
-    console.log(e.message);
-  }
-} 
-
 var OilCost = {
   rookie : [
     1800,10800,54000,270000
@@ -49,9 +14,10 @@ var OilCost = {
 }
 
 
-/**  Get data from  **/
+/**  Launch race  **/
 async function sign(driver1, driver2, vehicle,league) {
   return new Promise(async resolve => {
+    //Get race cost with league & gear
     switch(league){
       case "rookie": fuel = "SNAKOIL"; break;
       case "intermediate": fuel = "SNAKGAS"; break;
@@ -69,7 +35,7 @@ async function sign(driver1, driver2, vehicle,league) {
         logDebug("Reconnexion");
       }
       console.log("Launch : D1 "+driver1+" - D2 "+driver2+" - Vehicle "+vehicle+" league & cost "+oil+' '+fuel+" gear "+gear)
-      
+      //send the oil
       const transfer = await wax.api.transact({
         actions: [{
           account: 'novarallytok',
@@ -89,7 +55,8 @@ async function sign(driver1, driver2, vehicle,league) {
         blocksBehind: 3,
         expireSeconds: 1200,
       });
-      logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
+      //logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
+      //Send race
       const result = await wax.api.transact({
       actions: [{
           account: 'iraces.nova',
@@ -112,12 +79,15 @@ async function sign(driver1, driver2, vehicle,league) {
         blocksBehind: 3,
         expireSeconds: 1200,
       });
-      logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
 
+      logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
+      resolve('success');
     } catch(e) {
       logDebug(e.message)     
+      resolve('error');
+
     }
-    resolve('resolved');
+    
   });
 }
 

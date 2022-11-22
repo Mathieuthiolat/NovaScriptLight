@@ -57,7 +57,7 @@
     padding: 8px;
   }
 
-  #login-btn{
+  #login-btn,#login-info{
     display: inline-block;
   }
   #loader{
@@ -82,13 +82,33 @@
     <div class="sub-navbar">
       <div id="login-btn">
         <button id="login" onclick=login()>WAX Login</button>
-        <span class="spliter"></span>  
       </div>
-      <span>Account : </span>
-      <span id="account-name" style="min-width: 50px;display: inline-block;"></span>
+      <div id="login-info" class="hidden">
+        <span>Account : </span>
+        <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
+        <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
+      </div>
       <span class="spliter"></span>
+      <span>Current Fuel : </span>
+      <span id="current-boost" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span id="current-snakgas" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span id="current-snakoil" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span id="current-snakpow" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span id="current-snakven" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span class="spliter"></span>
+      <span>Unclaimed fuel : </span>
+      <span id="unclaimed-fuel" style="min-width: 50px;display: inline-block;">NaN</span>
+      <span class="spliter"></span>
+      <span>Other Token : </span>
+      
+
+
     </div>
     <div>
+      <div style="text-align: center;margin: 15px 0px;">
+        <button id="fetch_user" onclick="">Fetch user data</button>
+        <input id="user" name="user" type="text" placeholder="user_name" style="color: black;"/>
+      </div>
       <table class="table" id="resultDisplay">
         <thead>
           <tr>
@@ -111,13 +131,11 @@
 
 </body>
 <script type="text/javascript" src="./assets/js/utils.js"></script>
-<script type="text/javascript" src='./assets/js/script.js'></script>
+<script type="text/javascript" src='./assets/js/scriptDashboard.js'></script>
 <script type="module" src=" /node/script-table"></script>
 <script type="text/javascript">
   $(document).ready(() => {
     if(checkLogin()){
-      $("#login-btn")[0].classList.add("hidden");
-      $("#btnSetBulk")[0].classList.remove("hidden");
     }
   });
 

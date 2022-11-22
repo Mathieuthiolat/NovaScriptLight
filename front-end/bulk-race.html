@@ -110,7 +110,7 @@
 
 </body>
 <script type="text/javascript" src="./assets/js/utils.js"></script>
-<script type="text/javascript" src='./assets/js/script.js'></script>
+<script type="text/javascript" src='./assets/js/scriptBulk.js'></script>
 <script type="module" src=" /node/script-table"></script>
 <script type="text/javascript">
   var arr = {}; 
@@ -119,7 +119,7 @@
   
   $(document).ready(() => {
     if(checkLogin()){
-      $("#login-btn")[0].classList.add("hidden");
+      console.log("here")
       $("#btnSetBulk")[0].classList.remove("hidden");
     }
   });
@@ -302,12 +302,19 @@ async function launchBulkRace(arrOfRace){
   element = arrOfRace[0];
 
   try {
-    await sign(element.driver1.id, element.driver2.id,element.vehicle.id,element.league.toLowerCase())    
-    //Light up the row on display when the race is launched
-    $('.raceRow')[0].style = "background:#12860173";
-    $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
-    $('.raceRow')[0].classList.remove("raceRow")
-
+    var result = await sign(element.driver1.id, element.driver2.id,element.vehicle.id,element.league.toLowerCase())    
+    if(result == "success"){
+      //Light up the row on display when the race is launched
+      $('.raceRow')[0].style = "background:#12860173";
+      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
+      $('.raceRow')[0].classList.remove("raceRow")
+    }else{
+      logDebug("Cannot launch the race : "+element+"- "+error)
+      //Light up the row on display when the race is launched
+      $('.raceRow')[0].style = "background:red";
+      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
+      $('.raceRow')[0].classList.remove("raceRow")
+    }
 
   } catch (error) {
     logDebug("Cannot launch the race : "+element+"- "+error)
