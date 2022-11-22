@@ -6,18 +6,28 @@ const wax = new waxjs.WaxJS({
 
 //normal login. Triggers a popup for non-whitelisted dapps
 
+async function checkLogin(){
+  if(sessionStorage.getItem("userAccount") != ""){
+    $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+function disconect(){
+  sessionStorage.clear();
+}
+
 async function login() {
   try {
     //if autologged in, this simply returns the userAccount w/no popup
     let userAccount = await wax.login();
     sessionStorage.setItem('userAccount',userAccount)
     let pubKeys = wax.pubKeys;
-    $("#login-btn")[0].classList.add("hidden");
-    $("#btnSetBulk")[0].classList.remove("hidden");
-
-    $("#account-name")[0].innerHTML = userAccount;
     let str = '<br>Account: ' + userAccount + '<br/>Active: ' + pubKeys[0] + '<br/>Owner: ' + pubKeys[1]
     console.log(str);
+    checkLogin()
   } catch (e) {
     console.log(e.message);
   }
@@ -65,11 +75,11 @@ async function sign(driver1, driver2, vehicle,league) {
           account: 'novarallytok',
           name: 'transfer',
           authorization: [{
-            actor: wax.userAccount,
+            actor: sessionStorage.getItem("userAccount"),
             permission: 'active',
           }],
           data: {
-            from: wax.userAccount,
+            from: sessionStorage.getItem("userAccount"),
             to: 'iraces.nova',
             quantity: oil+' '+fuel,
             memo: '',
@@ -85,14 +95,14 @@ async function sign(driver1, driver2, vehicle,league) {
           account: 'iraces.nova',
           name: 'join',
           authorization: [{
-          actor: wax.userAccount,
+          actor: sessionStorage.getItem("userAccount"),
           permission: 'active',
           }],
           data: {
             driver1_asset_id: driver1,
             driver2_asset_id: driver2,
             gear_id: gear,
-            player: wax.userAccount,
+            player: sessionStorage.getItem("userAccount"),
             races_number: 1,
             use_boost: false,
             vehicle_asset_id: vehicle,

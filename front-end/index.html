@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>NovaRally Helper</title>
+  <title>NovaRally Helper - Dashboard</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -75,8 +75,9 @@
   <div id="root">
     <div>
       <div class="navbar">
-        <a href="./index.html">Home</a>
-      </div>
+        <a href="./">Dashboard</a>
+        <a href="./bulk-race">BulkRace</a>
+      </div> 
     </div>
     <div class="sub-navbar">
       <div id="login-btn">
@@ -86,8 +87,6 @@
       <span>Account : </span>
       <span id="account-name" style="min-width: 50px;display: inline-block;"></span>
       <span class="spliter"></span>
-      <button class="hidden" id="btnSetBulk" onclick="setUpBulkRace()">Set up bulk Race</button>
-      <button class="hidden" id="btnLaunchBulk" onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
     </div>
     <div>
       <table class="table" id="resultDisplay">
@@ -97,7 +96,10 @@
             <th scope="col" >Driver</th>
             <th scope="col" >Copilote</th>
             <th scope="col" >League</th>
-            <th scope="col" >Status</th>
+            <th scope="col" >Gear</th>
+            <th scope="col" >Position</th>
+            <th scope="col" >Reward</th>
+            <th scope="col" >Gain/lost</th>
           </tr>  
         </thead>
       </table>  
@@ -112,222 +114,12 @@
 <script type="text/javascript" src='./assets/js/script.js'></script>
 <script type="module" src=" /node/script-table"></script>
 <script type="text/javascript">
-  var arr = {}; 
-  var myAssets = {}
-  var raceArray = []
-  
   $(document).ready(() => {
-    /*login().then(()=> {
-      //GET all passed race
-      //asyncCall();
-    })*/
-  });
-
-
-function setUpBulkRace(){
-  if($("#resultDisplay tbody")[0] != undefined){
-    $("#resultDisplay tbody")[0].remove();
-    logDebug("remove tableau")
-  }
-  raceArray = []
-  $("#loader")[0].classList.remove("hidden");
-  $("#btnLaunchBulk")[0].classList.add("hidden");
-  //GET all assets 
-  laterAssets().then((assetsList) => {
-    myAssets = assetsList
-    //Get assets that are being used and remove them
-    getRunningAssets(myAssets).then(()=>{
-      //Create Array of bulk race from All assets availible
-      randomRacesArray().then(()=>{
-        logDebug("Array created")
-        console.log(raceArray)
-      })
-
-    })
-  })
-}
-
-async function laterAssets(){    
-  let result;
-  try {
-      result = await $.ajax({
-          url: 'getAssets/'+sessionStorage.getItem('userAccount')
-      });
-
-      return result.data;
-  } catch (error) {
-      console.error(error);
-  }
-}
-
-async function laterRunningAssets(){    
-  let result;
-  try {
-      result = await $.ajax({
-          url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
-      });
-      return result;
-  } catch (error) {
-      console.error(error);
-  }
-}
-
-function getKeyByValue(object, value) {
-  return Object.keys(object).find(key => object[key] === value);
-}
-
-
-async function getRunningAssets(assets){
-  laterRunningAssets().then((assetsToRemove)=>{
-    if(assetsToRemove+"" != ""){
-      assetsToRemove.forEach(element => {
-        //On check driver
-        var vehicleArrayKey = getKeyByValue(assets.vehicles,element.vehicle_asset_id)
-        var driver1ArrayKey = getKeyByValue(assets.drivers,element.driver1_asset_id)
-        var driver2ArrayKey = getKeyByValue(assets.drivers,element.driver2_asset_id)
-
-        if(vehicleArrayKey != undefined){
-          assets.vehicles.splice(vehicleArrayKey,1)
-        }
-        if(driver1ArrayKey != undefined){
-          assets.drivers.splice(driver1ArrayKey,1)
-        }
-        if(driver2ArrayKey != undefined){
-          assets.drivers.splice(driver2ArrayKey,1)
-        }
-      });
+    if(checkLogin()){
+      $("#login-btn")[0].classList.add("hidden");
+      $("#btnSetBulk")[0].classList.remove("hidden");
     }
-    return assets;
-  })
-}
-
-async function randomRacesArray(){
-  return new Promise(async resolve => {
-    raceArray = [];
-    resetTable()
-
-    //Get driver + 2 random asset that are not the same name 
-    //Get id + name + img + league 
-    var nbVechicles = myAssets.vehicles.length;
-    for(i=0;i<nbVechicles; i++){
-      try {
-        var tmpRace = {vehicle : {},driver1 : {},driver2 : {},league : {}};
-
-        var vehicle = await later(myAssets.vehicles[i])
-        tmpRace.vehicle.id = vehicle.asset_id;
-        tmpRace.vehicle.name = vehicle.data.name;
-        tmpRace.vehicle.league = vehicle.data.Quality;
-        tmpRace.vehicle.img = vehicle.data.img;
-
-        var driver1 = await getRandomDriver(myAssets.drivers);
-        tmpRace.driver1.id = driver1.asset_id;
-        tmpRace.driver1.name = driver1.data.name;
-        tmpRace.driver1.league = driver1.data.Quality;
-        tmpRace.driver1.img = driver1.data.img;
-        
-        var driver2 = await getRandomDriver(myAssets.drivers,driver1);
-        logDebug("choisen " +driver2.data.name + " - "+driver2.asset_id)
-        tmpRace.driver2.id = driver2.asset_id;
-        tmpRace.driver2.name = driver2.data.name;
-        tmpRace.driver2.league = driver2.data.Quality;
-        tmpRace.driver2.img = driver2.data.img;
-
-        if(tmpRace.driver1.league == tmpRace.driver2.league && tmpRace.driver2.league == tmpRace.vehicle.league){
-          tmpRace.league = tmpRace.vehicle.league.toLowerCase();
-        }
-        else{
-          tmpRace.league = "rookie";
-        }
-
-        raceArray.push(tmpRace)
-
-      } catch (error) {
-        logDebug("skiped one vehicle "+myAssets.vehicles[i]+" - "+error) 
-      }
-    }
-    $("#loader")[0].classList.add("hidden");
-    $("#btnLaunchBulk")[0].classList.remove("hidden");
-    $("#btnSetBulk")[0].innerHTML = "Change bulk selection";
-
-    sortDisplayRaceArray(raceArray)
-    resolve('resolved');
   });
-}
-
-function sortDisplayRaceArray(races){
-
-  races.sort(function(a, b) {
-    var x = a.league.toLowerCase(), y = b.league.toLowerCase();
-    return x < y ? -1 : x > y ? 1 : 0;
-  });
-  races.forEach(element => {
-
-    var vehicleDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.vehicle.img+"' style='width: 100px;' /><br><span>"+element.vehicle.name+"</span><br><span>"+element.vehicle.id+"<span>") ;        
-    var driverDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver1.img+"' style='width: 100px;'/><br><span>"+element.driver1.name+"</span><br><span>"+element.driver1.id+"</span>") ;        
-    var copiloteDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver2.img+"' style='width: 100px;'/><br><span>"+element.driver2.name+"</span><br><span>"+element.driver2.id+"</span>") ;        
-    var leagueDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
-    var statusDetail = $("<td></td>").html("<p>Pending</p>") ;        
-    var row = $("<tr class='raceRow'></tr>").append(vehicleDetail,driverDetail,copiloteDetail,leagueDetail,statusDetail);   
-    $("#resultDisplay").append(row);
-
-  });
-}
-
-async function getRandomDriver(driverList,firstDriver = ""){
-  var nbDriver = driverList.length
-  var driverNumber = Math.floor(Math.random()*(nbDriver-1));
-  var returnDriver;
-  if(firstDriver != ""){
-    //Previous driver name
-     driver2 = await later(driverList[driverNumber])
-     if(driver2.data.name != undefined && driver2.data.name !=  firstDriver.name){
-        myAssets.drivers.splice(driverNumber,1)
-        return driver2
-  
-      }else{
-        logDebug("redo")
-        getRandomDriver(driverList,firstDriver)
-      } 
-  }else{
-    returnDriver = await later(driverList[driverNumber]);
-    myAssets.drivers.splice(driverNumber,1)
-    return returnDriver
-  }
-}
-
-
-async function launchBulkRace(arrOfRace){
-  //Get first row & first race in the array
-  element = arrOfRace[0];
-
-  try {
-    await sign(element.driver1.id, element.driver2.id,element.vehicle.id,element.league.toLowerCase())    
-    //Light up the row on display when the race is launched
-    $('.raceRow')[0].style = "background:#12860173";
-    $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
-    $('.raceRow')[0].classList.remove("raceRow")
-
-
-  } catch (error) {
-    logDebug("Cannot launch the race : "+element+"- "+error)
-    //Light up the row on display when the race is launched
-    $('.raceRow')[0].style = "background:red";
-    $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
-    $('.raceRow')[0].classList.remove("raceRow")
-
-  }
-  //Remove first row of the raceArray
-  logDebug("delete last row")
-  arrOfRace.splice(0,1)
-
-  //Relaunch if the array is not empty
-  if(arrOfRace.length != 0){
-    logDebug("Launching next race")
-    setTimeout(() => {launchBulkRace(arrOfRace)}, 1000);
-  }else{
-    logDebug("Ended All races launched")
-  }
-}
 
 </script>
 </html>
