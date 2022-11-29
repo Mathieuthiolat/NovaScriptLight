@@ -10,22 +10,39 @@ const utils = require('./utils')
 require('./routes')(app,path);
 app.use(express.static(__dirname + '/front-end'));
 
-app.get('/getRace/:league/:place/:user/:nbRace',function(req,res){
+app.get('/getRaceDetail/:race_id',function(req,res){
+    var race_id = req.params.race_id;
+
+    racesJS.getRaceDetail(race_id).then((race) => {
+
+        res.send(race);
+    })
+});
+
+app.get('/getRaceList/:user/:nbRace',function(req,res){
     var place = req.params.place;
     var league = req.params.league;
     var user = req.params.user;
     var nbRace = req.params.nbRace;
 
     racesJS.getRaces(user,nbRace).then((val) => {
-        racesJS.getAllFirst(val.data,place,league).then((respFirst)=> {
-            res.send(respFirst);        
-        })
+        res.send(val);        
+        //racesJS.getAllFirst(val.data,place,league).then((respFirst)=> {
+        //})
     })
 });
 
-app.get('/getRace/:assets',function(req,res){
+app.get('/getAssetsDetail/:assets',function(req,res){
     var assets = req.params.assets
-    racesJS.getAssetInfo(assets).then((details) => {
+    assetsJS.getAssetInfo(assets).then((details) => {
+        res.send(details);
+    })   
+});
+
+app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
+    var collection_name = req.params.collection_name
+    var template_id = req.params.template_id
+    assetsJS.getTemplateInfo(assets).then((collection_name,template_id) => {
         res.send(details);
     })   
 });

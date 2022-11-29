@@ -4,6 +4,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script src='./assets/js/waxjs.js'></script>
 </head>
@@ -82,10 +83,12 @@
     <div class="sub-navbar">
       <div id="login-btn">
         <button id="login" onclick=login()>WAX Login</button>
-        <span class="spliter"></span>  
       </div>
-      <span>Account : </span>
-      <span id="account-name" style="min-width: 50px;display: inline-block;"></span>
+      <div id="login-info" class="hidden">
+        <span>Account : </span>
+        <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
+        <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
+      </div>
       <span class="spliter"></span>
       <button class="hidden" id="btnSetBulk" onclick="setUpBulkRace()">Set up bulk Race</button>
       <button class="hidden" id="btnLaunchBulk" onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
@@ -119,7 +122,7 @@
   
   $(document).ready(() => {
     if(checkLogin()){
-      console.log("here")
+      //console.log("here")
       $("#btnSetBulk")[0].classList.remove("hidden");
     }
   });
@@ -136,6 +139,7 @@ function setUpBulkRace(){
   //GET all assets 
   laterAssets().then((assetsList) => {
     myAssets = assetsList
+    console.log(myAssets)
     //Get assets that are being used and remove them
     getRunningAssets(myAssets).then(()=>{
       //Create Array of bulk race from All assets availible
@@ -154,7 +158,7 @@ async function laterAssets(){
       result = await $.ajax({
           url: 'getAssets/'+sessionStorage.getItem('userAccount')
       });
-
+      console.log(sessionStorage.getItem('userAccount'))
       return result.data;
   } catch (error) {
       console.error(error);

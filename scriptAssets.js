@@ -67,8 +67,6 @@ async function getAllAssets(totalAssets,user){
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
         arrAssets.data = editAssetsArray(JSON.parse(data).data)
-        console.log("save assets list")
-        utils.storeData(arrAssets.data,"./result/assets_list.json");
         resolve(arrAssets)
       });
 
@@ -99,8 +97,47 @@ async function createAssetsArray(userName){
     })
   })
 }
+/* swager : https://test.wax.api.atomicassets.io/docs/ */
+async function getAssetInfo(asset_id) {
+  return new Promise((resolve) => {
+    https.get('https://wax.api.atomicassets.io/atomicassets/v1/assets/'+asset_id, resp => {
+      let data = '';
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk;
+      });
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => { 
+        //console.log(JSON.parse(data))
+        resolve(JSON.parse(data))
+      });
 
-/*
+    }).on("error", (err) => {
+      console.log("Error: " + err.message);
+    });
+  })
+}
+
+async function getTemplateInfo(collection_name,template_id) {
+  return new Promise((resolve) => {
+    https.get('https://wax.api.atomicassets.io/atomicassets/v1/templates/'+collection_name+"/"+template_id+"/", resp => {
+      let data = '';
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk;
+      });
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => { 
+        //console.log(JSON.parse(data))
+        resolve(JSON.parse(data).data)
+      });
+
+    }).on("error", (err) => {
+      console.log("Error: " + err.message);
+    });
+  })
+}
+
 var userName = "unrsi.wam"
 
 createAssetsArray(userName).then((resp) => {
@@ -108,5 +145,5 @@ createAssetsArray(userName).then((resp) => {
   utils.storeData(resp,"./result/myAssets.json");
 
 })
-*/
-module.exports = {createAssetsArray };
+
+module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo};

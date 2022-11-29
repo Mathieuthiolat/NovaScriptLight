@@ -4,72 +4,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script src='./assets/js/waxjs.js'></script>
 </head>
 
-<style>
-  :root {
-    --bg-primary: #14141f;
-    --color-primary: #c7c7d1;
-    --color-secondary: #5c5c70;
-    --link: #f5f5a5;
-    --link-hover: #3e738e;
-  }
-  body {
-    margin: 0 0 32px;
-    font-family: monospace;
-    background-color: var(--bg-primary);
-    color: var(--color-primary);
-  }
-  .navbar {
-    border-bottom: 1px solid var(--color-secondary);
-    display: flex;
-    flex-flow: row;
-    padding: 6px;
-    margin-bottom: 0px;
-  }
-  .navbar a {
-    padding: 6px;
-    border-right: 1px solid var(--color-secondary);
-  }
-  a {
-    text-decoration: none;
-    font-weight: 700;
-    color: var(--link);
-  }
-  .sub-navbar{
-    padding: 14px 6px;
-  }
-  .spliter{
-    border-right: 1px solid var(--color-secondary);
-    margin: 0 25px;
-  }
-  button{
-    background-color: transparent;
-    border: 1px solid var(--color-primary);
-    color: var(--color-primary);
-    font-size: 13px;
-    font-family: monospace;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 4px auto;
-    padding: 8px;
-  }
-
-  #login-btn,#login-info{
-    display: inline-block;
-  }
-  #loader{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-  }
-  #resultDisplay{
-    width: 75%;
-    margin: auto;
-  }
-  </style>
 
 <body>
   <div id="root">
@@ -106,8 +45,8 @@
     </div>
     <div>
       <div style="text-align: center;margin: 15px 0px;">
-        <button id="fetch_user" onclick="">Fetch user data</button>
-        <input id="user" name="user" type="text" placeholder="user_name" style="color: black;"/>
+        <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
+        <button id="fetch_user" onclick="fetchData()">Fetch user data</button>
       </div>
       <table class="table" id="resultDisplay">
         <thead>
@@ -134,10 +73,108 @@
 <script type="text/javascript" src='./assets/js/scriptDashboard.js'></script>
 <script type="module" src=" /node/script-table"></script>
 <script type="text/javascript">
+  var arr = {}; 
+  var myRaces = []
+  var user = "";
+
   $(document).ready(() => {
     if(checkLogin()){
+      fetchData();
     }
   });
+
+  function fetchData(){
+    user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
+
+    asyncCall().then((response)=>{
+      createMyRaces(response.data);
+    });
+  }
+
+  async function asyncCall(){    
+    var nbRaces = $('#nbRace').val() ?? 20;
+    console.log('DBG : race result ');
+
+    try {
+        result = await $.ajax({
+          url: '/getRaceList/'+user+'/'+nbRaces
+        });
+        console.log("--- Start ---");
+        console.log(result);
+        console.log("--- End ---");
+
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+  }
+
+  async function createMyRaces(array){    
+    return new Promise(async resolve => {
+      array.forEach(async race=>{
+        var vehicle = await later(race.vehicleAssetId);
+        var driver = await later(race.driver1AssetId);
+        var copilote = await later(race.driver2AssetId);
+        var league = race.league;
+        var gear = race.gearId;
+        var position = race.position;
+        var racesDetail = await getRaceDetail(race.race_id)
+        console.log(racesDetail);
+        var reward = "";
+
+        racesDetail.prizes.forEach(async prize=>{
+          if(prize.type == "TOKEN"){
+            reward += "<img alt='Charm' src='https://play.novarally.io/assets/pic/CHARM.webp' width='26' height='26'><span>"+prize.charmTokenAmount+"</span>";
+          }
+          if(prize.type == "ASSET"){
+            var prize_template = await getTemplateInfo(template_id => prize.templateId);
+
+            reward += "<img src='https://atomichub-ipfs.com/ipfs/"+prize_template.immutable_data.img+"' style='width: 70px;' /><br><span>"+element.vehicle.name+"</span><br><span>"+element.vehicle.id+"<span>"
+            reward += "<img src='https://atomichub-ipfs.com/ipfs/"++"' style='width: 100px;'>"
+            
+          }
+
+        })   
+        var reward = race.position;
+
+
+      }) 
+      resolve('resolved');
+    });
+  }
+
+  async function getRaceDetail(id_race){
+    return new Promise(async resolve => {
+
+      var temp = await $.ajax({
+        url: '/getRaceDetail/'+id_race
+      });
+
+      temp.participants.forEach(participant=>{
+        if(participant.accountName == user){
+          resolve(participant);
+        }
+      })      
+    })
+  }
+
+  function sortDisplayRaceArray(races){
+
+    races.forEach(element => {
+
+      var vehicleDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.vehicle.img+"' style='width: 100px;' /><br><span>"+element.vehicle.name+"</span><br><span>"+element.vehicle.id+"<span>") ;        
+      var driverDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver1.img+"' style='width: 100px;'/><br><span>"+element.driver1.name+"</span><br><span>"+element.driver1.id+"</span>") ;        
+      var copiloteDetail = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver2.img+"' style='width: 100px;'/><br><span>"+element.driver2.name+"</span><br><span>"+element.driver2.id+"</span>") ;        
+      var leagueDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
+      var gearDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
+      var positionDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
+      var rewardDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
+      var gainLostDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
+      var row = $("<tr class='raceRow'></tr>").append(vehicleDetail,driverDetail,copiloteDetail,leagueDetail,statusDetail);   
+      $("#resultDisplay").append(row);
+
+    });
+  }
 
 </script>
 </html>

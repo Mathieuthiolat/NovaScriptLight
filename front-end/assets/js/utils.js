@@ -48,7 +48,18 @@ async function later(asset_id){
     let result;
     try {
         result = await $.ajax({
-            url: 'getRace/'+asset_id
+            url: 'getAssetsDetail/'+asset_id
+        });
+        return result.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+async function getTemplateInfo(collection_name = "novarallywax",template_id){    
+    let result;
+    try {
+        result = await $.ajax({
+            url: '/getTemplateDetail/'+collection_name+'/'+template_id
         });
         return result.data;
     } catch (error) {
