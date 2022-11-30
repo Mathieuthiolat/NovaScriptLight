@@ -231,7 +231,7 @@ async function randomRacesArray(){
         tmpRace.driver1.img = driver1.data.img;
         
         var driver2 = await getRandomDriver(myAssets.drivers,driver1);
-        logDebug("choisen " +driver2.data.name + " - "+driver2.asset_id)
+
         tmpRace.driver2.id = driver2.asset_id;
         tmpRace.driver2.name = driver2.data.name;
         tmpRace.driver2.league = driver2.data.Quality;

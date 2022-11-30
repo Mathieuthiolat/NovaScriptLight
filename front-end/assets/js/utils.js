@@ -41,7 +41,7 @@
     /****/
 
 function resetTable() {
-    $("#resultDisplay tr:not(:first-child)").remove()
+    $("#resultDisplay tbody").remove()
 }
 
 async function later(asset_id){    
