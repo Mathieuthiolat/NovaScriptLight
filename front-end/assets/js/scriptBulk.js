@@ -12,7 +12,12 @@ var OilCost = {
     200,1200,6000,30000
   ]
 }
-
+/*var fuel = {
+  rookie : "SNAKOIL",
+  intermediate : "SNAKGAS",
+  veteran : "SNAKPOW",
+  master : "SNAKVEN"
+}*/
 
 /**  Launch race  **/
 async function sign(driver1, driver2, vehicle,league) {

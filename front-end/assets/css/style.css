@@ -23,6 +23,10 @@
     text-decoration: underline;
   }
 
+  .navbar .nav-item {
+    padding: 0 15px;
+  } 
+  
   .navbar a {
     padding: 6px;
     border-right: 1px solid var(--color-secondary);
