@@ -24,37 +24,42 @@ async function sign(driver1, driver2, vehicle,league) {
       case "veteran": fuel = "SNAKPOW"; break;
       case "master": fuel = "SNAKVEN"; break;
     }
-    var gear = $('#gear-select').val() ?? 1
 
-    //OilCost.rookie[0]
-    var oil = OilCost[league][gear-1]
 
     try {
       if(!wax.api) {
         await login()
         logDebug("Reconnexion");
       }
-      console.log("Launch : D1 "+driver1+" - D2 "+driver2+" - Vehicle "+vehicle+" league & cost "+oil+' '+fuel+" gear "+gear)
-      //send the oil
-      const transfer = await wax.api.transact({
-        actions: [{
-          account: 'novarallytok',
-          name: 'transfer',
-          authorization: [{
-            actor: sessionStorage.getItem("userAccount"),
-            permission: 'active',
-          }],
-          data: {
-            from: sessionStorage.getItem("userAccount"),
-            to: 'iraces.nova',
-            quantity: oil+' '+fuel,
-            memo: '',
-          },
-        }]
-      }, {
-        blocksBehind: 3,
-        expireSeconds: 1200,
-      });
+      var gear = $("#gear").val() ?? 0
+
+      console.log("Launching : "+driver1+" - "+driver2+" - Vehicle "+vehicle+" Gear "+gear)
+      if(gear != 0){
+        //OilCost.rookie[0]
+        var oil = OilCost[league][gear-1]
+
+        //send the oil
+        const transfer = await wax.api.transact({
+          actions: [{
+            account: 'novarallytok',
+            name: 'transfer',
+            authorization: [{
+              actor: sessionStorage.getItem("userAccount"),
+              permission: 'active',
+            }],
+            data: {
+              from: sessionStorage.getItem("userAccount"),
+              to: 'iraces.nova',
+              quantity: oil+' '+fuel,
+              memo: '',
+            },
+          }]
+        }, {
+          blocksBehind: 3,
+          expireSeconds: 1200,
+        });
+      }
+
       //logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
       //Send race
       const result = await wax.api.transact({

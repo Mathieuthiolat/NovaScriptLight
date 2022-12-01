@@ -58,7 +58,6 @@ async function getAllAssets(totalAssets,user){
   return new Promise((resolve) => {
     var url = waxRpc[1]+"assets?collection_name=novarallywax&owner="+user+"&page=1&limit="+totalAssets+"&order=desc&sort=asset_id"
     https.get(url, resp => {
-      console.log(url)
       let data = '';
       // A chunk of data has been received.
       resp.on('data', (chunk) => {
@@ -137,13 +136,5 @@ async function getTemplateInfo(collection_name,template_id) {
     });
   })
 }
-
-var userName = "unrsi.wam"
-
-createAssetsArray(userName).then((resp) => {
-  
-  utils.storeData(resp,"./result/myAssets.json");
-
-})
 
 module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo};

@@ -82,9 +82,8 @@
   var user = "";
 
   $(document).ready(() => {
-    if(checkLogin()){
+    if(checkLogin() == true){
       $("#user")[0].placeholder = sessionStorage.getItem("userAccount")
-
     }
   });
 

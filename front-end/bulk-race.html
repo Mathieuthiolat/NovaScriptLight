@@ -90,6 +90,14 @@
         <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
       </div>
       <span class="spliter"></span>
+      <label>Gear</label>
+      <select id="gear" name="gear">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <span class="spliter"></span>
       <button class="hidden" id="btnSetBulk" onclick="setUpBulkRace()">Set up bulk Race</button>
       <button class="hidden" id="btnLaunchBulk" onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
     </div>
@@ -117,8 +125,9 @@
 <script type="module" src=" /node/script-table"></script>
 <script type="text/javascript">
   var arr = {}; 
-  var myAssets = {}
-  var raceArray = []
+  var myAssets = {};
+  var raceArray = [];
+  var gearValue;
   
   $(document).ready(() => {
     if(checkLogin()){
@@ -155,10 +164,10 @@ function setUpBulkRace(){
 async function laterAssets(){    
   let result;
   try {
+      gearValue = $("#gear").val();
       result = await $.ajax({
           url: 'getAssets/'+sessionStorage.getItem('userAccount')
       });
-      console.log(sessionStorage.getItem('userAccount'))
       return result.data;
   } catch (error) {
       console.error(error);
@@ -217,8 +226,13 @@ async function randomRacesArray(){
     for(i=0;i<nbVechicles; i++){
       try {
         var tmpRace = {vehicle : {},driver1 : {},driver2 : {},league : {}};
-
         var vehicle = await later(myAssets.vehicles[i])
+        if(gearValue == 0 && vehicle.mutable_data['Free Races Counter'] == "3" ){
+          logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race") 
+          break;
+        }
+          
+
         tmpRace.vehicle.id = vehicle.asset_id;
         tmpRace.vehicle.name = vehicle.data.name;
         tmpRace.vehicle.league = vehicle.data.Quality;
