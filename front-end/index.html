@@ -2,22 +2,30 @@
 <head>
   <title>NovaRally Helper - Dashboard</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="./assets/css/style.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script src='./assets/js/waxjs.js'></script>
 </head>
 
 
 <body>
   <div id="root">
-    <div>
-      <div class="navbar">
-        <a href="./">Dashboard</a>
-        <a href="./bulk-race">BulkRace</a>
-      </div> 
-    </div>
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="./"  class="active">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a href="./bulk-race">BulkRace</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="sub-navbar">
       <div id="login-btn">
         <button id="login" onclick=login()>WAX Login</button>
@@ -68,6 +76,8 @@
       </table>  
       <div id="loader" class="hidden">
         <img src="./assets/medias/step-loader.gif" alt="loader">
+        <br>
+        <span id="loaderCount"></span>
       </div>
     </div>
   </div>
@@ -122,7 +132,8 @@
       raceArray = [];
 
       for(i=0;i<array.length; i++){
-      //array.forEach(async race=>{
+        $("#loaderCount").html(i+"/"+array.length)
+
         var tmpRace = {date : "",vehicle : {},driver : {},copilote : {},league : "",gear : "",position : "",reward : "",gainLost : {}};
 
         tmpRace.date =  new Date(array[i].startedDate).toLocaleString();
@@ -165,13 +176,22 @@
 
     races.forEach(element => {
 
+      var positionCSS = "";
+
+      switch(element.position){
+        case 1: positionCSS = "style='color:#f0d148;font-size:20px;'"; break;
+        case 2: positionCSS = "style='color:#f3e8bf;font-size:18px;'"; break;
+        case 3: positionCSS = "style='color:#d28f2b;font-size:16px;'"; break;
+        default:break;
+      }
+
       var date = $("<td></td>").html("<span>"+element.date+"</span>") ;        
       var vehicleHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.vehicle.template.immutable_data.img+"' style='width: 50px;' /><br><span>"+element.vehicle.name+"</span>") ;        
       var driverHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+element.driver.name+"</span>") ;        
       var copiloteHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.copilote.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+element.copilote.name+"</span>") ;        
       var leagueHtml = $("<td></td>").html("<span>"+element.league+"</span>") ;        
       var gearHtml = $("<td></td>").html("<span>"+element.gear+"</span>") ;        
-      var positionHtml = $("<td></td>").html("<span>"+element.position+"</span>") ;        
+      var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+element.position+"</span>") ;        
       var rewardHtml = $("<td></td>").html("<div>"+element.reward+"</div>") ;        
       //var gainLostDetail = $("<td></td>").html("<h3>"+element.league+"</h3>") ;        
       

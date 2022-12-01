@@ -17,7 +17,12 @@
     flex-flow: row;
     padding: 6px;
     margin-bottom: 0px;
+    background-color: unset !important;
   }
+  .navbar .active{
+    text-decoration: underline;
+  }
+
   .navbar a {
     padding: 6px;
     border-right: 1px solid var(--color-secondary);
@@ -53,8 +58,13 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    text-align: center;
+  }
+  .hidden{
+    display: none!important;
   }
   #resultDisplay{
     width: 75%;
     margin: auto;
+    color: var(--color-primary);  
   }
