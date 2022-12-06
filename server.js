@@ -1,7 +1,10 @@
+import LogRocket from 'logrocket';
+
 const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
+
 
 const assetsJS = require('./scriptAssets')
 const racesJS = require('./scriptRaces')
@@ -9,6 +12,8 @@ const utils = require('./utils')
 //const resultRace = require('./result/selection_result.json')
 require('./routes')(app,path);
 app.use(express.static(__dirname + '/front-end'));
+
+LogRocket.init('ebz38p/personal');
 
 app.get('/getRaceDetail/:race_id',function(req,res){
     var race_id = req.params.race_id;
@@ -70,6 +75,6 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
 
 //add the router
 app.use('/', router);
-app.listen(process.env.port || 80);
+app.listen(process.env.port || 8080);
 
 console.log('Running');
