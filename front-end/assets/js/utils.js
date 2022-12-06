@@ -31,7 +31,7 @@
             let userAccount = await wax.login();
             sessionStorage.setItem('userAccount',userAccount)
             let pubKeys = wax.pubKeys;
-            let str = '<br>Account: ' + userAccount + '<br/>Active: ' + pubKeys[0] + '<br/>Owner: ' + pubKeys[1]
+            let str = 'Account: ' + userAccount
             console.log(str);
             checkLogin()
         } catch (e) {
@@ -61,7 +61,7 @@ async function getTemplateInfo(collection_name = "novarallywax",template_id){
         result = await $.ajax({
             url: '/getTemplateDetail/'+collection_name+'/'+template_id
         });
-        return result.data;
+        return result;
     } catch (error) {
         console.error(error);
     }

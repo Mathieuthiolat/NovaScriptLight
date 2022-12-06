@@ -53,6 +53,10 @@
         <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
         <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
       </div>
+      <span class="spliter"></span>
+      <label>Total Gain/Lost : </label>
+      <span id="totalGain"></span>
+      <span id="totalGainCharm"></span>
       
       <!--
       <span class="spliter"></span>
@@ -88,7 +92,7 @@
             <th scope="col" >Gear</th>
             <th scope="col" >Position</th>
             <th scope="col" >Reward</th>
-            <th scope="col" >Gain/lost</th>
+            <th scope="col" data-bs-toggle="tooltip" data-bs-placement="right" title="This price is determined with the current price of token" >Gain/lost</th>
           </tr>  
         </thead>
       </table>  
@@ -104,6 +108,15 @@
 <script type="text/javascript" src="./assets/js/utils.js"></script>
 <script type="text/javascript" src='./assets/js/scriptDashboard.js'></script>
 <script type="module" src=" /node/script-table"></script>
+
+<script>
+  // Initialize tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(element){
+        return new bootstrap.Tooltip(element);
+    });
+</script>
+
 <script type="text/javascript">
   var arr = {}; 
   var myRaces = []
@@ -137,7 +150,7 @@
     }
   });
 
-  function fetchData(){
+  async function fetchData(){
     if(!checkLogin()){
       return;
     }
@@ -147,8 +160,8 @@
 
     user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
 
-    asyncCall().then((response)=>{
-      createMyRaces(response.data);
+    await asyncCall().then(async (response)=>{
+      await createMyRaces(response.data);
     });
   }
 
@@ -203,7 +216,9 @@
       for(i=0;i<array.length; i++){
         $("#loaderCount").html(i+"/"+array.length)
 
-        var tmpRace = {date : "",vehicle : {},driver : {},copilote : {},league : "",gear : "",position : "",reward : "",gainLost : {}};
+        var tmpRace = {id : "",date : "",vehicle : {},driver : {},copilote : {},league : "",gear : "",position : "",reward : "",gainLost : {}};
+
+        tmpRace.id =  array[i].id;
 
         tmpRace.date =  new Date(array[i].startedDate).toLocaleString();
 
@@ -225,66 +240,105 @@
         raceArray.push(tmpRace);
 
       }
-      sortDisplayRaceArray(raceArray)
+      await sortDisplayRaceArray(raceArray)
 
       resolve('resolved');
     });
   }
-  function sortDisplayRaceArray(races){
+  async function getRewardList(prizesListe){
+    return new Promise(async resolve => {
+      var reward = {};
+
+      
+      prizesListe.forEach(async prize=>{
+        if(prize.type == "ASSET"){
+          reward.asset_id = prize.templateId;
+
+        }
+        if(prize.type == "TOKEN"){
+          reward.charm = prize.charmTokenAmount;
+        }
+      })
+
+      resolve(reward);
+    })
+
+  }
+
+
+
+  async function sortDisplayRaceArray(races){
 
     $("#loader")[0].classList.add("hidden");
 
-    races.forEach(element => {
+    var globalGain = 0;
+    var globalGainCharm = 0;
+    for(i=0;i<races.length; i++){
+
+    //races.forEach(async element => {
 
       var positionCSS = "";
 
-      switch(element.position){
+      switch(races[i].position){
         case 1: positionCSS = "style='color:#f0d148;font-size:20px;'"; break;
-        case 2: positionCSS = "style='color:#f3e8bf;font-size:18px;'"; break;
-        case 3: positionCSS = "style='color:#d28f2b;font-size:16px;'"; break;
+        case 2: positionCSS = "style='color:#f3e8bf;font-size:20px;'"; break;
+        case 3: positionCSS = "style='color:#d28f2b;font-size:20px;'"; break;
         default:break;
       }
 
-      var reward = "";
-      var rewardCharm = 0;
-      element.reward.prizes.forEach(async prize=>{
-        if(prize.type == "TOKEN"){
-          rewardCharm = rewardCharm+prize.charmTokenAmount;
-          reward += "<img alt='Charm' src='https://play.novarally.io/assets/pic/CHARM.webp' width='26' height='26'><span>"+prize.charmTokenAmount+"</span>";
-        }
-        if(prize.type == "ASSET"){
-          var prize_template = await getTemplateInfo(template_id => prize.templateId);
+      //get reward list
+      reward = await getRewardList(races[i].reward.prizes);
+      
+      var rewardDisplay = "";
+      if(reward.charm != null){
+        globalGainCharm = globalGainCharm + reward.charm
+        rewardDisplay += "<img alt='Charm' src='https://play.novarally.io/assets/pic/CHARM.webp' width='26' height='26'><span>"+reward.charm+"</span>";
 
-          reward += "<img src='https://atomichub-ipfs.com/ipfs/"+prize_template.immutable_data.img+"' style='width: 70px;' /><br><span>"+prize_template.name+"</span>" 
-        }
-        console.log(reward)
-      })
-
-      var date = $("<td></td>").html("<span>"+element.date+"</span>") ;        
-      var vehicleHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.vehicle.template.immutable_data.img+"' style='width: 50px;' /><br><span>"+element.vehicle.name+"</span>") ;        
-      var driverHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.driver.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+element.driver.name+"</span>") ;        
-      var copiloteHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+element.copilote.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+element.copilote.name+"</span>") ;        
-      var leagueHtml = $("<td></td>").html("<span>"+element.league+"</span>") ;        
-      var gearHtml = $("<td></td>").html("<span>"+element.gear+"</span>") ;        
-      var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+element.position+"</span>") ;        
-      var rewardHtml = $("<td></td>").html("<div>"+element.reward+"</div>") ;     
-      var cost = "0";
-      if(element.gear != "0"){
-        cost = ("#"+raceCost[element.league].fuel).html * raceCost[element.league].oil[element.gear-1]
-        var gainLostHtml = $("<td></td>").html("<span>"+gainLost+"</span>") ;        
-
-        var fuelPrice = $("#"+raceCost[element.league].fuel).html()
-
-        var fuelAmount = raceCost[element.league].oil[(element.gear-1)]
-
-        console.log(fuelPrice * fuelAmount )
       }
-      var gainLostHtml = $("<td></td>").html("<span>"+cost - (rewardCharm *  $("#charmPrice").html())  +"</span>") ;        
+      if(reward.asset_id != undefined){
+
+        await getTemplateInfo("novarallywax",reward.asset_id).then(prize_template=>{
+          reward.asset_img = prize_template.immutable_data.img;
+        });
+
+        rewardDisplay += "<a href='https://wax.atomichub.io/explorer/template/novarallywax/"+reward.asset_id+"' target='_blank'><img src='https://atomichub-ipfs.com/ipfs/"+reward.asset_img+"' style='width: 70px;' /></a>" 
+      }
+
+
+
+      var date = $("<td></td>").html("<span>"+races[i].date+"</span>") ;        
+      var vehicleHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].vehicle.template.immutable_data.img+"' style='width: 50px;' /><br><span>"+races[i].vehicle.name+"</span>") ;
+      var driverHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].driver.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].driver.name+"</span>") ;
+      var copiloteHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].copilote.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].copilote.name+"</span>") ;
+      var leagueHtml = $("<td></td>").html("<span>"+races[i].league+"</span>") ;
+      var gearHtml = $("<td></td>").html("<span>"+races[i].gear+"</span>") ;
+      var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+races[i].position+"</span>") ;
+
+      var rewardHtml = $("<td></td>").html("<div>"+rewardDisplay+"</div>") ;
+
+      var cost = "0";
+
+      if(races[i].gear != "0"){
+        var fuelPrice = $("#"+raceCost[races[i].league].fuel).html()
+
+        var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
+
+        cost = fuelPrice * fuelAmount
+
+      }
+
+      var gainlost = (reward.charm *  $("#charmPrice").html()) - cost
+      var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
+      
+      globalGain = globalGain + gainlost 
 
       var row = $("<tr class='raceRow'></tr>").append(date,vehicleHtml,driverHtml,copiloteHtml,leagueHtml,gearHtml,positionHtml,rewardHtml,gainLostHtml);   
       $("#resultDisplay").append(row);
+      $("#totalGain").html(globalGain.toFixed(3)+" Wax");
+      $("#totalGainCharm").html(globalGainCharm.toFixed(3)+" Charm");
 
-    });
+    };
+
   }
 
   async function getRaceDetail(id_race){

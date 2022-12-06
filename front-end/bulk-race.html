@@ -100,11 +100,10 @@ function setUpBulkRace(){
   //GET all assets 
   laterAssets().then((assetsList) => {
     myAssets = assetsList
-    console.log(myAssets)
     //Get assets that are being used and remove them
     getRunningAssets(myAssets).then(()=>{
       //Create Array of bulk race from All assets availible
-      randomRacesArray().then(()=>{
+      randomRacesArray(myAssets).then(()=>{
         logDebug("Array created")
         console.log(raceArray)
       })
@@ -127,12 +126,12 @@ async function laterAssets(){
 }
 
 async function laterRunningAssets(){    
-  let result;
+  let resultRunning;
   try {
-      result = await $.ajax({
+    resultRunning = await $.ajax({
           url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
       });
-      return result;
+      return resultRunning;
   } catch (error) {
       console.error(error);
   }
@@ -167,36 +166,49 @@ async function getRunningAssets(assets){
   })
 }
 
-async function randomRacesArray(){
+async function randomRacesArray(assets){
   return new Promise(async resolve => {
     raceArray = [];
     resetTable()
 
     //Get driver + 2 random asset that are not the same name 
     //Get id + name + img + league 
-    var nbVechicles = myAssets.vehicles.length;
+    var nbVechicles = assets.vehicles.length;
     for(i=0;i<nbVechicles; i++){
       try {
         var tmpRace = {vehicle : {},driver1 : {},driver2 : {},league : {}};
-        var vehicle = await later(myAssets.vehicles[i])
-        if(gearValue == 0 && vehicle.mutable_data['Free Races Counter'] == "3" ){
-          logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race") 
-          break;
+        var vehicle = await later(assets.vehicles[i])
+        if(gearValue == 0 ){
+          //Get last time freerace 02/12/2022 15:25:58
+          //Get date now UTC 05/12/2022 09:47:45 -> get previous day at 00:00 => 04/12/2022 00:00:00 = previouse reset
+          //Compare the two if timeFreerace is before than the previous reset -> Run 
+                            // Else if free race count is lower than 3 -> Run 
+                            // Else -> no more free race
+
+          var timeFreeraceDateRaw =  new Date(vehicle.mutable_data['Last Free Race Date'])
+          var previousResetRaw = new Date()
+          previousResetRaw = new Date(previousResetRaw - (86400) - (previousResetRaw.getUTCHours()*3600) - (previousResetRaw.getUTCMinutes()*60) - (previousResetRaw.getUTCSeconds()*1))
+
+          if(timeFreeraceDateRaw.getTime() >= previousResetRaw.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
+            //console.log(timeFreeraceDateRaw.getTime())
+            //console.log(previousResetRaw.getTime())
+            logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race"+" => "+vehicle.mutable_data['Free Races Counter'] ) 
+            continue;
+          }
         }
           
-
         tmpRace.vehicle.id = vehicle.asset_id;
         tmpRace.vehicle.name = vehicle.data.name;
         tmpRace.vehicle.league = vehicle.data.Quality;
         tmpRace.vehicle.img = vehicle.data.img;
 
-        var driver1 = await getRandomDriver(myAssets.drivers);
+        var driver1 = await getRandomDriver(assets.drivers);
         tmpRace.driver1.id = driver1.asset_id;
         tmpRace.driver1.name = driver1.data.name;
         tmpRace.driver1.league = driver1.data.Quality;
         tmpRace.driver1.img = driver1.data.img;
         
-        var driver2 = await getRandomDriver(myAssets.drivers,driver1);
+        var driver2 = await getRandomDriver(assets.drivers,driver1);
 
         tmpRace.driver2.id = driver2.asset_id;
         tmpRace.driver2.name = driver2.data.name;
@@ -213,7 +225,7 @@ async function randomRacesArray(){
         raceArray.push(tmpRace)
 
       } catch (error) {
-        logDebug("skiped one vehicle "+myAssets.vehicles[i]+" - "+error) 
+        logDebug("skiped one vehicle "+assets.vehicles[i]+" - "+error) 
       }
     }
     $("#loader")[0].classList.add("hidden");

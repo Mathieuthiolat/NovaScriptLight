@@ -42,8 +42,8 @@ app.get('/getAssetsDetail/:assets',function(req,res){
 app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
     var collection_name = req.params.collection_name
     var template_id = req.params.template_id
-    assetsJS.getTemplateInfo(assets).then((collection_name,template_id) => {
-        res.send(details);
+    assetsJS.getTemplateInfo(collection_name,template_id).then(async (response) => {
+        res.send(response);
     })   
 });
 
