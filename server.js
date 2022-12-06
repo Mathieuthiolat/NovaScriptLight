@@ -1,4 +1,4 @@
-import LogRocket from 'logrocket';
+const LogRocket = require('logrocket');
 
 const express = require('express');
 const app = express();
