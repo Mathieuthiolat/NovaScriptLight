@@ -1,5 +1,3 @@
-const LogRocket = require('logrocket');
-
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -13,7 +11,6 @@ const utils = require('./utils')
 require('./routes')(app,path);
 app.use(express.static(__dirname + '/front-end'));
 
-LogRocket.init('ebz38p/personal');
 
 app.get('/getRaceDetail/:race_id',function(req,res){
     var race_id = req.params.race_id;
