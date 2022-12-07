@@ -4,8 +4,8 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "test": "jest",
-        "start": "node server.js"
+        "start-server": "npm start",
+        "ci": "start-server-and-test start-server http://localhost:8080 test"
     },
     "author": "",
     "license": "ISC",
@@ -23,6 +23,7 @@
         "pug": "^3.0.2",
         "smart-webcomponents": "^14.4.0",
         "smart-webcomponents-community": "^14.4.0",
+        "start-server-and-test": "^1.15.1",
         "util": "^0.12.4"
     }
 }
