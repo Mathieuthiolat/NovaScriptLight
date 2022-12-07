@@ -22,9 +22,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-  install-dependency:
+  dependency:
     needs: build
     - run: npm i
   run-server:
-    needs: [build, install-dependency]
+    needs: [build, dependency]
     - run: npm ci
