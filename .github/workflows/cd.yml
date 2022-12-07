@@ -25,8 +25,8 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd ~/home/danielwetan/apps/node1
+          cd var/www/home
           git pull origin master
           git status
           npm install --only=prod
-          pm2 restart node1
+          pm2 restart server
