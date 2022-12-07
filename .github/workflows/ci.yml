@@ -9,9 +9,6 @@ on:
   push:
     branches:
       - 'staging'
-  pull_request:
-    branches: 'main'
-
 jobs:
   build:
     name: build
