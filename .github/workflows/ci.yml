@@ -6,18 +6,22 @@
 name: NovaScriptelper CI
 
 on:
+  push:
+    branches:
+      - 'staging'
   pull_request:
-    branches: [ master ]
+    branches: 'main'
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 12
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
       with:
-        node-version: 12.x
+        node-version: 16.x
     - run: npm i
-    - run: node run server.js
+    - run: npm ci

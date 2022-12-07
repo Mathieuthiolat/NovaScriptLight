@@ -72,6 +72,6 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
 
 //add the router
 app.use('/', router);
-app.listen(process.env.port || 8080);
-
-console.log('Running');
+//app.listen(process.env.port || 8080);
+const PORT = 8080
+app.listen(PORT, () => console.log(`App running on PORT ${PORT}`))
