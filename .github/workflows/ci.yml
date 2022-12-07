@@ -23,11 +23,5 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-  dependency:
-    name: dependency
-    needs: build
     - run: npm i
-  run-server:
-    name: run-server
-    needs: [build, dependency]
     - run: npm ci
