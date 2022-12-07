@@ -33,7 +33,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd var/www/home
+          cd ~/../var/www/html
           git pull origin master
           git status
           npm install --only=prod
