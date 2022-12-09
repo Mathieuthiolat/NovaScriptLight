@@ -19,9 +19,9 @@
             <li class="nav-item">
               <a href="./"  class="active">Dashboard</a>
             </li>
-            <!--<li class="nav-item">
+            <li class="nav-item">
               <a href="./bulk-race">BulkRace</a>
-            </li>-->
+            </li>
             <li class="nav-item">
               CHARM <span id="charmPrice">0,0</span>
             </li>
@@ -160,8 +160,10 @@
 
     user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
 
-    await asyncCall().then(async (response)=>{
-      await createMyRaces(response.data);
+    await asyncCallV2().then(async (response)=>{
+      console.log(response)
+      sortDisplayRaceArray(response)
+      //await createMyRaces(response.data);
     });
   }
 
@@ -179,6 +181,21 @@
         console.error(error);
     }
   }
+
+  async function asyncCallV2(){    
+    var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
+  
+    try {
+        result = await $.ajax({
+          url: '/getRaceListV2/'+user+'/'+nbRaces
+        });
+
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+  }
+
   async function getTokensPrices(){
     var tokens = 
     [
@@ -222,11 +239,11 @@
 
         tmpRace.date =  new Date(array[i].startedDate).toLocaleString();
 
-        var vehicle = await later(array[i].vehicleAssetId);
+        var vehicle = await later(array[i].vehicleAssetId).data;
         tmpRace.vehicle = vehicle;
-        var driver = await later(array[i].driver1AssetId);
+        var driver = await later(array[i].driver1AssetId).data;
         tmpRace.driver = driver;
-        var copilote = await later(array[i].driver2AssetId);
+        var copilote = await later(array[i].driver2AssetId).data;
         tmpRace.copilote = copilote;
 
         tmpRace.league = array[i].league;
@@ -268,7 +285,6 @@
 
 
   async function sortDisplayRaceArray(races){
-
     $("#loader")[0].classList.add("hidden");
 
     var globalGain = 0;
@@ -287,6 +303,8 @@
       }
 
       //get reward list
+      console.log(races[i])
+      /*
       reward = await getRewardList(races[i].reward.prizes);
       
       var rewardDisplay = "";
@@ -303,7 +321,7 @@
 
         rewardDisplay += "<a href='https://wax.atomichub.io/explorer/template/novarallywax/"+reward.asset_id+"' target='_blank'><img src='https://atomichub-ipfs.com/ipfs/"+reward.asset_img+"' style='width: 70px;' /></a>" 
       }
-
+      */
 
 
       var date = $("<td></td>").html("<span>"+races[i].date+"</span>") ;        
@@ -314,7 +332,7 @@
       var gearHtml = $("<td></td>").html("<span>"+races[i].gear+"</span>") ;
       var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+races[i].position+"</span>") ;
 
-      var rewardHtml = $("<td></td>").html("<div>"+rewardDisplay+"</div>") ;
+      var rewardHtml = $("<td></td>").html("<div>"+races[i].rewardDisplay+"</div>") ;
 
       var cost = "0";
 
@@ -327,7 +345,7 @@
 
       }
 
-      var gainlost = (reward.charm *  $("#charmPrice").html()) - cost
+      var gainlost = (races[i].reward.charm *  $("#charmPrice").html()) - cost
       var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
       
       globalGain = globalGain + gainlost 
