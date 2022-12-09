@@ -108,7 +108,7 @@ async function getAssetInfo(asset_id) {
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
         //console.log(JSON.parse(data))
-        resolve(JSON.parse(data).data)
+        resolve(JSON.parse(data))
       });
 
     }).on("error", (err) => {
