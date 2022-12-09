@@ -18,19 +18,17 @@ function myFunction() {
 
   
   function load(){
-    var json = JSON.parse(utils.loadData("csvjson.json"))
+    var json = JSON.parse(utils.loadData("sepa.json"))
 
-    var newJson = json.forEach(element => {
-        var timestamp = element.date_sepa;
-        console.log(timestamp)
-        var date = new Date(timestamp * 1000).toLocaleString('fr-FR');
-        //var formattedDate = Utilities.formatDate(date, 'Paris', 'dd,MM,yyyy HH:mm:ss')
-        console.log(date)
-        element.date_lisible = date;
+    var newJson = json.forEach(function(k,v){
+      console.log(v+" / "+json.length);
+      var timestamp = k.date_sepa;
+      var date = new Date(timestamp * 1000).toLocaleString('fr-FR');
+      //var formattedDate = Utilities.formatDate(date, 'Paris', 'dd,MM,yyyy HH:mm:ss')
+      k.date_lisible = date;
     })
-    console.log(newJson)
-    utils.storeData(json,"./myAssets.json");
+    utils.storeData(json,"./sepaPretty.json");
 
 
 }
-//load()
+load()
