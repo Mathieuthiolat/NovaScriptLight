@@ -4,7 +4,8 @@
         const wax = new waxjs.WaxJS({
             //https://wax.eosio.online/endpoints
             rpcEndpoint: 'https://wax.greymass.com',
-            isAutoLoginAvailable: true
+            isAutoLoginAvailable: true,
+            tryAutoLogin: false
         });
 
         //normal login. Triggers a popup for non-whitelisted dapps
@@ -20,6 +21,7 @@
                 return false;
             }
         }
+
         function disconect(){
             sessionStorage.clear();
             location.reload()
@@ -43,11 +45,14 @@
 function resetTable() {
     $("#resultDisplay tbody").remove()
 }
-
+function loop(){
+    setInterval(async function() { 
+        getInfos()
+    }, 20000);
+}
 //DBG 
 function logDebug(msg){
-    console.log("Last Debug : "+new Date().toLocaleString("fr-FR"))
-    console.log("DBG : "+msg)
+    console.log(new Date().toLocaleTimeString("fr-FR")+" DBG : "+msg)
     //Voir si besoin de log dans un fichier externe
   
 }
@@ -55,7 +60,8 @@ function logDebug(msg){
 async function getInfos(){
     laterRunningAssets().then((usedCars) => {
         laterAssets().then((totalCars) => {
-            usedCars = usedCars ?? 0;
+            //logDebug("Use car : "+ usedCars.length)
+            //logDebug("Total Car : "+totalCars.vehicles.length)
             $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
         });
     });
@@ -74,14 +80,15 @@ var tokens =
 async function getTokensPrice(){
 
   tokens.forEach(async token  => {
-    var tempPrice = await getTokenPrice(token.id);
+    var tempPrice = await ajaxTokenPrice(token.id);
     token.price = tempPrice.last_price;
     $("#"+token.name).html(tempPrice.last_price)
   })
     
 }
-
-async function getTokenPrice(token_id){    
+getTokensPrice()
+console.log(tokens)
+async function ajaxTokenPrice(token_id){    
     try {
         result = await $.ajax({
           url: 'https://wax.alcor.exchange/api/markets/'+token_id
@@ -95,7 +102,7 @@ async function getTokenPrice(token_id){
 async function later(asset_id){    
     let result;
     try {
-        logDebug("Asset detail")
+        //logDebug("Asset detail")
         result = await $.ajax({
             url: 'getAssetsDetail/'+asset_id
         });
@@ -108,7 +115,7 @@ async function later(asset_id){
 async function getTemplateInfo(collection_name = "novarallywax",template_id){    
     let result;
     try {
-        logDebug("Template info")
+        //logDebug("Template info")
 
         result = await $.ajax({
             url: '/getTemplateDetail/'+collection_name+'/'+template_id
@@ -122,7 +129,7 @@ async function getTemplateInfo(collection_name = "novarallywax",template_id){
 async function laterRunningAssets(){    
     let resultRunning;
     try {
-        logDebug("Getting list of assets used")
+        //logDebug("Getting list of assets used")
 
         resultRunning = await $.ajax({
             url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')

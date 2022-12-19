@@ -20,6 +20,9 @@
             <li class="nav-item">
               <a href="./bulk-race" class="active">BulkRace</a>
             </li>
+            <li class="nav-item">
+              Available Cars <span id="carsAvailable">0 / 0</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -82,6 +85,12 @@
   var gearValue;
 
   $(document).ready(() => {
+    if(sessionStorage.getItem('userAccount') != null){
+      getInfos(),
+      loop()
+    }
+    getTokensPrice()
+    
     if(checkLogin()){
       //console.log("here")
       $("#btnSetBulk")[0].classList.remove("hidden");
@@ -92,11 +101,12 @@
 function setUpBulkRace(){
   if($("#resultDisplay tbody")[0] != undefined){
     $("#resultDisplay tbody")[0].remove();
-    logDebug("remove tableau")
   }
   raceArray = []
+
   $("#loader")[0].classList.remove("hidden");
   $("#btnLaunchBulk")[0].classList.add("hidden");
+  
   //GET all assets 
   laterAssets().then((assetsList) => {
     myAssets = assetsList
@@ -163,11 +173,11 @@ async function randomRacesArray(assets){
                             // Else if free race count is lower than 3 -> Run 
                             // Else -> no more free race
 
-          var timeFreeraceDateRaw =  new Date(vehicle.mutable_data['Last Free Race Date'])
+          var timeFreeraceDateRaw =  new Date(vehicle.mutable_data['Last Free Race Date']*1000)
           var previousResetRaw = new Date()
           previousResetRaw = new Date(previousResetRaw - (86400) - (previousResetRaw.getUTCHours()*3600) - (previousResetRaw.getUTCMinutes()*60) - (previousResetRaw.getUTCSeconds()*1))
 
-          if(timeFreeraceDateRaw.getTime() >= previousResetRaw.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
+          if(timeFreeraceDateRaw.getTime() <= previousResetRaw.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
             //console.log(timeFreeraceDateRaw.getTime())
             //console.log(previousResetRaw.getTime())
             logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race"+" => "+vehicle.mutable_data['Free Races Counter'] ) 

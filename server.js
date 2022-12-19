@@ -11,12 +11,6 @@ const utils = require('./utils')
 require('./routes')(app,path);
 app.use(express.static(__dirname + '/front-end'));
 
-app.get('/setRCP/:rcp_id',function(req,res){
-    var rcp_id = req.params.rcp_id;
-
-    assetsJS.setRCP(rcp_id);
-});
-
 app.get('/getRaceDetail/:race_id',function(req,res){
     var race_id = req.params.race_id;
 

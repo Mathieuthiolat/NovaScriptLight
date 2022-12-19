@@ -7,14 +7,6 @@ var waxRpc = "https://atomic.wax.eosrio.io/atomicassets/v1/";
 
 var arrAssets = {data : {}};
 
-function setRCP(rcp_id){
-  const tmpWaxRpc = [
-    "https://atomic.wax.eosrio.io/atomicassets/v1/",
-    "https://wax.api.atomicassets.io/atomicassets/v1/"
-  ]
-  waxRpc = tmpWaxRpc[rcp_id];
-}
-
 /* swager : https://test.wax.api.atomicassets.io/docs/ */
 async function getAssetNumber(user) {
   return new Promise((resolve) => {
@@ -146,4 +138,4 @@ async function getTemplateInfo(collection_name,template_id) {
   })
 }
 
-module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo,setRCP};
+module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo};

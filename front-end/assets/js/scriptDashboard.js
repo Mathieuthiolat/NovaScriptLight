@@ -147,7 +147,15 @@ async function sortDisplayRaceArray(races){
     var cost = "0";
 
     if(races[i].gear != "0"){
-      var fuelPrice = tokens[races[i].league-1].price
+      var fuel_id ="";
+      switch(races[i].league){
+        case "rookie": fuel_id = 0;break;  
+        case "intermediate":fuel_id = 1;break;  
+        case "veteran":fuel_id = 2;break;  
+        case "master":fuel_id = 3;break;  
+      }
+
+      var fuelPrice = tokens[fuel_id].price
 
       var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
 

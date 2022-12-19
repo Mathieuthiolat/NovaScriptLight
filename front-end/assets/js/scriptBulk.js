@@ -49,11 +49,11 @@ async function sign(driver1, driver2, vehicle,league) {
             account: 'novarallytok',
             name: 'transfer',
             authorization: [{
-              actor: sessionStorage.getItem("userAccount"),
+              actor: wax.userAccount,
               permission: 'active',
             }],
             data: {
-              from: sessionStorage.getItem("userAccount"),
+              from: wax.userAccount,
               to: 'iraces.nova',
               quantity: oil+' '+fuel,
               memo: '',
@@ -72,14 +72,14 @@ async function sign(driver1, driver2, vehicle,league) {
           account: 'iraces.nova',
           name: 'join',
           authorization: [{
-          actor: sessionStorage.getItem("userAccount"),
+          actor: wax.userAccount,
           permission: 'active',
           }],
           data: {
             driver1_asset_id: driver1,
             driver2_asset_id: driver2,
             gear_id: gear,
-            player: sessionStorage.getItem("userAccount"),
+            player: wax.userAccount,
             races_number: 1,
             use_boost: false,
             vehicle_asset_id: vehicle,
