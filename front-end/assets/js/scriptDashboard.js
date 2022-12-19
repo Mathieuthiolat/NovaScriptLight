@@ -24,8 +24,8 @@ var raceCost = {
 async function asyncCall(){    
   var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
   
-
   try {
+      logDebug("Getting user races")
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
       });
@@ -35,35 +35,7 @@ async function asyncCall(){
       console.error(error);
   }
 }
-async function getTokensPrices(){
-  var tokens = 
-  [
-    {name : "charmPrice", id : "634"},
-    {name : "boostPrice", id : "110"},
-    {name : "oilPrice", id : "100"},
-    {name : "gasPrice", id : "141"},
-    {name : "powPrice", id : "152"},
-    {name : "venPrice", id : "153"}
-  ];
 
-  tokens.forEach(async token  => {
-    var tempPrice = await getTokenPrice(token.id);
-    $("#"+token.name).html(tempPrice.last_price)
-  })
-}
-
-async function getTokenPrice(token_id){    
- 
-
-  try {
-      result = await $.ajax({
-        url: 'https://wax.alcor.exchange/api/markets/'+token_id
-      });
-      return result;
-  } catch (error) {
-      console.error(error);
-  }
-}
 
 async function createMyRaces(array){    
   return new Promise(async resolve => {
@@ -175,15 +147,14 @@ async function sortDisplayRaceArray(races){
     var cost = "0";
 
     if(races[i].gear != "0"){
-      var fuelPrice = $("#"+raceCost[races[i].league].fuel).html()
+      var fuelPrice = tokens[races[i].league-1].price
 
       var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
 
       cost = fuelPrice * fuelAmount
 
     }
-
-    var gainlost = (reward.charm *  $("#charmPrice").html()) - cost
+    var gainlost = (reward.charm *  tokens[4].price) - cost
     var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
     
     globalGain = globalGain + gainlost 

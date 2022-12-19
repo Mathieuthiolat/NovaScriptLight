@@ -112,30 +112,8 @@ function setUpBulkRace(){
   })
 }
 
-async function laterAssets(){    
-  let result;
-  try {
-      gearValue = $("#gear").val();
-      result = await $.ajax({
-          url: 'getAssets/'+sessionStorage.getItem('userAccount')
-      });
-      return result.data;
-  } catch (error) {
-      console.error(error);
-  }
-}
 
-async function laterRunningAssets(){    
-  let resultRunning;
-  try {
-    resultRunning = await $.ajax({
-          url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
-      });
-      return resultRunning;
-  } catch (error) {
-      console.error(error);
-  }
-}
+
 
 function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
