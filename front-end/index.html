@@ -54,6 +54,12 @@
       <div id="login-btn">
         <button id="login" onclick=login()>WAX Login</button>
       </div>
+      <div id="rcp-btn">
+        <select id="rcp-change" name="rcp-change">
+          <option value="0">Atomic</option>
+          <option value="1">Wax</option>
+        </select>
+      </div>
       <div id="login-info" class="hidden">
         <span>Account : </span>
         <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
@@ -135,6 +141,19 @@
     if(checkLogin() == true){
       $("#user")[0].placeholder = sessionStorage.getItem("userAccount")
     }
+
+    $("#rcp-change").change(function(){
+      try {
+      logDebug("Changing RCP")
+      result = $.ajax({
+        url: '/setRCP/'+this.value
+      });
+
+      return result;
+  } catch (error) {
+      console.error(error);
+  }
+    })
   });
 
   async function fetchData(){
