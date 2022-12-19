@@ -53,11 +53,14 @@ function logDebug(msg){
 }
 
 async function getInfos(){
-    var usedCars = await laterRunningAssets();
-    var totalCars = await laterAssets();
-    $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
-      
+    laterRunningAssets().then((usedCars) => {
+        laterAssets().then((totalCars) => {
+            usedCars = usedCars ?? 0;
+            $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
+        });
+    });
 }
+
 var tokens = 
 [
     {name : "oilPrice", id : "100"},

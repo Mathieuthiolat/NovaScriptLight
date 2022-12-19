@@ -3,17 +3,22 @@ const https = require('https');
 const fetch = require('node-fetch');
 const utils = require('./utils.js');
 const rpc = new JsonRpc('https://api.waxsweden.org', { fetch });
-const waxRpc = [
-  "https://atomic.wax.eosrio.io/atomicassets/v1/",
-  "https://wax.api.atomicassets.io/atomicassets/v1/"
-]
+var waxRpc = "https://atomic.wax.eosrio.io/atomicassets/v1/";
+
 var arrAssets = {data : {}};
 
+function setRCP(rcp_id){
+  const tmpWaxRpc = [
+    "https://atomic.wax.eosrio.io/atomicassets/v1/",
+    "https://wax.api.atomicassets.io/atomicassets/v1/"
+  ]
+  waxRpc = tmpWaxRpc[rcp_id];
+}
 
 /* swager : https://test.wax.api.atomicassets.io/docs/ */
 async function getAssetNumber(user) {
   return new Promise((resolve) => {
-    https.get(waxRpc[1]+'accounts/'+user+'/novarallywax', resp => {
+    https.get(waxRpc+'accounts/'+user+'/novarallywax', resp => {
       let data = '';
       // A chunk of data has been received.
       resp.on('data', (chunk) => {
@@ -56,7 +61,7 @@ async function getAssetNumber(user) {
 
 async function getAllAssets(totalAssets,user){
   return new Promise((resolve) => {
-    var url = waxRpc[1]+"assets?collection_name=novarallywax&owner="+user+"&page=1&limit="+totalAssets+"&order=desc&sort=asset_id"
+    var url = waxRpc+"assets?collection_name=novarallywax&owner="+user+"&page=1&limit="+totalAssets+"&order=desc&sort=asset_id"
     https.get(url, resp => {
       let data = '';
       // A chunk of data has been received.
@@ -141,4 +146,4 @@ async function getTemplateInfo(collection_name,template_id) {
   })
 }
 
-module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo};
+module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo,setRCP};
