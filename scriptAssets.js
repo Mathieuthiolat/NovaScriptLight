@@ -99,6 +99,8 @@ async function createAssetsArray(userName){
 /* swager : https://test.wax.api.atomicassets.io/docs/ */
 async function getAssetInfo(asset_id) {
   return new Promise((resolve) => {
+    console.log("Get assets "+asset_id+" : "+new Date().getTime().toLocaleString("fr-FR"))
+
     https.get('https://wax.api.atomicassets.io/atomicassets/v1/assets/'+asset_id, resp => {
       let data = '';
       // A chunk of data has been received.
@@ -108,6 +110,8 @@ async function getAssetInfo(asset_id) {
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
         //console.log(JSON.parse(data))
+        console.log("Detail OK : "+new Date().getTime().toLocaleString("fr-FR"))
+
         resolve(JSON.parse(data))
       });
 

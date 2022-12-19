@@ -45,11 +45,8 @@ function resetTable() {
 }
 
 //DBG 
-var lastDbg = new Date().getTime()
-
 function logDebug(msg){
-    console.log("Last Debug : "+new Date(lastDbg).toLocaleString("fr-FR"))
-    lastDbg = new Date().getTime();
+    console.log("Last Debug : "+new Date().getTime().toLocaleString("fr-FR"))
     console.log("DBG : "+msg)
     //Voir si besoin de log dans un fichier externe
   
