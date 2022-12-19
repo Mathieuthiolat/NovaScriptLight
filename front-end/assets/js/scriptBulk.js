@@ -179,9 +179,3 @@ async function asyncGetAssets() {
   }
 
 }
-
-function logDebug(msg){
-  console.log("DBG : "+msg)
-  //Voir si besoin de log dans un fichier externe
-
-}
