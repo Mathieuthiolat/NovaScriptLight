@@ -20,7 +20,7 @@ app.get('/getRaceDetail/:race_id',function(req,res){
     })
 });
 
-app.get('/getRaceList/:user/:nbRace',function(req,res){
+/*app.get('/getRaceList/:user/:nbRace',function(req,res){
     var place = req.params.place;
     var league = req.params.league;
     var user = req.params.user;
@@ -31,30 +31,30 @@ app.get('/getRaceList/:user/:nbRace',function(req,res){
         //racesJS.getAllFirst(val.data,place,league).then((respFirst)=> {
         //})
     })
-});
+});*/
 
-app.get('/getAssetsDetail/:assets',function(req,res){
+/*app.get('/getAssetsDetail/:assets',function(req,res){
     var assets = req.params.assets
     assetsJS.getAssetInfo(assets).then((details) => {
         res.send(details);
     })   
-});
+});*/
 
-app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
+/*app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
     var collection_name = req.params.collection_name
     var template_id = req.params.template_id
     assetsJS.getTemplateInfo(collection_name,template_id).then(async (response) => {
         res.send(response);
     })   
-});
+});*/
 
-app.get('/getAssets/:user_name',function(req,res){
+/*app.get('/getAssets/:user_name',function(req,res){
     var user = req.params.user_name
     assetsJS.createAssetsArray(user).then((assets) => {
         //console.log(assets)
         res.send(assets);      
     })
-});
+});*/
 app.get('/getAssetsRuning/:user_name',function(req,res){
     var user = req.params.user_name
     racesJS.getQueueRaces().then((assets) => {

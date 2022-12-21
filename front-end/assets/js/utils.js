@@ -58,7 +58,7 @@ function logDebug(msg){
 }
 
 async function getInfos(){
-    laterRunningAssets().then((usedCars) => {
+    runningAssets().then((usedCars) => {
         laterAssets().then((totalCars) => {
             //logDebug("Use car : "+ usedCars.length)
             //logDebug("Total Car : "+totalCars.vehicles.length)
@@ -99,38 +99,44 @@ async function ajaxTokenPrice(token_id){
     }
 }
 
+//Get detail of and asset by is id
 async function later(asset_id){    
     let result;
     try {
-        //logDebug("Asset detail")
-        result = await $.ajax({
-            url: 'getAssetsDetail/'+asset_id
-        });
+        result = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets/'+asset_id);
         return result.data;
+  
+        //logDebug("Asset detail")
+        //result = await $.ajax({
+        //    url: 'getAssetsDetail/'+asset_id
+        //});
+        //return result.data;
     } catch (error) {
         console.error(error);
     }
 }
 
+//Get detail of a template by is template_id
 async function getTemplateInfo(collection_name = "novarallywax",template_id){    
     let result;
     try {
         //logDebug("Template info")
+        result = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/templates/'+collection_name+"/"+template_id);
+        return result.data;
 
-        result = await $.ajax({
-            url: '/getTemplateDetail/'+collection_name+'/'+template_id
-        });
-        return result;
+        //result = await $.ajax({
+        //    url: '/getTemplateDetail/'+collection_name+'/'+template_id
+        //});
+        //return result;
     } catch (error) {
         console.error(error);
     }
 }
 
-async function laterRunningAssets(){    
+//Get list of assets begin used
+async function runningAssets(){    
     let resultRunning;
     try {
-        //logDebug("Getting list of assets used")
-
         resultRunning = await $.ajax({
             url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
         });
@@ -141,16 +147,43 @@ async function laterRunningAssets(){
 
 }
 
-async function laterAssets(){    
-
-    let result;
-
+//Get all assets from the novarallywax collection 
+async function laterAssets(collection_name = "novarallywax",user=sessionStorage.getItem('userAccount')){    
     try {
-        gearValue = $("#gear").val();
-        result = await $.ajax({
-            url: 'getAssets/'+sessionStorage.getItem('userAccount')
+        var Assets = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/accounts/'+user+'/'+collection_name);
+        var arrAssets = {data : {totalAssets : 0}};
+        var totalAssets = 0;
+
+        try {
+            var jsonCategories = Assets.data.schemas;
+  
+            jsonCategories.forEach(obj => {
+              Object.entries(obj).forEach(([key, value]) => {
+                if(key == "assets")
+                  totalAssets +=  parseInt(value);
+                if(key == "schema_name"){
+                  arrAssets.data[value] = [];
+                }
+              });
+            });
+    
+            arrAssets.data.totalAssets = totalAssets
+            arrAssets.data.templateInfo = jsonCategories;
+
+        } catch (error) {
+            console.error(error);
+
+          }
+        
+        var assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page=1&limit='+totalAssets+'&order=desc&sort=asset_id');   
+
+        assetsListes.data.forEach(assets => {
+            arrAssets.data[assets.schema.schema_name].push(assets.asset_id)  
         });
-        return result.data;
+        
+        
+        return arrAssets.data
+        
     } catch (error) {
         console.error(error);
     }
