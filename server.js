@@ -20,7 +20,7 @@ app.get('/getRaceDetail/:race_id',function(req,res){
     })
 });
 
-/*app.get('/getRaceList/:user/:nbRace',function(req,res){
+app.get('/getRaceList/:user/:nbRace',function(req,res){
     var place = req.params.place;
     var league = req.params.league;
     var user = req.params.user;
@@ -31,7 +31,7 @@ app.get('/getRaceDetail/:race_id',function(req,res){
         //racesJS.getAllFirst(val.data,place,league).then((respFirst)=> {
         //})
     })
-});*/
+});
 
 /*app.get('/getAssetsDetail/:assets',function(req,res){
     var assets = req.params.assets
@@ -48,7 +48,7 @@ app.get('/getRaceDetail/:race_id',function(req,res){
     })   
 });*/
 
-/*app.get('/getAssets/:user_name',function(req,res){
+app.get('/getAssets/:user_name',function(req,res){
     var user = req.params.user_name
     assetsJS.createAssetsArray(user).then((assets) => {
         //console.log(assets)
