@@ -20,12 +20,15 @@ var raceCost = {
   }
 };
 
-
+//Call all race with user, nbRace and pages 
 async function asyncCall(){    
   var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
-  
   try {
       logDebug("Getting user races")
+
+      
+      //var result = await $.getJSON('http://nr-api.win-win.software/api/v1/races/?currentAccount='+user+'&isCurrentOnly=true&size='+nbRaces+'&page=0');
+
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
       });
@@ -147,7 +150,15 @@ async function sortDisplayRaceArray(races){
     var cost = "0";
 
     if(races[i].gear != "0"){
-      var fuelPrice = tokens[races[i].league-1].price
+      var fuel_id ="";
+      switch(races[i].league){
+        case "rookie": fuel_id = 0;break;  
+        case "intermediate":fuel_id = 1;break;  
+        case "veteran":fuel_id = 2;break;  
+        case "master":fuel_id = 3;break;  
+      }
+
+      var fuelPrice = tokens[fuel_id].price
 
       var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
 
@@ -170,6 +181,8 @@ async function sortDisplayRaceArray(races){
 
 async function getRaceDetail(id_race){
   return new Promise(async resolve => {
+
+    //var temp = await $.getJSON('https://nr-api.win-win.software/api/v1/races/'+id_race);
 
     var temp = await $.ajax({
       url: '/getRaceDetail/'+id_race
