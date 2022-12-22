@@ -101,7 +101,11 @@ async function sortDisplayRaceArray(races){
 
   var globalGain = 0;
   var globalGainCharm = 0;
+
+
   for(i=0;i<races.length; i++){
+
+  console.log(races[i])
 
   //races.forEach(async element => {
 
@@ -126,6 +130,7 @@ async function sortDisplayRaceArray(races){
     if(reward.asset_id != undefined){
 
       await getTemplateInfo("novarallywax",reward.asset_id).then(prize_template=>{
+        console.log(prize_template)
         reward.asset_img = prize_template.immutable_data.img;
       });
 

@@ -131,7 +131,7 @@ function getKeyByValue(object, value) {
 
 
 async function getRunningAssets(assets){
-  laterRunningAssets().then((assetsToRemove)=>{
+  runningAssets().then((assetsToRemove)=>{
     if(assetsToRemove+"" != ""){
       assetsToRemove.forEach(element => {
         //On check driver
