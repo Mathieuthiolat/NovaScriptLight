@@ -87,7 +87,7 @@ async function getTokensPrice(){
     
 }
 getTokensPrice()
-console.log(tokens)
+
 async function ajaxTokenPrice(token_id){    
     try {
         result = await $.ajax({
@@ -102,15 +102,11 @@ async function ajaxTokenPrice(token_id){
 //Get detail of and asset by is id
 async function later(asset_id){    
     let result;
-    try {
-        result = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets/'+asset_id);
+    try {  
+        result = await $.ajax({
+            url: 'getAssetsDetail/'+asset_id
+        });
         return result.data;
-  
-        //logDebug("Asset detail")
-        //result = await $.ajax({
-        //    url: 'getAssetsDetail/'+asset_id
-        //});
-        //return result.data;
     } catch (error) {
         console.error(error);
     }
@@ -120,14 +116,10 @@ async function later(asset_id){
 async function getTemplateInfo(collection_name = "novarallywax",template_id){    
     let result;
     try {
-        //logDebug("Template info")
-        result = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/templates/'+collection_name+"/"+template_id);
-        return result.data;
-
-        //result = await $.ajax({
-        //    url: '/getTemplateDetail/'+collection_name+'/'+template_id
-        //});
-        //return result;
+        result = await $.ajax({
+            url: '/getTemplateDetail/'+collection_name+'/'+template_id
+        });
+        return result;
     } catch (error) {
         console.error(error);
     }

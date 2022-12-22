@@ -33,20 +33,20 @@ app.get('/getRaceList/:user/:nbRace',function(req,res){
     })
 });
 
-/*app.get('/getAssetsDetail/:assets',function(req,res){
+app.get('/getAssetsDetail/:assets',function(req,res){
     var assets = req.params.assets
     assetsJS.getAssetInfo(assets).then((details) => {
         res.send(details);
     })   
-});*/
+});
 
-/*app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
+app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
     var collection_name = req.params.collection_name
     var template_id = req.params.template_id
     assetsJS.getTemplateInfo(collection_name,template_id).then(async (response) => {
         res.send(response);
     })   
-});*/
+});
 
 app.get('/getAssets/:user_name',function(req,res){
     var user = req.params.user_name
