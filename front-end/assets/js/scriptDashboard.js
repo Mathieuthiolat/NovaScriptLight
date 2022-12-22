@@ -20,15 +20,12 @@ var raceCost = {
   }
 };
 
-//Call all race with user, nbRace and pages 
+
 async function asyncCall(){    
   var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
+  
   try {
       logDebug("Getting user races")
-
-      
-      //var result = await $.getJSON('http://nr-api.win-win.software/api/v1/races/?currentAccount='+user+'&isCurrentOnly=true&size='+nbRaces+'&page=0');
-
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
       });
@@ -181,8 +178,6 @@ async function sortDisplayRaceArray(races){
 
 async function getRaceDetail(id_race){
   return new Promise(async resolve => {
-
-    //var temp = await $.getJSON('https://nr-api.win-win.software/api/v1/races/'+id_race);
 
     var temp = await $.ajax({
       url: '/getRaceDetail/'+id_race

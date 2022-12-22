@@ -131,7 +131,7 @@ function getKeyByValue(object, value) {
 
 
 async function getRunningAssets(assets){
-  runningAssets().then((assetsToRemove)=>{
+  laterRunningAssets().then((assetsToRemove)=>{
     if(assetsToRemove+"" != ""){
       assetsToRemove.forEach(element => {
         //On check driver
@@ -173,12 +173,13 @@ async function randomRacesArray(assets){
                             // Else if free race count is lower than 3 -> Run 
                             // Else -> no more free race
 
-          var previousResetRaw =  new Date(vehicle.mutable_data['Last Free Race Date']*1000)
-          var DateNow = new Date()
-          //previousResetRaw = new Date(previousResetRaw - (86400) - (previousResetRaw.getUTCHours()*3600) - (previousResetRaw.getUTCMinutes()*60) - (previousResetRaw.getUTCSeconds()*1))
-          console.log(previousResetRaw.getTime() +" -- "+ previousResetRaw.getTime())
-          if(previousResetRaw.getTime() >= DateNow.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
+          var timeFreeraceDateRaw =  new Date(vehicle.mutable_data['Last Free Race Date']*1000)
+          var previousResetRaw = new Date()
+          previousResetRaw = new Date(previousResetRaw - (86400) - (previousResetRaw.getUTCHours()*3600) - (previousResetRaw.getUTCMinutes()*60) - (previousResetRaw.getUTCSeconds()*1))
 
+          if(timeFreeraceDateRaw.getTime() <= previousResetRaw.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
+            //console.log(timeFreeraceDateRaw.getTime())
+            //console.log(previousResetRaw.getTime())
             logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race"+" => "+vehicle.mutable_data['Free Races Counter'] ) 
             continue;
           }
