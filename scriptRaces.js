@@ -34,14 +34,13 @@ async function getRaces(user="unrsi.wam",nbRaces = 10,pageNb = 0) {
       });
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
-        //console.log(JSON.parse(data).data)
         
         arr.data = editRaceArray(JSON.parse(data).data)
         resolve(arr)
       });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }
@@ -61,7 +60,7 @@ async function getRaceDetail(race_id) {
        });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }
@@ -100,13 +99,10 @@ const getAllFirst = async (lsJson = "", position = "false",league = "false") => 
     if(element.position == position || position == "false"){
       if(element.league  == league || position == "false"){
         element.count = 1;
-        //console.log(element)
       
         if(arr.data[0] != undefined){
           let arrLength = arr.data.length - 1;
           for(i=0;i<= arrLength;i++){
-
-            //console.log(arr.data[i]) 
 
             if(arr.data[i].vehicle_asset_id == element.vehicle_asset_id && arr.data[i].driver1_asset_id == element.driver1_asset_id && arr.data[i].driver2_asset_id == element.driver2_asset_id){
               

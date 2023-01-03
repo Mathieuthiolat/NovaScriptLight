@@ -51,7 +51,6 @@ app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
 app.get('/getAssets/:user_name',function(req,res){
     var user = req.params.user_name
     assetsJS.createAssetsArray(user).then((assets) => {
-        //console.log(assets)
         res.send(assets);      
     })
 });

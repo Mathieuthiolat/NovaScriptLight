@@ -34,10 +34,9 @@
             sessionStorage.setItem('userAccount',userAccount)
             let pubKeys = wax.pubKeys;
             let str = 'Account: ' + userAccount
-            console.log(str);
             checkLogin()
         } catch (e) {
-            console.log(e.message);
+            utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
         }
         } 
     /****/
