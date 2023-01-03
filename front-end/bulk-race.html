@@ -92,7 +92,6 @@
     getTokensPrice()
     
     if(checkLogin()){
-      //console.log("here")
       $("#btnSetBulk")[0].classList.remove("hidden");
     }
   });
@@ -115,7 +114,6 @@ function setUpBulkRace(){
       //Create Array of bulk race from All assets availible
       randomRacesArray(myAssets).then(()=>{
         logDebug("Array created")
-        console.log(raceArray)
       })
 
     })
