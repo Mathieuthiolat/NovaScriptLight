@@ -68,6 +68,12 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
     })
 });
 
+app.get('/logError/:data',function(req,res){
+    var data = req.params.data
+    utils.storeData(data,"./logs/error.json");
+});
+
+
 
 //add the router
 app.use('/', router);

@@ -93,7 +93,7 @@ async function sign(driver1, driver2, vehicle,league) {
       logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
       resolve('success');
     } catch(e) {
-      logDebug(e.message)     
+      logError(e.message)     
       resolve('error');
 
     }

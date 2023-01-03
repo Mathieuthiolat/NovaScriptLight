@@ -25,7 +25,6 @@ async function asyncCall(){
   var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
   
   try {
-      logDebug("Getting user races")
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
       });

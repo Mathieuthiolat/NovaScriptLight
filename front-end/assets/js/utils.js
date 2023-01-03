@@ -54,7 +54,15 @@ function loop(){
 function logDebug(msg){
     console.log(new Date().toLocaleTimeString("fr-FR")+" DBG : "+msg)
     //Voir si besoin de log dans un fichier externe
-  
+}
+function logError(msg){
+
+    msgDetail = new Date().toLocaleTimeString("fr-FR")+" : "+msg
+
+    $.ajax({
+        url: 'logError/'+msgDetail
+    });
+    //Voir si besoin de log dans un fichier externe
 }
 
 async function getInfos(){
