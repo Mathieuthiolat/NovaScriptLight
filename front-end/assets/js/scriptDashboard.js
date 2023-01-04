@@ -25,7 +25,6 @@ async function asyncCall(){
   var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
   
   try {
-      logDebug("Getting user races")
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
       });
@@ -105,7 +104,6 @@ async function sortDisplayRaceArray(races){
 
   for(i=0;i<races.length; i++){
 
-  console.log(races[i])
 
   //races.forEach(async element => {
 
@@ -130,7 +128,6 @@ async function sortDisplayRaceArray(races){
     if(reward.asset_id != undefined){
 
       await getTemplateInfo("novarallywax",reward.asset_id).then(prize_template=>{
-        console.log(prize_template)
         reward.asset_img = prize_template.immutable_data.img;
       });
 

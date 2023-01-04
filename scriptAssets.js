@@ -37,7 +37,6 @@ async function getAssetNumber(user) {
   
           arrAssets.data.totalAssets = totalAssets
           arrAssets.data.templateInfo = jsonCategories;
-          //console.log(arrAssets.templateInfo)
           resolve(arrAssets)
         } catch (error) {
           getAssetNumber(user)
@@ -46,7 +45,7 @@ async function getAssetNumber(user) {
       });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }
@@ -67,7 +66,7 @@ async function getAllAssets(totalAssets,user){
       });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }
@@ -85,7 +84,6 @@ async function createAssetsArray(userName){
   return new Promise((resolve) => {
     getAssetNumber(userName).then((resp) => {
       getAllAssets(resp.data.totalAssets,userName).then((result)=>{
-        //console.log(result)
         arrAssets = result;
         
         resolve(result)
@@ -96,7 +94,6 @@ async function createAssetsArray(userName){
 /* swager : https://test.wax.api.atomicassets.io/docs/ */
 async function getAssetInfo(asset_id) {
   return new Promise((resolve) => {
-    console.log("Get assets "+asset_id+" : "+new Date().toLocaleString("fr-FR"))
 
     https.get('https://wax.api.atomicassets.io/atomicassets/v1/assets/'+asset_id, resp => {
       let data = '';
@@ -106,14 +103,11 @@ async function getAssetInfo(asset_id) {
       });
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
-        //console.log(JSON.parse(data))
-        console.log("Detail OK : "+new Date().toLocaleString("fr-FR"))
-
         resolve(JSON.parse(data))
       });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }
@@ -128,12 +122,11 @@ async function getTemplateInfo(collection_name,template_id) {
       });
       // The whole response has been received. Print out the result.
       resp.on('end', () => { 
-        //console.log(JSON.parse(data))
         resolve(JSON.parse(data).data)
       });
 
     }).on("error", (err) => {
-      console.log("Error: " + err.message);
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
     });
   })
 }

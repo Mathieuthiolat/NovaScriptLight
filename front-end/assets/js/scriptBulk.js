@@ -38,7 +38,6 @@ async function sign(driver1, driver2, vehicle,league) {
       }
       var gear = $("#gear").val() ?? 0
 
-      console.log("Launching : "+driver1+" - "+driver2+" - Vehicle "+vehicle+" Gear "+gear)
       if(gear != 0){
         //OilCost.rookie[0]
         var oil = OilCost[league][gear-1]
@@ -93,7 +92,7 @@ async function sign(driver1, driver2, vehicle,league) {
       logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
       resolve('success');
     } catch(e) {
-      logDebug(e.message)     
+      logError(e.message)     
       resolve('error');
 
     }
@@ -105,13 +104,11 @@ async function asyncCall() {
     resetTable()
     var league = $('#league-select').val() ?? "false"
     var place = $('#place-select').val() ?? "false"
-    console.log('DBG : calling league : '+league+" place : "+place);
     $("#loader").css("display","block")
     $.ajax({url: 'getRace/'+league+'/'+place+'/'+sessionStorage.getItem('userAccount')+'/'+10, success:function(res){
       arr = res;
     }});
     const result = await callDetail();
-    //console.log(result);
 }
 
 function callDetail(){
@@ -131,7 +128,6 @@ function getDetail(array){
   jQuery.each( array, function( i, val ) {
     var league = val.league;
     var position = val.position;
-    //console.log(val.vehicleAssetId)
     //Vehicle
     later(val.vehicleAssetId).then((vehicle_detail) => {
       //Driver 1
@@ -139,8 +135,7 @@ function getDetail(array){
         //Driver2
         later(val.driver2AssetId).then((driver2_detail) => {
           $("#loader").css("display","none")
-          //console.log("here") 
-          //console.log(vehicle_detail)
+
           display(vehicle_detail,driver1_detail,driver2_detail,league,position)
         })  
       })      
@@ -149,9 +144,7 @@ function getDetail(array){
 }
 
 function display(vehicle_detail,driver1_detail,driver2_detail,league_val,position_val){
-    //console.log("Display race info")
     const userAccount = sessionStorage.getItem('userAccount')
-    //console.log(vehicle_detail  )
     if(vehicle_detail.owner == userAccount && driver1_detail.owner == userAccount && driver2_detail.owner == userAccount ){
 
       var vehicle = $("<td></td>").text(vehicle_detail.name);        
@@ -161,7 +154,6 @@ function display(vehicle_detail,driver1_detail,driver2_detail,league_val,positio
       var position = $("<td></td>").text(position_val);   
       var action = $("<button></button>").text("Send").attr('onclick','sign('+driver1_detail.asset_id+', '+driver2_detail.asset_id+','+vehicle_detail.asset_id+',"'+league_val+'")');   
       var row = $("<tr></tr>").append(vehicle,driver1,driver2,league,position,action);   
-      //console.log("ici")
       $("#resultDisplay").append(row);
     }  
 }
@@ -172,7 +164,6 @@ async function asyncGetAssets() {
       result = await $.ajax({
         url: '/getAssets/'+sessionStorage.getItem('userAccount')
       });
-      console.log(result.data)
       return result.data;
   } catch (error) {
       console.error(error);

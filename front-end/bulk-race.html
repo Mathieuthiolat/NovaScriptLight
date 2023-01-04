@@ -92,7 +92,6 @@
     getTokensPrice()
     
     if(checkLogin()){
-      //console.log("here")
       $("#btnSetBulk")[0].classList.remove("hidden");
     }
   });
@@ -115,7 +114,6 @@ function setUpBulkRace(){
       //Create Array of bulk race from All assets availible
       randomRacesArray(myAssets).then(()=>{
         logDebug("Array created")
-        console.log(raceArray)
       })
 
     })
@@ -178,9 +176,7 @@ async function randomRacesArray(assets){
           previousResetRaw = new Date(previousResetRaw - (86400) - (previousResetRaw.getUTCHours()*3600) - (previousResetRaw.getUTCMinutes()*60) - (previousResetRaw.getUTCSeconds()*1))
 
           if(timeFreeraceDateRaw.getTime() <= previousResetRaw.getTime() && vehicle.mutable_data['Free Races Counter']+"" == "3"){
-            //console.log(timeFreeraceDateRaw.getTime())
-            //console.log(previousResetRaw.getTime())
-            logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race"+" => "+vehicle.mutable_data['Free Races Counter'] ) 
+            //logDebug(vehicle.data.name+" - "+vehicle.asset_id+" => as reach is daily free race"+" => "+vehicle.mutable_data['Free Races Counter'] ) 
             continue;
           }
         }
@@ -256,7 +252,6 @@ async function getRandomDriver(driverList,firstDriver = ""){
         return driver2
   
       }else{
-        logDebug("redo")
         getRandomDriver(driverList,firstDriver)
       } 
   }else{
@@ -279,7 +274,7 @@ async function launchBulkRace(arrOfRace){
       $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
       $('.raceRow')[0].classList.remove("raceRow")
     }else{
-      logDebug("Cannot launch the race : "+element+"- "+error)
+      logError("Cannot launch the race : "+element+"- "+error)
       //Light up the row on display when the race is launched
       $('.raceRow')[0].style = "background:red";
       $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
@@ -287,7 +282,7 @@ async function launchBulkRace(arrOfRace){
     }
 
   } catch (error) {
-    logDebug("Cannot launch the race : "+element+"- "+error)
+    logError("Cannot launch the race : "+element+"- "+error)
     //Light up the row on display when the race is launched
     $('.raceRow')[0].style = "background:red";
     $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";

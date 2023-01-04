@@ -51,7 +51,6 @@ app.get('/getTemplateDetail/:collection_name/:template_id',function(req,res){
 app.get('/getAssets/:user_name',function(req,res){
     var user = req.params.user_name
     assetsJS.createAssetsArray(user).then((assets) => {
-        //console.log(assets)
         res.send(assets);      
     })
 });
@@ -68,9 +67,15 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
     })
 });
 
+app.get('/logError/:data',function(req,res){
+    var data = req.params.data
+    utils.storeData(data,"./logs/error.json");
+});
+
+
 
 //add the router
 app.use('/', router);
 //app.listen(process.env.port || 8080);
-const PORT = 8080
+const PORT = 8080;
 app.listen(PORT, () => console.log(`App running on PORT ${PORT}`))
