@@ -77,5 +77,5 @@ app.get('/logError/:data',function(req,res){
 //add the router
 app.use('/', router);
 //app.listen(process.env.port || 8080);
-const PORT = 8080
+const PORT = 8080;
 app.listen(PORT, () => console.log(`App running on PORT ${PORT}`))
