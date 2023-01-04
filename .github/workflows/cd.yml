@@ -38,9 +38,9 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd ~/../var/www/html
-          git reset --hard
-          git pull
+          cd /var/www/html
+          sudo git reset --hard
+          sudo git pull
           git status
           npm i
           pm2 restart server
