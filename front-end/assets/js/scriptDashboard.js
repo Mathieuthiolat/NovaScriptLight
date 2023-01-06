@@ -121,6 +121,7 @@ async function sortDisplayRaceArray(races){
     
     var rewardDisplay = "";
     if(reward.charm != null){
+
       globalGainCharm = globalGainCharm + reward.charm
       rewardDisplay += "<img alt='Charm' src='https://play.novarally.io/assets/pic/CHARM.webp' width='26' height='26'><span>"+reward.charm+"</span>";
 
@@ -165,14 +166,17 @@ async function sortDisplayRaceArray(races){
 
     }
     var gainlost = (reward.charm *  tokens[4].price) - cost
+
     var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
     
     globalGain = globalGain + gainlost 
 
     var row = $("<tr class='raceRow'></tr>").append(date,vehicleHtml,driverHtml,copiloteHtml,leagueHtml,gearHtml,positionHtml,rewardHtml,gainLostHtml);   
     $("#resultDisplay").append(row);
-    $("#totalGain").html(globalGain.toFixed(3)+" Wax");
-    $("#totalGainCharm").html(globalGainCharm.toFixed(3)+" Charm");
+    $("#totalGain").html(globalGain.toFixed(3));
+    $("#totalGainCharm").html(globalGainCharm.toFixed(3));
+    $(".currencie").css("display", "inline");;
+
 
   };
 
