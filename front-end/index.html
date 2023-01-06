@@ -77,8 +77,8 @@
       </div>
       <span class="spliter"></span>
       <label>Total Gain/Lost : </label>
-      <span id="totalGain"></span>
-      <span id="totalGainCharm"></span>
+      <span id="totalGain"></span><span class="currencie"> Wax</span>
+      <span id="totalGainCharm"></span><span class="currencie"> Charms</span>
       
       <!--
       <span class="spliter"></span>
@@ -126,7 +126,7 @@
     </div>
   </div>
 <footer>
-  <div >Created By <a href="https://wax.bloks.io/account/unrsi.wam">FreeQyMat#4039</a></div>
+  <div >Created By <a href="https://wax.bloks.io/account/unrsi.wam" target="_blank">FreeQyMat#4039</a> | <a href="https://github.com/Mathieuthiolat/NovaScriptLight" target="_blank">Github project </a> </div>
 </footer>
 
 
@@ -164,7 +164,33 @@
     user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
 
     await asyncCall().then(async (response)=>{
-      await createMyRaces(response.data);
+      var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
+
+      if(nbRaces > 10){
+        /*tmp.data.slice(0, 3)*/
+        /* Exemple for 26
+        min = i*10  / i = 0 => 0
+        max = min + 10      => 10
+        --
+        min = i*10  / i = 1 => 10 
+        max = min + 10      => 20
+        --
+        min = i*10 / 1 = 2  => 20
+        max = min +10       => 30 !!
+        */
+        for(var i=0;i<nbRaces/10;i++){
+          var min = i*10;
+          var max = min + 10;
+          if(max>=nbRaces)
+            max = nbRaces;
+          await createMyRaces(response.data.slice(min, max));
+          setTimeout(() => {
+            
+          }, 1000);
+        }
+      }else{
+        await createMyRaces(response.data);
+      }
     });
   }
 </script>
