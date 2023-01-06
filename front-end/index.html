@@ -178,15 +178,23 @@
         min = i*10 / 1 = 2  => 20
         max = min +10       => 30 !!
         */
+       var tmpGainTotal = parseFloat($("#totalGain").html())
+       var tmpGainCharm = parseFloat($("#totalGainCharm").html())
         for(var i=0;i<nbRaces/10;i++){
           var min = i*10;
           var max = min + 10;
           if(max>=nbRaces)
             max = nbRaces;
+          
+          $("#loader")[0].classList.remove("hidden");
+
           await createMyRaces(response.data.slice(min, max));
+          console.log($("#totalGainCharm").html()+"+"+tmpGainCharm)
+          $("#totalGainCharm").html($("#totalGainCharm").html()+tmpGainCharm)
+          $("#totalGain").html($("#totalGain").html()+tmpGainTotal)
+
           setTimeout(() => {
-            
-          }, 1000);
+          }, 5000);
         }
       }else{
         await createMyRaces(response.data);

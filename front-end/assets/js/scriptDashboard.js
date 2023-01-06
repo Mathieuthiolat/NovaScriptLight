@@ -121,9 +121,8 @@ async function sortDisplayRaceArray(races){
     
     var rewardDisplay = "";
     if(reward.charm != null){
-      console.log(globalGainCharm +"+"+ reward.charm +"+"+ parseFloat($("#totalGainCharm").html()))
 
-      globalGainCharm = globalGainCharm + reward.charm + parseFloat($("#totalGainCharm").html())
+      globalGainCharm = globalGainCharm + reward.charm
       rewardDisplay += "<img alt='Charm' src='https://play.novarally.io/assets/pic/CHARM.webp' width='26' height='26'><span>"+reward.charm+"</span>";
 
     }
@@ -166,8 +165,7 @@ async function sortDisplayRaceArray(races){
       cost = fuelPrice * fuelAmount
 
     }
-    console.log((reward.charm +"*"+  tokens[4].price) +"-"+ cost +"+"+ parseFloat($("#totalGain").html()))
-    var gainlost = (reward.charm *  tokens[4].price) - cost + parseFloat($("#totalGain").html())
+    var gainlost = (reward.charm *  tokens[4].price) - cost
 
     var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
     
