@@ -59,7 +59,7 @@ button{
   display: inline-block;
 }
 #loader{
-  position: absolute;
+  /*position: absolute;*/
   top: 50%;
   left: 50%;
   text-align: center;
@@ -70,7 +70,14 @@ button{
 #resultDisplay{
   width: 75%;
   margin: auto;
+  margin-bottom: 50px;
   color: var(--color-primary);  
+
+}
+#load-more{
+  width: 150px;
+  margin: auto;
+  text-align: center;
 }
 footer{
   background-color: var(--bg-primary);
@@ -82,4 +89,7 @@ footer{
   text-align: center;
   font-size: 12px;
   padding: 8px;
+}
+.currencie{
+  display: none;
 }

@@ -42,6 +42,10 @@
     /****/
 
 function resetTable() {
+    $(".currencie").css("display", "none");;
+
+    $("#totalGain").html("0")
+    $("#totalGainCharm").html("0")
     $("#resultDisplay tbody").remove()
 }
 function loop(){
