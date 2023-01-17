@@ -1,3 +1,4 @@
+
 var myRaces = []
 var user = "";
 
@@ -21,9 +22,8 @@ var raceCost = {
 };
 
 
-async function asyncCall(){    
-  var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
-  
+async function asyncCall(nbRaces){    
+ 
   try {
       result = await $.ajax({
         url: '/getRaceList/'+user+'/'+nbRaces
@@ -45,7 +45,7 @@ async function createMyRaces(array){
 
       var tmpRace = {id : "",date : "",vehicle : {},driver : {},copilote : {},league : "",gear : "",position : "",reward : "",gainLost : {}};
 
-      tmpRace.id =  array[i].id;
+      tmpRace.id =  array[i].race_id;
 
       tmpRace.date =  new Date(array[i].startedDate).toLocaleString();
 
@@ -95,8 +95,8 @@ async function getRewardList(prizesListe){
 
 
 async function sortDisplayRaceArray(races){
-
   $("#loader")[0].classList.add("hidden");
+  $("#load-more")[0].classList.remove("hidden");
 
   var globalGain = 0;
   var globalGainCharm = 0;
@@ -136,46 +136,53 @@ async function sortDisplayRaceArray(races){
     }
 
 
+    try {
+      var date = $("<td></td>").html("<span>"+races[i].date+"<br>id:"+races[i].id+"</span>") ;        
+      var vehicleHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].vehicle.template.immutable_data.img+"' style='width: 50px;' /><br><span>"+races[i].vehicle.name+"</span>") ;
+      var driverHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].driver.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].driver.name+"</span>") ;
+      var copiloteHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].copilote.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].copilote.name+"</span>") ;
+      var leagueHtml = $("<td></td>").html("<span>"+races[i].league+"</span>") ;
+      var gearHtml = $("<td></td>").html("<span>"+races[i].gear+"</span>") ;
+      var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+races[i].position+"</span>") ;
+  
+      var rewardHtml = $("<td></td>").html("<div>"+rewardDisplay+"</div>") ;
+  
+      var cost = "0";
+  
+      if(races[i].gear != "0"){
+        var fuel_id ="";
+        switch(races[i].league){
+          case "rookie": fuel_id = 0;break;  
+          case "intermediate":fuel_id = 1;break;  
+          case "veteran":fuel_id = 2;break;  
+          case "master":fuel_id = 3;break;  
+        }
+  
+        var fuelPrice = tokens[fuel_id].price
+  
+        var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
+        
+        console.log( raceCost[races[i].league])
+        console.log(races[i])
 
-    var date = $("<td></td>").html("<span>"+races[i].date+"</span>") ;        
-    var vehicleHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].vehicle.template.immutable_data.img+"' style='width: 50px;' /><br><span>"+races[i].vehicle.name+"</span>") ;
-    var driverHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].driver.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].driver.name+"</span>") ;
-    var copiloteHtml = $("<td></td>").html("<img src='https://atomichub-ipfs.com/ipfs/"+races[i].copilote.template.immutable_data.img+"' style='width: 50px;'/><br><span>"+races[i].copilote.name+"</span>") ;
-    var leagueHtml = $("<td></td>").html("<span>"+races[i].league+"</span>") ;
-    var gearHtml = $("<td></td>").html("<span>"+races[i].gear+"</span>") ;
-    var positionHtml = $("<td></td>").html("<span "+positionCSS+" >"+races[i].position+"</span>") ;
-
-    var rewardHtml = $("<td></td>").html("<div>"+rewardDisplay+"</div>") ;
-
-    var cost = "0";
-
-    if(races[i].gear != "0"){
-      var fuel_id ="";
-      switch(races[i].league){
-        case "rookie": fuel_id = 0;break;  
-        case "intermediate":fuel_id = 1;break;  
-        case "veteran":fuel_id = 2;break;  
-        case "master":fuel_id = 3;break;  
+        cost = fuelPrice * fuelAmount
+  
       }
-
-      var fuelPrice = tokens[fuel_id].price
-
-      var fuelAmount = raceCost[races[i].league].oil[(races[i].gear-1)]
-
-      cost = fuelPrice * fuelAmount
-
+      var gainlost = (reward.charm *  tokens[4].price) - cost
+  
+      var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
+      
+      globalGain = globalGain + gainlost 
+  
+      var row = $("<tr class='raceRow'></tr>").append(date,vehicleHtml,driverHtml,copiloteHtml,leagueHtml,gearHtml,positionHtml,rewardHtml,gainLostHtml);   
+      $("#resultDisplay").append(row);
+      $("#totalGain").html(globalGain.toFixed(3));
+      $("#totalGainCharm").html(globalGainCharm.toFixed(3));
+      $(".currencie").css("display", "inline");
+  
+    } catch (error) {
+      logDebug(error)
     }
-    var gainlost = (reward.charm *  tokens[4].price) - cost
-
-    var gainLostHtml = $("<td></td>").html("<span>"+gainlost.toFixed(4)+" Wax</span>") ;        
-    
-    globalGain = globalGain + gainlost 
-
-    var row = $("<tr class='raceRow'></tr>").append(date,vehicleHtml,driverHtml,copiloteHtml,leagueHtml,gearHtml,positionHtml,rewardHtml,gainLostHtml);   
-    $("#resultDisplay").append(row);
-    $("#totalGain").html(globalGain.toFixed(3));
-    $("#totalGainCharm").html(globalGainCharm.toFixed(3));
-    $(".currencie").css("display", "inline");;
 
 
   };

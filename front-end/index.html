@@ -97,10 +97,10 @@
 
 
     </div>
-    <div>
+    <div style="margin-bottom: 150px;">
       <div style="text-align: center;margin: 15px 0px;">
         <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
-        <input id="nbRace" name="nbRace" type="number" placeholder="10" style="color: black;width: 80px;"/>
+        <!--<input id="nbRace" name="nbRace" type="number" placeholder="10" style="color: black;width: 80px;"/>-->
         <button id="fetch_user" onclick="fetchData()">Fetch user data</button>
       </div>
       <table class="table" id="resultDisplay">
@@ -118,6 +118,7 @@
           </tr>  
         </thead>
       </table>  
+      <div id="load-more" class="hidden"><button onclick="fetchData(false)">Load more</button></div>
       <div id="loader" class="hidden">
         <img src="./assets/medias/step-loader.gif" alt="loader">
         <br>
@@ -141,6 +142,8 @@
       return new bootstrap.Tooltip(element);
   });
   
+  var nbRaces = 10;
+
   $(document).ready(() => {
     if(sessionStorage.getItem('userAccount') != null){
       getInfos(),
@@ -153,49 +156,47 @@
     }
   });
 
-  async function fetchData(){
+  async function fetchData(reset = true){
     if(!checkLogin()){
       return;
     }
-    resetTable()
+    if(reset){
+      resetTable()
+      nbRaces = 10;
+      var tmpGainTotal = 0
+      var tmpGainCharm = 0
 
+    }else{
+      nbRaces += 10;
+      var tmpGainTotal = parseFloat($("#totalGain").html())
+      var tmpGainCharm = parseFloat($("#totalGainCharm").html())
+    }
+
+    $("#load-more")[0].classList.add("hidden");
     $("#loader")[0].classList.remove("hidden");
 
     user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
 
-    await asyncCall().then(async (response)=>{
-      var nbRaces = ($('#nbRace').val() != "")? $('#nbRace').val() : 10;
+    await asyncCall(nbRaces).then(async (response)=>{
 
       if(nbRaces > 10){
-        /*tmp.data.slice(0, 3)*/
-        /* Exemple for 26
-        min = i*10  / i = 0 => 0
-        max = min + 10      => 10
-        --
-        min = i*10  / i = 1 => 10 
-        max = min + 10      => 20
-        --
-        min = i*10 / 1 = 2  => 20
-        max = min +10       => 30 !!
+        /*
+        Si j'ai plus de 10 race 
+        c'est que je load more 
+        donc => on get les 10 next
+        exemple 20 
+        je prende de 10 => 20
+
         */
-       var tmpGainTotal = parseFloat($("#totalGain").html())
-       var tmpGainCharm = parseFloat($("#totalGainCharm").html())
-        for(var i=0;i<nbRaces/10;i++){
-          var min = i*10;
-          var max = min + 10;
-          if(max>=nbRaces)
-            max = nbRaces;
+
+          var min = nbRaces-10;
           
           $("#loader")[0].classList.remove("hidden");
-
-          await createMyRaces(response.data.slice(min, max));
-          console.log($("#totalGainCharm").html()+"+"+tmpGainCharm)
-          $("#totalGainCharm").html($("#totalGainCharm").html()+tmpGainCharm)
-          $("#totalGain").html($("#totalGain").html()+tmpGainTotal)
-
-          setTimeout(() => {
-          }, 5000);
-        }
+          console.log("get from "+min+" to  "+nbRaces)
+          await createMyRaces(response.data.slice(min, nbRaces));
+          $("#totalGainCharm").html(Math.round((parseFloat($("#totalGainCharm").html())+tmpGainCharm)*100)/100)
+          $("#totalGain").html(Math.round((parseFloat($("#totalGain").html())+tmpGainTotal)*100)/100)
+        
       }else{
         await createMyRaces(response.data);
       }
