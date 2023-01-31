@@ -67,6 +67,14 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
     })
 });
 
+app.get('/getInnerBalance/:user_name',function(req,res){
+    var user = req.params.user_name
+    assetsJS.getInnerBalance(user).then((innerBalance) => {
+
+        res.send(innerBalance.rows[0]);      
+    })
+});
+
 app.get('/logError/:data',function(req,res){
     var data = req.params.data
     utils.storeData(data,"./logs/error.json");

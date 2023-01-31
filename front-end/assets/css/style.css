@@ -93,3 +93,17 @@ footer{
 .currencie{
   display: none;
 }
+
+.refuel_btn button{
+  border: none;
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+  border: 1px solid #888;
+
+}
+.refuel_btn button:hover{
+  border: 1px solid var(--link);
+  color: var(--link);
+  font-weight: bold;
+}
+

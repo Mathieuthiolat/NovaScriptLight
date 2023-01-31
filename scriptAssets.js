@@ -131,4 +131,20 @@ async function getTemplateInfo(collection_name,template_id) {
   })
 }
 
-module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo};
+
+async function getInnerBalance(user = ""){
+  return new Promise((resolve) => {
+
+    const json = rpc.get_table_rows({
+      json: true,               // Get the response as json
+      code: 'iraces.nova',      // Contract that we target
+      scope: user,         // Account that owns the data
+      table: 'playersinfo',        // Table name
+      limit: 200
+    });
+    resolve(json)
+  })
+}
+
+
+module.exports = {createAssetsArray,getAssetInfo,getTemplateInfo,getInnerBalance};

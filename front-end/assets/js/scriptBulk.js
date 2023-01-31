@@ -19,6 +19,46 @@ var OilCost = {
   master : "SNAKVEN"
 }*/
 
+/**  Refuel intern storage **/
+async function refuel() {
+  return new Promise(async resolve => {
+    try {
+      if($("#fuel_amount")[0].value != undefined &&  ($("#fuel_type")[0].value != undefined || $("#fuel_type")[0].value != "0")){
+        if(!wax.api) {
+          await login()
+          logDebug("Reconnexion");
+        }
+        //send the oil
+        const transfer = await wax.api.transact({
+          actions: [{
+            account: 'novarallytok',
+            name: 'transfer',
+            authorization: [{
+              actor: wax.userAccount,
+              permission: 'active',
+            }],
+            data: {
+              from: wax.userAccount,
+              to: 'iraces.nova',
+              quantity: $("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value,
+              memo: '',
+            },
+          }]
+        }, {
+          blocksBehind: 3,
+          expireSeconds: 1200,
+        });
+        logDebug("Refuel succes : amount "+oil+' '+fueltype)    
+        getInfos()
+        resolve('success');
+      }
+    } catch(e) {
+      logError(e.message)     
+      resolve(e.message);
+    }
+  });
+}
+
 /**  Launch race  **/
 async function sign(driver1, driver2, vehicle,league) {
   return new Promise(async resolve => {
@@ -38,32 +78,6 @@ async function sign(driver1, driver2, vehicle,league) {
       }
       var gear = $("#gear").val() ?? 0
 
-      if(gear != 0){
-        //OilCost.rookie[0]
-        var oil = OilCost[league][gear-1]
-
-        //send the oil
-        const transfer = await wax.api.transact({
-          actions: [{
-            account: 'novarallytok',
-            name: 'transfer',
-            authorization: [{
-              actor: wax.userAccount,
-              permission: 'active',
-            }],
-            data: {
-              from: wax.userAccount,
-              to: 'iraces.nova',
-              quantity: oil+' '+fuel,
-              memo: '',
-            },
-          }]
-        }, {
-          blocksBehind: 3,
-          expireSeconds: 1200,
-        });
-      }
-
       //logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
       //Send race
       const result = await wax.api.transact({
@@ -71,7 +85,7 @@ async function sign(driver1, driver2, vehicle,league) {
           account: 'iraces.nova',
           name: 'join',
           authorization: [{
-          actor: wax.userAccount,
+          actor: 'unrsi.wam',
           permission: 'active',
           }],
           data: {
@@ -81,7 +95,7 @@ async function sign(driver1, driver2, vehicle,league) {
             player: wax.userAccount,
             races_number: 1,
             use_boost: false,
-            vehicle_asset_id: vehicle,
+            vehicle_asset_id: vehicle,    
           },
       }]
       }, {
@@ -93,7 +107,7 @@ async function sign(driver1, driver2, vehicle,league) {
       resolve('success');
     } catch(e) {
       logError(e.message)     
-      resolve('error');
+      resolve(e.message);
 
     }
     

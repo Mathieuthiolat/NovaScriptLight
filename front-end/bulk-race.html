@@ -289,18 +289,18 @@ async function launchBulkRace(arrOfRace){
       $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
       $('.raceRow')[0].classList.remove("raceRow")
     }else{
-      logError("Cannot launch the race : "+element+"- "+error)
+      logError("Cannot launch the race : "+result)
       //Light up the row on display when the race is launched
       $('.raceRow')[0].style = "background:red";
-      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
+      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3><br><span>"+result+"</span>";
       $('.raceRow')[0].classList.remove("raceRow")
     }
 
-  } catch (error) {
-    logError("Cannot launch the race : "+element+"- "+error)
+  } catch (e) {
+    logError("Sign crash : "+e)
     //Light up the row on display when the race is launched
     $('.raceRow')[0].style = "background:red";
-    $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
+    $('.raceRow')[0].childNodes[4].innerHTML =  "<h3>Failed</h3><br><span>"+e+"</span>";
     $('.raceRow')[0].classList.remove("raceRow")
 
   }

@@ -9,13 +9,12 @@
         });
 
         //normal login. Triggers a popup for non-whitelisted dapps
-
         async function checkLogin(){
+
             if(sessionStorage.getItem("userAccount") != null){
                 $("#login-btn")[0].classList.add("hidden");
                 $("#login-info")[0].classList.remove("hidden");
                 $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
-                return true;
             }
             else{
                 return false;
@@ -28,16 +27,16 @@
         }
 
         async function login() {
-        try {
-            //if autologged in, this simply returns the userAccount w/no popup
-            let userAccount = await wax.login();
-            sessionStorage.setItem('userAccount',userAccount)
-            let pubKeys = wax.pubKeys;
-            let str = 'Account: ' + userAccount
-            checkLogin()
-        } catch (e) {
-            utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
-        }
+            try {
+                //if autologged in, this simply returns the userAccount w/no popup
+                let userAccount = await wax.login();
+                sessionStorage.setItem('userAccount',userAccount)
+                let pubKeys = wax.pubKeys;
+                let str = 'Account: ' + userAccount
+                checkLogin()
+            } catch (e) {
+                utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+            }
         } 
     /****/
 
@@ -51,7 +50,7 @@ function resetTable() {
 function loop(){
     setInterval(async function() { 
         getInfos()
-    }, 20000);
+    }, 60000);
 }
 //DBG 
 function logDebug(msg){
@@ -76,6 +75,44 @@ async function getInfos(){
             $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
         });
     });
+    innerBalance().then((resources)=>{
+        if(!resources)
+            return;
+
+        var elements = Array.from($(".innerBalance"))
+
+        for (let index = 0; index < resources.length; index++) {
+
+            if(resources[index].key == "CHARM")
+                resources[index].value = Math.round((resources[index].value / 1000) * 10) / 10;
+        
+            if(resources[index].value>=1000000)
+                elements[index].childNodes[1].innerHTML = parseFloat(resources[index].value / 1000000).toFixed(1)+"m"    
+            else if(resources[index].value>=1000)
+                elements[index].childNodes[1].innerHTML = parseFloat(resources[index].value / 1000).toFixed(1)+"k"    
+        }
+    })
+    novaTokens().then((userTokenArray)=>{
+        if(userTokenArray!=null){
+            var walletDiv = Array.from($(".walletBalance"))
+            for (let index = 0; index < userTokenArray.length; index++) {
+                var token = userTokenArray[index].split(" ")
+                var tokenDesc = walletDiv.find(item => item.dataset.tokenname === token[1]);
+
+                token[0] = parseInt(token[0])
+
+                if(tokenDesc != undefined){
+                    if(token[0]>=1000000)
+                        tokenDesc.childNodes[1].innerHTML = parseFloat((token[0] / 1000000)).toFixed(1)+"m"                   
+                    else if(token[0]>=1000)
+                        tokenDesc.childNodes[1].innerHTML = parseFloat((token[0] / 1000)).toFixed(1)+"k"                   
+    
+                }
+    
+            }
+    
+        }
+    })
 }
 
 var tokens = 
@@ -148,6 +185,39 @@ async function runningAssets(){
         console.error(error);
     }
 
+}
+
+//Get list of inner resources
+async function innerBalance(){    
+    let innerBalance;
+    try {
+        innerBalance = await $.ajax({
+            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')
+        });
+        if(innerBalance.balances != null || innerBalance.balances != undefined)
+            return innerBalance.balances;
+        else
+            return false;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+//Get list of novarally token
+async function novaTokens(){    
+    let userTokenArray;
+    try {
+        userTokenArray = await $.ajax({
+            type: "POST",
+            url: "https://api.waxsweden.org:443/v1/chain/get_currency_balance",
+            data: '{"code":"novarallytok","account": "unrsi.wam","symbol": null}',
+            dataType: "json"
+        });
+        return userTokenArray;
+
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 //Get all assets from the novarallywax collection 
