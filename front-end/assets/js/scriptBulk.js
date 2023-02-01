@@ -48,10 +48,81 @@ async function refuel() {
           blocksBehind: 3,
           expireSeconds: 1200,
         });
-        logDebug("Refuel succes : amount "+oil+' '+fueltype)    
+
+        showMsg("Refuel succes : "+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)
+
+        logDebug("Refuel succes :"+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)    
         getInfos()
         resolve('success');
       }
+    } catch(e) {
+      logError(e.message)     
+      resolve(e.message);
+    }
+  });
+}
+
+/**  Claim intern storage **/
+async function claimToken() {
+  return new Promise(async resolve => {
+    try {
+      if($("#claim_token_amount")[0].value != undefined && ($("#claim_token_type")[0].value != undefined && $("#claim_token_type")[0].value != "0")){
+        console.log( $("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)
+
+        if(!wax.api) {
+          await login()
+          logDebug("Reconnexion");
+        }
+
+        if($("#claim_token_type")[0].value == "CHARM"){
+          //claim charm
+          const claim = await wax.api.transact({
+            actions: [{
+              account: 'iraces.nova',
+              name: 'charms.claim',
+              authorization: [{
+                actor: wax.userAccount,
+                permission: 'active',
+              }],
+              data: {
+                player: wax.userAccount,
+              },
+            }]
+          }, {
+            blocksBehind: 3,
+            expireSeconds: 1200,
+          });
+        }else{
+          //claim oil
+          
+          const claim = await wax.api.transact({
+            actions: [{
+              account: 'iraces.nova',
+              name: 'withdraw',
+              authorization: [{
+                actor: wax.userAccount,
+                permission: 'active',
+              }],
+              data: {
+                owner: wax.userAccount,
+                amount: $("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value,
+              },
+            }]
+          }, {
+            blocksBehind: 3,
+            expireSeconds: 1200,
+          });
+        }
+
+
+        showMsg("Claim succes : "+$("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)
+        logDebug("Refuel succes : "+$("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)    
+        getInfos()
+        resolve('success');
+      }else{
+
+      }
+
     } catch(e) {
       logError(e.message)     
       resolve(e.message);
@@ -102,7 +173,6 @@ async function sign(driver1, driver2, vehicle,league) {
         blocksBehind: 3,
         expireSeconds: 1200,
       });
-
       logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
       resolve('success');
     } catch(e) {
