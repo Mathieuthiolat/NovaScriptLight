@@ -15,6 +15,8 @@
                 $("#login-btn")[0].classList.add("hidden");
                 $("#login-info")[0].classList.remove("hidden");
                 $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
+                $("#set_up_bulk").prop("disabled",false)
+                $("#launch_races").prop("disabled",false)
             }
             else{
                 return false;
@@ -41,6 +43,7 @@
     /****/
 
 function resetTable() {
+    $("#select_all").prop("disabled",true)
     $(".currencie").css("display", "none");;
 
     $("#totalGain").html("0")
@@ -78,7 +81,6 @@ async function getInfos(){
     innerBalance().then((resources)=>{
         if(!resources)
             return;
-        console.log(resources)
         var elements = Array.from($(".innerBalance"))
 
         for (let index = 0; index < resources.length; index++) {
@@ -88,8 +90,6 @@ async function getInfos(){
                 if(resources[index].key == "CHARM")
                     resources[index].value = Math.round((resources[index].value / 1000) * 10) / 10;
                     
-                console.log(resources[index])
-
                 tokenDesc.childNodes[1].title = (resources[index].value)                   
 
                 if(resources[index].value>=1000000)
@@ -305,4 +305,12 @@ function showMsg(message="",type="success"){
         target.removeClass("show")
         target.addClass("fade")
     }, 5000);
+}
+
+function createElementFromHTML(htmlString) {
+    var div = document.createElement('div');
+    div.innerHTML = htmlString.trim();
+  
+    // Change this to div.childNodes to support multiple top-level nodes.
+    return div.firstChild;
 }

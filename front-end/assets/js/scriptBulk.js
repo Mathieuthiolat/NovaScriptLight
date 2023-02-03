@@ -51,7 +51,7 @@ async function refuel() {
 
         showMsg("Refuel succes : "+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)
 
-        logDebug("Refuel succes :"+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)    
+        logDebug("Refuel succes : "+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)    
         getInfos()
         resolve('success');
       }

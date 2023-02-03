@@ -32,3 +32,47 @@ function myFunction() {
 
 }
 load()
+
+
+
+/*
+Exemple of card for listing : 
+
+<div class="col-md-3">
+  <div class="card p-3 mb-2" style="background: #5c5c70;">
+    <div class="d-flex justify-content-between">
+      <div class="ms-2 d-flex flex-row align-items-center">
+        <input type="checkbox">
+        <div class="c-details">
+          <p class="ms-2 mb-0">League : <span>Rookie</span></p> 
+        </div>
+      </div>
+      <div class="badge" style="background: lightgray;height: fit-content;color: #000;">
+        Pending
+      </div>
+    </div>
+    <div class="mt-2 row text-center">
+      <div class="col-4">
+        <img src="https://atomichub-ipfs.com/ipfs/QmbxxSGkZAJqxyFGTNcejD35qimDyYMipgzjdiSYnuHp1L/turtle_uncommon.gif" style="width: 100%;">
+        <br>Name
+      </div>
+      <div class="col-4">
+        <img src="https://atomichub-ipfs.com/ipfs/QmQvcPNeHsfRDqzEjB9BxPnVBZsMhCGnad7jCTHWDcpccw/7_optimus_common.png" style="width: 100px;width: 100%;">
+        <br>Name
+      </div>
+      <div class="col-4">
+        <img src="https://atomichub-ipfs.com/ipfs/QmQvcPNeHsfRDqzEjB9BxPnVBZsMhCGnad7jCTHWDcpccw/7_optimus_common.png" style="width: 100px;width: 100%;">
+        <br>Name
+      </div>
+      <div class="mt-2 col-12">
+        <div>
+          <p class="text1 mb-0">
+            Race Cost : 
+            <span class="text2">XXX Fuel</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+*/

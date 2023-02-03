@@ -36,6 +36,17 @@ a,.nav-tabs .nav-link {
   font-weight: 700;
   color: var(--link);
 }
+button{
+  transition: all 0.2s ease;
+}
+button:active {
+  background: #5c5c70;
+  font-weight: bold;
+  color: var(--link);
+}
+button:hover {
+  color: var(--link);
+}
 .sub-navbar{
   padding: 14px 6px;
 }
@@ -43,7 +54,7 @@ a,.nav-tabs .nav-link {
   border-right: 1px solid var(--color-secondary);
   margin: 0 25px;
 }
-button{
+button,input[type=button]{
   background-color: transparent;
   border: 1px solid var(--color-primary);
   color: var(--color-primary);
@@ -53,6 +64,11 @@ button{
   cursor: pointer;
   margin: 4px auto;
   padding: 8px;
+}
+button:disabled, input[type="button"]:disabled,select:disabled {
+  background-color: #393939;
+  color: #8a8a8a;
+  cursor: no-drop;
 }
 
 #login-btn,#login-info{
@@ -107,3 +123,15 @@ footer{
   font-weight: bold;
 }
 
+.card .assets_details img{
+  width: 100%;
+  max-height: 105px;
+  object-fit: contain;
+}
+.card .assets_details>div.col-4{
+  font-size: 12px;
+  min-height: 160px;
+}
+.card .assets_details .error_msg{
+  margin:0px;
+}

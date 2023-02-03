@@ -33,3 +33,11 @@
 16:39:10 : Unknown action transfer in contract iraces.nova
 16:42:12 : oil is not defined
 16:44:06 : oil is not defined
+13:40:51 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:40:51 : Cannot launch the race : race_card_0- ReferenceError: error is not defined
+13:43:15 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:43:15 : Cannot launch the race : race_card_0- ReferenceError: error is not defined
+13:46:51 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:46:51 : Cannot launch the race : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:49:10 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:49:10 : Cannot launch the race : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
