@@ -2,8 +2,9 @@ const { JsonRpc } = require('eosjs');
 const https = require('https');
 const fetch = require('node-fetch');
 const utils = require('./utils.js');
-const rpc = new JsonRpc('https://api.waxsweden.org', { fetch });
+//const rpc = new JsonRpc('https://api.waxsweden.org', { fetch });
 var waxRpc = "https://atomic.wax.eosrio.io/atomicassets/v1/";
+const rpcList = ["https://api.waxsweden.org","https://wax.eu.eosamsterdam.net"];
 
 var arrAssets = {data : {}};
 
@@ -132,8 +133,9 @@ async function getTemplateInfo(collection_name,template_id) {
 }
 
 
-async function getInnerBalance(user = ""){
+async function getInnerBalance(user = "",rpcKey = ""){
   return new Promise((resolve) => {
+    var rpc = new JsonRpc(rpcList[rpcKey], { fetch });
 
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json

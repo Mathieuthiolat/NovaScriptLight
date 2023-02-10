@@ -12,11 +12,9 @@
         async function checkLogin(){
 
             if(sessionStorage.getItem("userAccount") != null){
-                $("#login-btn")[0].classList.add("hidden");
-                $("#login-info")[0].classList.remove("hidden");
-                $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
                 $("#set_up_bulk").prop("disabled",false)
                 $("#launch_races").prop("disabled",false)
+                return true;
             }
             else{
                 return false;
@@ -35,6 +33,9 @@
                 sessionStorage.setItem('userAccount',userAccount)
                 let pubKeys = wax.pubKeys;
                 let str = 'Account: ' + userAccount
+                $("#login-btn")[0].classList.add("hidden");
+                $("#login-info")[0].classList.remove("hidden");
+                $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
                 checkLogin()
             } catch (e) {
                 utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
@@ -45,34 +46,36 @@
 function resetTable() {
     $("#select_all").prop("disabled",true)
     $(".currencie").css("display", "none");;
-
+    $("#list_card").empty();
     $("#totalGain").html("0")
     $("#totalGainCharm").html("0")
     $("#resultDisplay tbody").remove()
 }
+
 function loop(){
     setInterval(async function() { 
         getInfos()
     }, 60000);
 }
+
 //DBG 
 function logDebug(msg){
     console.log(new Date().toLocaleTimeString("fr-FR")+" DBG : "+msg)
     //Voir si besoin de log dans un fichier externe
 }
 function logError(msg){
-
     msgDetail = new Date().toLocaleTimeString("fr-FR")+" : "+msg
-
     $.ajax({
         url: 'logError/'+msgDetail
     });
+    console.log(msgDetail)
     //Voir si besoin de log dans un fichier externe
 }
 
 async function getInfos(){
     runningAssets().then((usedCars) => {
         laterAssets().then((totalCars) => {
+
             //logDebug("Use car : "+ usedCars.length)
             //logDebug("Total Car : "+totalCars.vehicles.length)
             $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
@@ -98,10 +101,7 @@ async function getInfos(){
                     tokenDesc.childNodes[1].innerHTML = parseFloat((resources[index].value / 1000)).toFixed(1)+"k"      
                 else             
                     tokenDesc.childNodes[1].innerHTML = parseFloat(resources[index].value).toFixed(1)                 
-
             }
-
-
         }
     })
     novaTokens().then((userTokenArray)=>{
@@ -122,11 +122,8 @@ async function getInfos(){
                         tokenDesc.childNodes[1].innerHTML = parseFloat((token[0] / 1000)).toFixed(1)+"k"                   
                     else             
                         tokenDesc.childNodes[1].innerHTML = parseFloat(token[0]).toFixed(1)                 
-    
                 }
-    
             }
-    
         }
     })
 }
@@ -194,13 +191,12 @@ async function runningAssets(){
     let resultRunning;
     try {
         resultRunning = await $.ajax({
-            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
+            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
         });
         return resultRunning;
     } catch (error) {
         console.error(error);
     }
-
 }
 
 //Get list of inner resources
@@ -208,7 +204,7 @@ async function innerBalance(){
     let innerBalance;
     try {
         innerBalance = await $.ajax({
-            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')
+            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
         });
         if(innerBalance.balances != null || innerBalance.balances != undefined)
             return innerBalance.balances;
@@ -219,6 +215,7 @@ async function innerBalance(){
         console.error(error);
     }
 }
+
 //Get list of novarally token
 async function novaTokens(){    
     let userTokenArray;
@@ -226,11 +223,10 @@ async function novaTokens(){
         userTokenArray = await $.ajax({
             type: "POST",
             url: "https://api.waxsweden.org:443/v1/chain/get_currency_balance",
-            data: '{"code":"novarallytok","account": "unrsi.wam","symbol": null}',
+            data: '{"code":"novarallytok","account": "'+sessionStorage.getItem('userAccount')+'","symbol": null}',
             dataType: "json"
         });
         return userTokenArray;
-
     } catch (error) {
         console.error(error);
     }
@@ -266,8 +262,38 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
         
         var assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page=1&limit='+totalAssets+'&order=desc&sort=asset_id');   
 
-        assetsListes.data.forEach(assets => {
-            arrAssets.data[assets.schema.schema_name].push(assets.asset_id)  
+        $.each(assetsListes.data , function( index, assets ) {
+            if(assets.schema.schema_name == "vehicles" || assets.schema.schema_name == "drivers" ){
+                if(assets.schema.schema_name == "vehicles"){
+                    console.log(assets)
+                    arrAssets.data[assets.schema.schema_name].push({
+                        "id":assets.asset_id,
+                        "img":assets.data.img,
+                        "name":assets.data.name,
+                        "league":assets.data.Quality,
+                        "last_free_race":assets.mutable_data["Free Races Counter"],
+                        "free_races_counter":assets.mutable_data["Last Free Race Date"]
+                    })
+                }else{
+                    arrAssets.data[assets.schema.schema_name].push({
+                        "id":assets.asset_id,
+                        "img":assets.data.img,
+                        "name":assets.data.name,
+                        "league":assets.data.Quality
+                    })       
+                }
+                //console.log(arrAssets.data)
+//
+                //arrAssets.data[assets.schema.schema_name][assets.asset_id].id = assets.asset_id
+                //arrAssets.data[assets.schema.schema_name][assets.asset_id].img = assets.data.img
+                //console.log(arrAssets.data)
+//
+                //arrAssets.data[assets.schema.schema_name][assets.asset_id].name =assets.data.name;
+                //arrAssets.data[assets.schema.schema_name][assets.asset_id].league = assets.data.Quality
+
+            }else{
+                arrAssets.data[assets.schema.schema_name].push(assets.asset_id)
+            }
         });
         
         

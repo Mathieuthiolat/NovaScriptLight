@@ -131,7 +131,7 @@ async function claimToken() {
 }
 
 /**  Launch race  **/
-async function sign(driver1, driver2, vehicle,league) {
+async function sign(driver1, driver2, vehicle,league,fuel=false) {
   return new Promise(async resolve => {
     //Get race cost with league & gear
     switch(league){

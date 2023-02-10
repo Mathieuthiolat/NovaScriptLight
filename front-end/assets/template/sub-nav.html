@@ -1,0 +1,151 @@
+<div class="row g-0">
+    <div class="col-sm-12 col-md-4">
+      <div>
+        <ul class="navbar-nav">
+          <li class="nav-item" style="width: max-content;">  
+            <div id="login-btn">
+              <button id="login" onclick=login()>WAX Login</button>
+            </div>
+
+            <div id="login-info" class="hidden">
+              <span>Account : </span>
+              <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
+              <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <ul class="navbar-nav">
+          <li class="nav-item" style="width: max-content;">  
+            Available Cars <span id="carsAvailable">0 / 0</span>
+          </li>
+        </ul>
+      </div>
+    </div>  
+    <div class="col-sm-12 col-md-8 d-flex nav-custom-flex">
+        <div>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <strong>Inner Storage :</strong>
+            </li>
+            <li class="nav-item innerBalance" data-tokenname="CHARM">
+              Charms <span id="inner_charm">0</span>
+            </li>
+            <li class="nav-item innerBalance" data-tokenname="SNAKOIL">
+              SnakOil <span id="inner_oil">0</span>
+            </li>
+            <li class="nav-item innerBalance" data-tokenname="SNAKGAS">
+              SnakGas <span id="inner_gas">0</span>
+            </li>
+            <li class="nav-item innerBalance" data-tokenname="SNAKPOW"> 
+              SnakPow <span id="inner_pow">0</span>
+            </li>
+            <li class="nav-item innerBalance" data-tokenname="SNAKVEN">
+              SnakVen <span id="inner_ven">0</span>
+            </li>
+            <li class="nav-item refuel_btn">
+              <button class="small_button" title="refuel" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">+</button>
+            </li>
+          </ul>            
+        </div>
+        <div>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <strong>In wallet :</strong>
+            </li>
+            <li class="nav-item walletBalance" data-tokenname="CHARM">
+              Charms <span id="inner_charm">0</span>
+            </li>
+            <li class="nav-item walletBalance" data-tokenname="SNAKOIL">
+              SnakOil <span id="wallet_oil">0</span>
+            </li>
+            <li class="nav-item walletBalance" data-tokenname="SNAKGAS">
+              SnakGas <span id="wallet_gas">0</span>
+            </li>
+            <li class="nav-item walletBalance" data-tokenname="SNAKPOW">
+              SnakPow <span id="wallet_pow">0</span>
+            </li>
+            <li class="nav-item walletBalance" data-tokenname="SNAKVEN">
+              SnakVen <span id="wallet_ven">0</span>
+            </li>
+            <li class="nav-item refuel_btn">
+              <button class="small_button" onclick="getInfos()" title="refresh">&#x21bb;</button>
+            </li>
+          </ul>          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-6 offset-6 collapse" id="collapseExample" style="position: absolute;right: 0;z-index: 999;">
+            <div class="card card-body">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="refuel">
+                <button class="nav-link active" id="refuel-tab" data-bs-toggle="tab" data-bs-target="#refuel" type="button" role="tab" aria-controls="refuel" aria-selected="true">Add to inner wallet</button>
+                </li>
+                <li class="nav-item" role="refuel">
+                <button class="nav-link" id="claim-tab" data-bs-toggle="tab" data-bs-target="#claim" type="button" role="tab" aria-controls="claim" aria-selected="false">Claim from inner wallet</button>
+                </li>
+                <button class="small_button" title="refuel" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample" style="position: absolute;right: 20px;top: 10px;">X</button>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="refuel" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Add</span>
+                                <input type="number" class="form-control" placeholder="0.00" id="fuel_amount" name="fuel_amount" required>
+                                <select class="form-select" id="fuel_type" name="fuel_type" required>
+                                <option value="0">Choose...</option>
+                                <option value="SNAKOIL">SnakOil</option>
+                                <option value="SNAKGAS">SnakGas</option>
+                                <option value="SNAKPOW">SnakPow</option>
+                                <option value="SNAKVEN">SnakVen</option>
+                                </select>
+                            </div>           
+                        </div>
+                        <div class="col-12 text-center">
+                            <button class="btn btn-primary" type="submit"  onclick="refuel()">Refuel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="claim" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Claim</span>
+                                <input type="number" class="form-control" placeholder="0.00" id="claim_token_amount" name="claim_token_amount" required>
+                                <select class="form-select" id="claim_token_type" name="claim_token_type" required>
+                                <option value="0">Choose...</option>
+                                <option value="CHARM">Charm's</option>
+                                <option value="SNAKOIL">SnakOil</option>
+                                <option value="SNAKGAS">SnakGas</option>
+                                <option value="SNAKPOW">SnakPow</option>
+                                <option value="SNAKVEN">SnakVen</option>
+                                </select>
+                            </div>    
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;">*note : when claiming Charm's you don't need to select an amout it will claim all the Charm</span>
+                        </div>
+                        <div class="col-12 text-center">
+                            <button class="btn btn-primary" type="submit"  onclick="claimToken()">Claim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  $(document).ready(() => {
+    checkLogin().then((connected)=>{
+      getInfos();
+      if(connected){
+        $("#login-btn")[0].classList.add("hidden");
+        $("#login-info")[0].classList.remove("hidden");
+        $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
+      }
+    })
+  }) 
+</script>

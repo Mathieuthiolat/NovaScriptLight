@@ -13,8 +13,7 @@ body {
 }
 .navbar {
   border-bottom: 1px solid var(--color-secondary);
-  display: flex;
-  flex-flow: row;
+  display: block;
   padding: 6px;
   margin-bottom: 0px;
   background-color: unset !important;
@@ -135,3 +134,39 @@ footer{
 .card .assets_details .error_msg{
   margin:0px;
 }
+
+.card.card-body {
+  background: #272727;
+    background-color: rgb(39, 39, 39);
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-image: none;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    color: var(--color-primary);
+  }
+  .nav-custom-flex{
+    display: flex!important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .nav-custom-flex-right{
+    display: flex!important;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .small_button{
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+    padding: 0;
+  }
+  
+  #global_race_cost{
+    font-size: 12px;
+  }

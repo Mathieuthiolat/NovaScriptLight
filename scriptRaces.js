@@ -2,27 +2,10 @@ const { JsonRpc } = require('eosjs');
 const https = require('https');
 const fetch = require('node-fetch');
 const utils = require('./utils.js');
-const rpc = new JsonRpc('https://api.waxsweden.org', { fetch });
+//const rpc = new JsonRpc('https://api.waxsweden.org', { fetch });
+const rpcList = ["https://api.waxsweden.org","https://wax.eu.eosamsterdam.net"];
 
 var arr = {data : []};
-
-const getRacesOld = async () => {
-  const json = await rpc.get_table_rows({
-    json: true,               // Get the response as json
-    code: 'iraces.nova',      // Contract that we target
-    scope: 'unrsi.wam',         // Account that owns the data
-    table: 'playerraces',        // Table name
-    limit: 500
-  });
-  
-  //Write json file with json as data
-  //utils.storeData(json,"./result/races_rawOld.json");
-
-  //get data from jsonFile
-  //const json = utils.loadData("./races_raw.json")
-
-  return json
-}
 
 async function getRaces(user="unrsi.wam",nbRaces = 10,pageNb = 0) {
   return new Promise((resolve) => {
@@ -75,8 +58,9 @@ function editRaceArray(array){
   return newArr
 }
 
-async function getQueueRaces(){
+async function getQueueRaces(rpcKey){
   return new Promise((resolve) => {
+    var rpc = new JsonRpc(rpcList[rpcKey], { fetch });
 
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json

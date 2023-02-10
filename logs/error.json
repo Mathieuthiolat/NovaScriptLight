@@ -43,3 +43,25 @@
 13:49:10 : Cannot launch the race : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
 15:55:45 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
 16:49:45 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+13:50:55 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+13:51:19 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+14:14:11 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:08:39 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:08:52 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:08:52 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:09:29 : assertion failure with message: Vehicle asset id 1099604520917 has exhausted its free races for today.
+15:09:29 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099604520917 has exhausted its free races for today.
+15:09:36 : assertion failure with message: Vehicle asset id 1099599268610 has exhausted its free races for today.
+15:09:42 : assertion failure with message: Vehicle asset id 1099598251881 has exhausted its free races for today.
+15:09:42 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099598251881 has exhausted its free races for today.
+15:09:36 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099599268610 has exhausted its free races for today.
+16:32:53 : assertion failure with message: The vehicle is already being used
+16:32:53 : Cannot launch the race : assertion failure with message: The vehicle is already being used
+13:49:57 : Unable to open popup window
+13:49:57 : Cannot launch the race : Unable to open popup window
+13:49:58 : Unable to open popup window
+13:49:58 : Cannot launch the race : Unable to open popup window
+13:49:59 : Unable to open popup window
+13:49:59 : Cannot launch the race : Unable to open popup window
+16:19:04 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+16:19:04 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
