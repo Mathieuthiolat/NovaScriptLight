@@ -14,6 +14,7 @@
                 $("#set_up_bulk").prop("disabled",false)
                 $("#launch_races").prop("disabled",false)
                 $(".connected_content").removeClass("hidden");
+                $(".non_connected_content").addClass("hidden");
                 return true;
             }
             else{
