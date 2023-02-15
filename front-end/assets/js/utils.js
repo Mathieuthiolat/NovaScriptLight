@@ -193,7 +193,7 @@ async function runningAssets(){
     let resultRunning;
     try {
         resultRunning = await $.ajax({
-            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
+            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
         });
         return resultRunning;
     } catch (error) {
@@ -206,7 +206,7 @@ async function innerBalance(){
     let innerBalance;
     try {
         innerBalance = await $.ajax({
-            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
+            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')
         });
         if(innerBalance.balances != null || innerBalance.balances != undefined)
             return innerBalance;
