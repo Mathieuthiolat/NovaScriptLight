@@ -7,7 +7,7 @@ const rpcList = ["https://api.waxsweden.org","https://wax.eu.eosamsterdam.net"];
 
 var arr = {data : []};
 
-async function getRaces(user="unrsi.wam",nbRaces = 10,pageNb = 0) {
+async function getRaces(user="",nbRaces = 10,pageNb = 0) {
   return new Promise((resolve) => {
     https.get('https://nr-api.win-win.software/api/v1/races/?currentAccount='+user+'&isCurrentOnly=true&size='+nbRaces+'&page='+pageNb, resp => {
       let data = '';

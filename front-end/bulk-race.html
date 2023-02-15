@@ -51,16 +51,16 @@
 
 
 
-    <div class="container">
+    <div class="container connected_content hidden">
       <div class="row mt-3"> 
-        <div class="col-3" style="display: flex;">
+        <div class="col-ld-3 col-6" style="display: flex;">
           <button id="set_up_bulk" onclick="setUpBulkRace()">Set up bulk</button>
           <button id="launch_races" onclick="loopBulk()">Launch Races</button>
         </div>
         
-        <div class="col-3">
+        <div class="col-ld-3 col-6">
           <div class="row m-0">
-            <div class="col-6" style="font-size: 12px;display: flex;align-items: center;justify-content: space-evenly;">
+            <div class="col-6" style="font-size: 12px;display: flex;flex-direction: column;align-items: center;justify-content: center;">
               <input id="default_selection" type="checkbox">
               <label>Default<br>Selected</label>
             </div>
@@ -69,7 +69,7 @@
             </div>
           </div>       
         </div>
-        <div class="col-3">
+        <div class="col-ld-3 col-6">
           <label>Gear</label>
           <select class="form-select" id="gear" name="gear" style="width: auto;display: inline-block;">
             <option value="0">Free Race</option>
@@ -79,7 +79,7 @@
             <option value="4">4</option>
           </select>        
         </div>
-        <div class="col-3">
+        <div class="col-ld-3 col-6">
           Global Race cost<br>
           <span id="global_race_cost">
           </span>

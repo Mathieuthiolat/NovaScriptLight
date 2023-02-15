@@ -151,3 +151,8 @@
 17:08:05 : Cannot launch the race : You don't have any boost
 17:08:06 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
 17:21:42 : Cannot launch the race : undefined- TypeError: Cannot read properties of undefined (reading 'innerHTML')
+20:52:11 : Cannot launch the race : undefined- TypeError: Cannot read properties of undefined (reading 'innerHTML')
+20:52:21 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+20:52:21 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+20:52:22 : assertion failure with message: Drivers must not be the same.
+20:52:22 : Cannot launch the race : assertion failure with message: Drivers must not be the same.
