@@ -1,0 +1,153 @@
+
+17:17:00 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+17:17:00 : Sign crash : ReferenceError: error is not defined
+17:17:07 : assertion failure with message: Vehicle asset id 1099775233216 has exhausted its free races for today.
+17:17:07 : Sign crash : ReferenceError: error is not defined
+17:17:14 : assertion failure with message: Vehicle asset id 1099620708284 has exhausted its free races for today.
+17:17:14 : Sign crash : ReferenceError: error is not defined
+17:17:27 : Sign crash : ReferenceError: error is not defined
+17:17:27 : assertion failure with message: Vehicle asset id 1099604520917 has exhausted its free races for today.
+17:17:34 : Sign crash : ReferenceError: error is not defined
+17:17:34 : assertion failure with message: Vehicle asset id 1099599268610 has exhausted its free races for today.
+17:17:21 : Sign crash : ReferenceError: error is not defined
+17:17:21 : assertion failure with message: Vehicle asset id 1099615087418 has exhausted its free races for today.
+17:17:41 : Sign crash : ReferenceError: error is not defined
+17:17:41 : assertion failure with message: Vehicle asset id 1099598251881 has exhausted its free races for today.
+17:17:47 : assertion failure with message: Vehicle asset id 1099545256424 has exhausted its free races for today.
+17:17:47 : Sign crash : ReferenceError: error is not defined
+17:17:54 : assertion failure with message: Vehicle asset id 1099545203852 has exhausted its free races for today.
+17:17:54 : Sign crash : ReferenceError: error is not defined
+17:33:06 : oil is not defined
+17:35:13 : oil is not defined
+10:18:41 : oil is not defined
+10:26:53 : oil is not defined
+10:42:38 : Unknown action charms.claim in contract novarallytok
+10:43:14 : oil is not defined
+14:10:30 : Unknown action charms.claim in contract novarallytok
+14:15:59 : Unknown action withdraw in contract novarallytok
+14:17:01 : oil is not defined
+14:17:35 : oil is not defined
+16:34:19 : oil is not defined
+16:38:21 : Unknown action transfer in contract iraces.nova
+16:39:00 : Unknown action transfer in contract iraces.nova
+16:39:10 : Unknown action transfer in contract iraces.nova
+16:42:12 : oil is not defined
+16:44:06 : oil is not defined
+13:40:51 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:40:51 : Cannot launch the race : race_card_0- ReferenceError: error is not defined
+13:43:15 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:43:15 : Cannot launch the race : race_card_0- ReferenceError: error is not defined
+13:46:51 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:46:51 : Cannot launch the race : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:49:10 : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+13:49:10 : Cannot launch the race : assertion failure with message: Wrong asset 1099825713539 schema, expected drivers but got vehicles
+15:55:45 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+16:49:45 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+13:50:55 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+13:51:19 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+14:14:11 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:08:39 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:08:52 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:08:52 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:09:29 : assertion failure with message: Vehicle asset id 1099604520917 has exhausted its free races for today.
+15:09:29 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099604520917 has exhausted its free races for today.
+15:09:36 : assertion failure with message: Vehicle asset id 1099599268610 has exhausted its free races for today.
+15:09:42 : assertion failure with message: Vehicle asset id 1099598251881 has exhausted its free races for today.
+15:09:42 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099598251881 has exhausted its free races for today.
+15:09:36 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099599268610 has exhausted its free races for today.
+16:32:53 : assertion failure with message: The vehicle is already being used
+16:32:53 : Cannot launch the race : assertion failure with message: The vehicle is already being used
+13:49:57 : Unable to open popup window
+13:49:57 : Cannot launch the race : Unable to open popup window
+13:49:58 : Unable to open popup window
+13:49:58 : Cannot launch the race : Unable to open popup window
+13:49:59 : Unable to open popup window
+13:49:59 : Cannot launch the race : Unable to open popup window
+16:19:04 : Cannot launch the race : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+16:19:04 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:21:16 : assertion failure with message: Drivers must not be the same.
+15:21:16 : Cannot launch the race : assertion failure with message: Drivers must not be the same.
+15:21:49 : assertion failure with message: Drivers must not be the same.
+15:21:49 : Cannot launch the race : assertion failure with message: Drivers must not be the same.
+15:22:00 : assertion failure with message: The vehicle is already being used
+15:22:00 : Cannot launch the race : assertion failure with message: The vehicle is already being used
+09:02:35 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+09:14:36 : assertion failure with message: You do not have enough boosts for 1 races.
+09:14:36 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+09:14:37 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+09:15:24 : assertion failure with message: You do not have enough boosts for 1 races.
+09:15:24 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+09:15:25 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+09:16:39 : assertion failure with message: You do not have enough boosts for 1 races.
+09:16:39 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+09:16:40 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+09:22:56 : assertion failure with message: You do not have enough boosts for 1 races.
+09:22:56 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+09:22:57 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+09:23:45 : assertion failure with message: You do not have enough boosts for 1 races.
+09:23:45 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+09:23:46 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:22:54 : Cannot launch the race : race_card_0- TypeError: burnAsset is not a function
+10:22:55 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:37:48 : Expected boolean or number equal to 1 or 0
+10:37:48 : Cannot launch the race : Expected boolean or number equal to 1 or 0
+10:37:49 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:38:30 : Expected boolean or number equal to 1 or 0
+10:38:30 : Cannot launch the race : Expected boolean or number equal to 1 or 0
+10:38:31 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:41:39 : Expected boolean or number equal to 1 or 0
+10:41:39 : Cannot launch the race : Expected boolean or number equal to 1 or 0
+10:41:40 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:42:53 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:43:15 : assertion failure with message: You do not have enough boosts for 1 races.
+10:43:15 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+10:43:16 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:45:22 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:45:42 : assertion failure with message: You do not have enough boosts for 1 races.
+10:45:42 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+10:45:43 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:48:33 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+10:48:43 : assertion failure with message: You do not have enough boosts for 1 races.
+10:48:43 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+10:48:44 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+11:19:50 : Cannot launch the race : undefined
+11:19:51 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+11:20:04 : assertion failure with message: Insufficient funds, required 18000 SNAKGAS, but you have only 6072 SNAKGAS
+11:47:43 : Cannot launch the race : undefined
+11:47:44 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+14:04:21 : assertion failure with message: Drivers must not be the same.
+14:04:21 : Cannot launch the race : assertion failure with message: Drivers must not be the same.
+14:32:53 : myAssets.boost is undefined
+14:32:53 : Cannot launch the race : undefined
+14:32:54 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+14:33:00 : assertion failure with message: The vehicle is already being used
+14:33:31 : myAssets.boost is undefined
+14:33:41 : assertion failure with message: You do not have enough boosts for 1 races.
+14:33:41 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+14:33:42 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:32:54 : Cannot launch the race : [object Promise]
+15:32:55 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:33:09 : assertion failure with message: Vehicle asset id 1099825713539 has exhausted its free races for today.
+15:35:01 : Cannot launch the race : [object Promise]
+15:35:02 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+15:35:34 : myAssets.boost is undefined
+15:35:44 : estimated CPU time (0 us) is not less than the maximum billable CPU time for the transaction (0 us)
+15:35:44 : Cannot launch the race : estimated CPU time (0 us) is not less than the maximum billable CPU time for the transaction (0 us)
+15:35:45 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:00:49 : myAssets.boost is undefined
+17:00:59 : assertion failure with message: You do not have enough boosts for 1 races.
+17:00:59 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+17:01:00 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:04:08 : assertion failure with message: You do not have enough boosts for 1 races.
+17:04:08 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+17:04:09 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:05:04 : assertion failure with message: You do not have enough boosts for 1 races.
+17:05:04 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+17:05:05 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:05:49 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:06:04 : assertion failure with message: You do not have enough boosts for 1 races.
+17:06:04 : Cannot launch the race : assertion failure with message: You do not have enough boosts for 1 races.
+17:06:05 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:08:05 : Cannot launch the race : You don't have any boost
+17:08:06 : Cannot launch the race : undefined- TypeError: $(...)[0] is undefined
+17:21:42 : Cannot launch the race : undefined- TypeError: Cannot read properties of undefined (reading 'innerHTML')

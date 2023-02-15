@@ -54,9 +54,10 @@ app.get('/getAssets/:user_name',function(req,res){
         res.send(assets);      
     })
 });
-app.get('/getAssetsRuning/:user_name',function(req,res){
+app.get('/getAssetsRuning/:user_name/:rpc',function(req,res){
     var user = req.params.user_name
-    racesJS.getQueueRaces().then((assets) => {
+    var rpc = req.params.rpc
+    racesJS.getQueueRaces(rpc).then((assets) => {
         var assetsRunning = "";
         assets.rows.forEach(async races =>{
             if(races.player == user){
@@ -64,6 +65,14 @@ app.get('/getAssetsRuning/:user_name',function(req,res){
             }
         })  
         res.send(assetsRunning);      
+    })
+});
+
+app.get('/getInnerBalance/:user_name/:rpc',function(req,res){
+    var user = req.params.user_name
+    var rpc = req.params.rpc
+    assetsJS.getInnerBalance(user,rpc).then((innerBalance) => {
+        res.send(innerBalance.rows[0]);      
     })
 });
 

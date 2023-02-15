@@ -15,7 +15,7 @@
   const storeData = (data, path) => {
     try {
       //fs.writeFileSync(path, JSON.stringify(data))
-      fs.appendFile(path, data, function (err) {
+      fs.appendFile(path, "\n"+data, function (err) {
         if (err) {
           // append failed
         } else {

@@ -28,75 +28,13 @@
 
 <body>
   <div id="root">
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="./"  class="active">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="./bulk-race">BulkRace</a>
-            </li>
-            <li class="nav-item">
-              Available Cars <span id="carsAvailable">0 / 0</span>
-            </li>
-
-            <!-- Token price
-            <li class="nav-item">
-              CHARM <span id="charmPrice">0,0</span>
-            </li>
-            <li class="nav-item">
-              Boost <span id="boostPrice">0,0</span>
-            </li>
-            <li class="nav-item">
-              SnakOil <span id="oilPrice">0,0</span>
-            </li>
-            <li class="nav-item">
-              SnakGas <span id="gasPrice">0,0</span>
-            </li>
-            <li class="nav-item">
-              SnakPow <span id="powPrice">0,0</span>
-            </li>
-            <li class="nav-item">
-              SnakVen <span id="venPrice">0,0</span>
-            </li>
-            -->
-          </ul>
-        </div>
-      </div>
+    <!-- Main navigation -->
+    <nav id="nav" class="navbar navbar-expand-lg bg-light">
     </nav>
-    <div class="sub-navbar">
-      <div id="login-btn">
-        <button id="login" onclick=login()>WAX Login</button>
-      </div>
-      <div id="login-info" class="hidden">
-        <span>Account : </span>
-        <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
-        <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
-      </div>
-      <span class="spliter"></span>
-      <label>Total Gain/Lost : </label>
-      <span id="totalGain"></span><span class="currencie"> Wax</span>
-      <span id="totalGainCharm"></span><span class="currencie"> Charms</span>
-      
-      <!--
-      <span class="spliter"></span>
-      <span>Current Fuel : </span>
-      <span id="current-boost" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span id="current-snakgas" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span id="current-snakoil" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span id="current-snakpow" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span id="current-snakven" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span class="spliter"></span>
-      <span>Unclaimed fuel : </span>
-      <span id="unclaimed-fuel" style="min-width: 50px;display: inline-block;">NaN</span>
-      <span class="spliter"></span>
-      <span>Other Token : </span>
-      -->
+    <!-- Sub Menu -->
+    <nav id="sub_nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
 
-
-    </div>
     <div style="margin-bottom: 150px;">
       <div style="text-align: center;margin: 15px 0px;">
         <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
@@ -141,7 +79,16 @@
   var tooltipList = tooltipTriggerList.map(function(element){
       return new bootstrap.Tooltip(element);
   });
-  
+
+  // Include nav
+  $(function(){
+      $("#nav").load("./assets/template/navigation.html"); 
+      $("#sub_nav").load("./assets/template/sub-nav.html"); 
+  }); 
+
+</script>
+
+<script>
   var nbRaces = 10;
 
   $(document).ready(() => {

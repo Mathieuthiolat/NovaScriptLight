@@ -25,43 +25,12 @@
 </head>
 <body>
   <div id="root">
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="./">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="./bulk-race" class="active">BulkRace</a>
-            </li>
-            <li class="nav-item">
-              Available Cars <span id="carsAvailable">0 / 0</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <!-- Main navigation -->
+    <nav id="nav" class="navbar navbar-expand-lg bg-light">
     </nav>
-
-    <div class="sub-navbar">
-      <div id="login-btn">
-        <button id="login" onclick=login()>WAX Login</button>
-      </div>
-      <div id="login-info" class="hidden">
-        <span>Account : </span>
-        <span id="account-name" style="min-width: 50px;display: inline-block;font-weight: bold;"></span>
-        <span class="disconectIcon" style="color: red;" onclick=disconect()>&#10008;</span>
-      </div>
-      <span class="spliter"></span>
-      <label>Gear</label>
-      <select id="gear" name="gear" data-bs-toggle="tooltip" data-bs-placement="right" title="Only gear 0 & 1 for the moment to avoid losing to much in case of bugs" >
-        <option value="0">0</option>
-        <option value="1">1</option>
-      </select>
-      <span class="spliter"></span>
-      <button class="hidden" id="btnSetBulk" onclick="setUpBulkRace()">Set up bulk Race</button>
-      <button class="hidden" id="btnLaunchBulk" onclick="launchBulkRace(raceArray)">Launch bulk Race</button>
-    </div>
+    <!-- Sub Menu -->
+    <nav id="sub_nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
     <div>
       <table class="table" id="resultDisplay">
         <thead>
@@ -88,9 +57,16 @@
 <script>
   // Initialize tooltips
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(element){
-        return new bootstrap.Tooltip(element);
-    });
+  var tooltipList = tooltipTriggerList.map(function(element){
+      return new bootstrap.Tooltip(element);
+  });
+
+  // Include nav
+  $(function(){
+      $("#nav").load("./assets/template/navigation.html"); 
+      $("#sub_nav").load("./assets/template/sub-nav.html"); 
+  }); 
+
 </script>
 
 <script type="text/javascript">
@@ -289,18 +265,18 @@ async function launchBulkRace(arrOfRace){
       $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Launched</h3>";
       $('.raceRow')[0].classList.remove("raceRow")
     }else{
-      logError("Cannot launch the race : "+element+"- "+error)
+      logError("Cannot launch the race : "+result)
       //Light up the row on display when the race is launched
       $('.raceRow')[0].style = "background:red";
-      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
+      $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3><br><span>"+result+"</span>";
       $('.raceRow')[0].classList.remove("raceRow")
     }
 
-  } catch (error) {
-    logError("Cannot launch the race : "+element+"- "+error)
+  } catch (e) {
+    logError("Sign crash : "+e)
     //Light up the row on display when the race is launched
     $('.raceRow')[0].style = "background:red";
-    $('.raceRow')[0].childNodes[4].innerHTML = "<h3>Failed</h3>";
+    $('.raceRow')[0].childNodes[4].innerHTML =  "<h3>Failed</h3><br><span>"+e+"</span>";
     $('.raceRow')[0].classList.remove("raceRow")
 
   }
