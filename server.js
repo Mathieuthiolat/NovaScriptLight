@@ -72,7 +72,6 @@ app.get('/getInnerBalance/:user_name/:rpc',function(req,res){
     var user = req.params.user_name
     var rpc = req.params.rpc
     assetsJS.getInnerBalance(user,rpc).then((innerBalance) => {
-
         res.send(innerBalance.rows[0]);      
     })
 });

@@ -76,7 +76,6 @@ async function getInfos(){
     runningAssets().then((usedCars) => {
         laterAssets().then((totalCars) => {
 
-            //logDebug("Use car : "+ usedCars.length)
             //logDebug("Total Car : "+totalCars.vehicles.length)
             $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
         });
@@ -86,6 +85,8 @@ async function getInfos(){
             return;
         var elements = Array.from($(".innerBalance"))
 
+        $(".innerBalance[data-tokenname='BOOST']")[0].childNodes[1].innerHTML = resources.boost_balance;
+        resources = resources.balances;
         for (let index = 0; index < resources.length; index++) {
             var tokenDesc = elements.find(item => item.dataset.tokenname === resources[index].key);
 
@@ -207,7 +208,7 @@ async function innerBalance(){
             url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
         });
         if(innerBalance.balances != null || innerBalance.balances != undefined)
-            return innerBalance.balances;
+            return innerBalance;
         else
             return false;
 
@@ -265,14 +266,13 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
         $.each(assetsListes.data , function( index, assets ) {
             if(assets.schema.schema_name == "vehicles" || assets.schema.schema_name == "drivers" ){
                 if(assets.schema.schema_name == "vehicles"){
-                    console.log(assets)
                     arrAssets.data[assets.schema.schema_name].push({
                         "id":assets.asset_id,
                         "img":assets.data.img,
                         "name":assets.data.name,
                         "league":assets.data.Quality,
-                        "last_free_race":assets.mutable_data["Free Races Counter"],
-                        "free_races_counter":assets.mutable_data["Last Free Race Date"]
+                        "last_free_race":assets.mutable_data["Last Free Race Date"],
+                        "free_races_counter":assets.mutable_data["Free Races Counter"]
                     })
                 }else{
                     arrAssets.data[assets.schema.schema_name].push({
@@ -282,15 +282,6 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
                         "league":assets.data.Quality
                     })       
                 }
-                //console.log(arrAssets.data)
-//
-                //arrAssets.data[assets.schema.schema_name][assets.asset_id].id = assets.asset_id
-                //arrAssets.data[assets.schema.schema_name][assets.asset_id].img = assets.data.img
-                //console.log(arrAssets.data)
-//
-                //arrAssets.data[assets.schema.schema_name][assets.asset_id].name =assets.data.name;
-                //arrAssets.data[assets.schema.schema_name][assets.asset_id].league = assets.data.Quality
-
             }else{
                 arrAssets.data[assets.schema.schema_name].push(assets.asset_id)
             }

@@ -67,7 +67,6 @@ async function claimToken() {
   return new Promise(async resolve => {
     try {
       if($("#claim_token_amount")[0].value != undefined && ($("#claim_token_type")[0].value != undefined && $("#claim_token_type")[0].value != "0")){
-        console.log( $("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)
 
         if(!wax.api) {
           await login()
@@ -130,8 +129,59 @@ async function claimToken() {
   });
 }
 
+/**  Burn assets  **/
+async function burnAsset(asset_owner = sessionStorage.getItem('userAccount'), asset_id) {
+  return new Promise(async resolve => {
+    //Get race cost with league & gear
+    console.log(myAssets.boost)
+    if($(".innerBalance[data-tokenname='BOOST']")[0].childNodes[1].innerHTML > 0){
+      logDebug("Use inner boost ")    
+      resolve('success');
+    }else if(myAssets.boost != undefined){
+      try {
+        var boost_id = myAssets.boost[0]
+        myAssets.boost.splice(0,1)
+        if(!wax.api) {
+          await login()
+          logDebug("Reconnexion");
+        }
+        //logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
+        //Send race
+        const result = await wax.api.transact({
+        actions: [{
+            account: 'atomicassets',
+            name: 'burnasset',
+            authorization: [{
+            actor: asset_owner,
+            permission: 'active',
+            }],
+            data: {
+              asset_owner: asset_owner,
+              asset_id: boost_id,   
+            },
+        }]
+        }, {
+          blocksBehind: 3,
+          expireSeconds: 1200,
+        });
+        logDebug("Assets burn succes "+boost_id)    
+        resolve('success');
+      } catch(e) {
+        logError(e.message)     
+        resolve(e.message);
+      }
+    }else{
+      logDebug("Error : no boost")    
+      resolve('You don\'t have any boost');
+    }
+
+
+    
+  });
+}
+
 /**  Launch race  **/
-async function sign(driver1, driver2, vehicle,league,fuel=false) {
+async function sign(driver1, driver2, vehicle,league,boost=false, user = sessionStorage.getItem('userAccount') ) {
   return new Promise(async resolve => {
     //Get race cost with league & gear
     switch(league){
@@ -141,14 +191,14 @@ async function sign(driver1, driver2, vehicle,league,fuel=false) {
       case "master": fuel = "SNAKVEN"; break;
     }
 
-
     try {
+
       if(!wax.api) {
         await login()
         logDebug("Reconnexion");
       }
       var gear = $("#gear").val() ?? 0
-
+      console.log(boost)
       //logDebug("Send "+JSON.stringify(transfer.transaction_id, null, 2))
       //Send race
       const result = await wax.api.transact({
@@ -156,7 +206,7 @@ async function sign(driver1, driver2, vehicle,league,fuel=false) {
           account: 'iraces.nova',
           name: 'join',
           authorization: [{
-          actor: 'unrsi.wam',
+          actor: user,
           permission: 'active',
           }],
           data: {
@@ -165,7 +215,7 @@ async function sign(driver1, driver2, vehicle,league,fuel=false) {
             gear_id: gear,
             player: wax.userAccount,
             races_number: 1,
-            use_boost: false,
+            use_boost: boost,
             vehicle_asset_id: vehicle,    
           },
       }]
@@ -174,11 +224,11 @@ async function sign(driver1, driver2, vehicle,league,fuel=false) {
         expireSeconds: 1200,
       });
       logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
+      getInfos()
       resolve('success');
     } catch(e) {
       logError(e.message)     
       resolve(e.message);
-
     }
     
   });

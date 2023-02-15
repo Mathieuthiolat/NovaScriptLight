@@ -4,38 +4,38 @@
   <title>NovaRally Helper - Bulk Race</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css">
-
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src='./assets/js/waxjs.js'></script>
   <!-- Matomo -->
   <script>
-    var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
       var u="https://novahelperprofreakstech.matomo.cloud/";
       _paq.push(['setTrackerUrl', u+'matomo.php']);
       _paq.push(['setSiteId', '1']);
       var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
       g.async=true; g.src='//cdn.matomo.cloud/novahelperprofreakstech.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-    
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  })();
+  
+      // Initialize tooltips
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       var tooltipList = tooltipTriggerList.map(function(element){
           return new bootstrap.Tooltip(element);
       });
-    // Include nav
-    $(function(){
-        $("#nav").load("./assets/template/navigation.html"); 
-        $("#sub_nav").load("./assets/template/sub-nav.html"); 
-    }); 
-
+  
+      // Include nav
+      $(function(){
+          $("#nav").load("./assets/template/navigation.html"); 
+          $("#sub_nav").load("./assets/template/sub-nav.html"); 
+      }); 
   </script>
   <!-- End Matomo Code -->
 </head>
@@ -128,10 +128,10 @@
 
 function selectAll(){
   if($("#select_all")[0].innerHTML == "Select All"){
-    $("#list_card input").prop( "checked", true );
+    $("#list_card input[name='launch']").prop( "checked", true );
     $("#select_all")[0].innerHTML = "Remove All"
   }else{
-    $("#list_card input").prop( "checked", false );
+    $("#list_card input[name='launch']").prop( "checked", false );
     $("#select_all")[0].innerHTML = "Select All"
   }
   changeRacePrice()
@@ -167,32 +167,33 @@ function getKeyByValue(object, value) {
 }
 
 async function getRunningAssets(assets){
-  runningAssets().then((assetsToRemove)=>{
-    if(assetsToRemove+"" != ""){
-      assetsToRemove.forEach(element => {
-          var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
-          assets.vehicles.splice(indexVehicles,1)
-          
-          var indexDrivers1 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver1_asset_id);
-          assets.drivers.splice(indexDrivers1,1)
+  return new Promise(async resolve => {
+    runningAssets().then((assetsToRemove)=>{
+      if(assetsToRemove+"" != ""){
+        assetsToRemove.forEach(element => {
+            var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
+            assets.vehicles.splice(indexVehicles,1)
+            
+            var indexDrivers1 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver1_asset_id);
+            assets.drivers.splice(indexDrivers1,1)
 
-          var indexDrivers2 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver2_asset_id);
-          assets.drivers.splice(indexDrivers2,1)
-      });
-    }
-    return assets;
-  })
+            var indexDrivers2 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver2_asset_id);
+            assets.drivers.splice(indexDrivers2,1)
+        });
+      }
+      resolve(assets);
+    })
+  });
 }
 
 async function randomRacesArray(assetsListe){
   return new Promise(async resolve => {
+    resetTable()
     var thisAssetsListe = assetsListe;
     raceArray = [];
-
-    resetTable()
     //Get driver + 2 random asset that are not the same name 
     //Get id + name + img + league 
-    var nbVechicles = assets.vehicles.length;
+    var nbVechicles = thisAssetsListe.vehicles.length;
     for(i=0;i<nbVechicles; i++){
       try {
         var tmpRace = {vehicle : {},driver1 : {},driver2 : {},league : {}};
@@ -202,7 +203,7 @@ async function randomRacesArray(assetsListe){
         //Compare the two if timeFreerace is before than the previous reset -> Run 
                           // Else if free race count is lower than 3 -> Run 
                           // Else -> no more free race
-        var timeFreeraceDateRaw =  new Date(thisAssetsListe.vehicles[i].mutable_data['Last Free Race Date']*1000)
+        var timeFreeraceDateRaw =  new Date(thisAssetsListe.vehicles[i].last_free_race*1000)
         var rawDate = new Date()
         var previousResetRaw = rawDate;
         previousResetRaw.setHours(0)
@@ -210,7 +211,7 @@ async function randomRacesArray(assetsListe){
         previousResetRaw.setSeconds(0)
         previousResetRaw.setMilliseconds(0)
 
-        var freeRace = thisAssetsListe.vehicles[i].mutable_data['Free Races Counter'];
+        var freeRace = thisAssetsListe.vehicles[i].free_races_counter;
         if(timeFreeraceDateRaw.getTime() <= previousResetRaw.getTime()){
           freeRace = 0;
         }       
@@ -219,16 +220,21 @@ async function randomRacesArray(assetsListe){
         tmpRace.vehicle.name = thisAssetsListe.vehicles[i].name;
         tmpRace.vehicle.league = thisAssetsListe.vehicles[i].league;
         tmpRace.vehicle.img = thisAssetsListe.vehicles[i].img;
+        tmpRace.vehicle.free_races_counter = freeRace;
 
+        
+        driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+        var driver1 = thisAssetsListe.drivers[driverNumber];
+        thisAssetsListe.drivers.splice(driverNumber,1)
 
-
-        var driver1 = await getRandomDriver(thisAssetsListe.drivers);
         tmpRace.driver1.id = driver1.id;
         tmpRace.driver1.name = driver1.name;
         tmpRace.driver1.league = driver1.league;
         tmpRace.driver1.img = driver1.img;
         
-        var driver2 = await getRandomDriver(thisAssetsListe.drivers);
+        driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+        var driver2 = thisAssetsListe.drivers[driverNumber];
+        thisAssetsListe.drivers.splice(driverNumber,1)
 
         tmpRace.driver2.id = driver2.id;
         tmpRace.driver2.name = driver2.name;
@@ -245,7 +251,7 @@ async function randomRacesArray(assetsListe){
         raceArray.push(tmpRace)
 
       } catch (error) {
-        logDebug("skiped one vehicle "+assets.vehicles[i]+" - "+error) 
+        console.log(error) 
       }
     }
     $("#loader")[0].classList.add("hidden");
@@ -256,32 +262,7 @@ async function randomRacesArray(assetsListe){
     resolve('resolved');
   });
 }
-async function getRandomDriver(driverList,firstDriver = ""){
 
-  var driverNumber = Math.floor(Math.random()*(driverList.length-1));
-
-  var returnDriver = driverList[driverNumber];
-  thisAssetsListe.drivers.splice(driverNumber,1)
-
-  return returnDriver
-
-
-  /*if(firstDriver != ""){
-    //Previous driver name
-     driver2 = await later(driverList[driverNumber])
-     if(driver2.data.name != undefined && driver2.data.name !=  firstDriver.name){
-        myAssets.drivers.splice(driverNumber,1)
-        return driver2
-  
-      }else{
-        getRandomDriver(driverList,firstDriver)
-      } 
-  }else{
-    returnDriver = await later(driverList[driverNumber]);
-    myAssets.drivers.splice(driverNumber,1)
-    return returnDriver
-  }*/
-}
 
 async function sortDisplayRaceArray(races){
 
@@ -315,11 +296,11 @@ async function sortDisplayRaceArray(races){
     }else{
       newCard = newCard.replace("[RACE_COST]",race_cost_oil+" "+fuel)
     }
-    
 
     newCard = newCard.replace("[CAR_IMG]",element.vehicle.img)
     newCard = newCard.replace("[CAR_NAME]",element.vehicle.name)
     newCard = newCard.replace("[CAR_ID]",element.vehicle.id)
+    newCard = newCard.replace("[FREE_RACE_COUNT]",element.vehicle.free_races_counter)
 
     newCard = newCard.replace("[DRIVER_IMG]",element.driver1.img)
     newCard = newCard.replace("[DRIVER_NAME]",element.driver1.name)
@@ -335,13 +316,15 @@ async function sortDisplayRaceArray(races){
       row.childNodes[1].childNodes[1].childNodes[1].childNodes[1].checked = true
       if($("#gear").val() != "0"){
         globalRaceCost[fuel] += race_cost_oil;
+      }else{
+        $(".free_race_count").removeClass("hidden")
       }
     }
 
     $("#list_card").append(row);
     i++;
   });
-  console.log(globalRaceCost)
+
   displayGlobalRacePrice(globalRaceCost)
 }
 
@@ -357,9 +340,11 @@ function changeRacePrice(){
   globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
 
   
-  Array.from($("#list_card").parent().find(':checkbox:checked')).forEach(element => {
-    var div = element.parentElement.parentElement.parentElement;
-    var id = div.id
+  Array.from($('[id^=race_card]')).forEach(element => {
+    var id = element.id
+    
+    var ischecked = $("#"+id+" [name='launch']")[0].checked
+    console.log(id)
     var league = $("#"+id+" .league_details span")[0].innerHTML;
     var fuel;
     switch(league){
@@ -371,10 +356,15 @@ function changeRacePrice(){
     var race_cost_oil = OilCost[''+league+''][$("#gear").val()-1]
 
     if($("#gear").val() == "0"){
+      $(".free_race_count").removeClass("hidden")
+
       $("#"+id+" .race_price")[0].innerHTML = "Free Race"
     }else{
+      $(".free_race_count").addClass("hidden")
+
       $("#"+id+" .race_price")[0].innerHTML = race_cost_oil+" "+fuel
-      globalRaceCost[fuel] += race_cost_oil;
+      if(ischecked)
+        globalRaceCost[fuel] += race_cost_oil;
     }
   });
   displayGlobalRacePrice(globalRaceCost)
@@ -388,14 +378,14 @@ function displayGlobalRacePrice(arrCost){
   $.each(arr , function( index, value ) {
     if(value !=0 ){
       var oilLabel = "";
-      console.log(index+" "+value)
+
       switch(index){
         case 0: oilLabel = "SnakOil" ;break
         case 1: oilLabel = "SnakGas" ;break
         case 2: oilLabel = "SnakPow" ;break
         case 3: oilLabel = "SnakVen" ;break
       }
-      console.log(oilLabel)
+
       $("#global_race_cost").append(oilLabel+" "+value+"<br>")
     }
   });
@@ -403,7 +393,7 @@ function displayGlobalRacePrice(arrCost){
 
 //Au check d'un case on calcul ajout sa valeur au cost preview total
 $( ".league_details input:checkbox" ).change(function() {
- console.log("check")
+ //console.log("check")
 });
 //Lorsque l'on check toute les case 
 
@@ -419,15 +409,6 @@ async function loopBulk(){
 }
 
 async function launchBulkRace(arrOfRace){
-  //League =>  $("#race_card_0 .league_details span")[0].innerHTML
-
-  //assets list : 
-  //var getChild = $("#race_card_0 .assets_details").children();
-  //getChild.each(function(i,v){
-  //  console.log(($(v).data('id')))
-  //})
-
-
   //Get first row & first race in the array
   element = arrOfRace[0];
 
@@ -437,23 +418,38 @@ async function launchBulkRace(arrOfRace){
     var car_id = $("#"+element+" .assets_details").children()[0].dataset['id']
     var driver_id = $("#"+element+" .assets_details").children()[1].dataset['id']
     var copilote_id = $("#"+element+" .assets_details").children()[2].dataset['id']
-    
+    var boost = $("#"+element+" [name='fuel']")[0].checked;
     //var result = await sign(element.driver1.id, element.driver2.id,element.vehicle.id,element.league.toLowerCase())    
-    var result = await sign(driver_id,copilote_id,car_id,league.toLowerCase())    
+    //If boost = true => Burn assets
+    var result;
+    if(boost){
+      await burnAsset(sessionStorage.getItem('userAccount')).then(async(assetburn)=>{
+        if(assetburn == "success"){
+          result = await sign(driver_id,copilote_id,car_id,league.toLowerCase(),boost)    
+        }else{
+          result = assetburn;
+        }
+      })  
+    }else{
+      result = await sign(driver_id,copilote_id,car_id,league.toLowerCase(),false)    
+    }
+    console.log("la")
+
+    $("#"+element+" .badge").removeClass("bg-success")
+    $("#"+element+" .badge").removeClass("bg-danger")
+    $("#"+element+" .error_msg")[0].innerHTML = "";
+
     if(result == "success"){
       //Light up the row on display when the race is launched
-
       $("#"+element+" .badge")[0].innerHTML = "Launched";
       $("#"+element+" .badge").addClass("bg-success")
 
     }else{
       logError("Cannot launch the race : "+result)
-      //Light up the row on display when the race is launched
+      //Light up the row on display when the race is launched.league_details span
       $("#"+element+" .badge")[0].innerHTML = "Failed";
       $("#"+element+" .badge").addClass("bg-danger")
-      console.log(result)
       $("#"+element+" .error_msg")[0].innerHTML = result
-
     }
 
   } catch (error) {
@@ -461,7 +457,6 @@ async function launchBulkRace(arrOfRace){
     //Light up the row on display when the race is launched
     $("#"+element+" .badge")[0].innerHTML = "Failed";
     $("#"+element+" .badge").addClass("bg-danger")
-    console.log(error)
     $("#"+element+" .error_msg")[0].innerHTML = error
 
   }

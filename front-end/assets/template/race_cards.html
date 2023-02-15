@@ -2,13 +2,21 @@
     <div id="race_card_[CARD_ID]" class="card p-3 mb-2" style="background: #5c5c70;">
       <div class="d-flex justify-content-between league_details">
         <div class="ms-2 d-flex flex-row align-items-center">
-          <input class="" type="checkbox">
+          <input class="" type="checkbox" name="launch">
           <div class="c-details">
             <p class="ms-2 mb-0">League : <span>[LEAGUE]</span></p> 
           </div>
         </div>
         <div id="card_status" class="badge rounded-pill" style="background: lightgray;height: fit-content;color: #000;">
           [STATUS]
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="ms-2">
+          <div class="c-details">
+            <input class="" type="checkbox" name="fuel">
+            <label>Use boost</label> 
+          </div>
         </div>
       </div>
       <div class="mt-2 row text-center assets_details">
@@ -26,6 +34,7 @@
         </div>
         <div class="mt-2 col-12">
           <div>
+            <p class="free_race_count hidden mb-0" style="font-size: 12px;">[FREE_RACE_COUNT]/3</p>
             <p class="text1 mb-0">
               Race Cost : 
               <span class="race_price text2">[RACE_COST]</span>
