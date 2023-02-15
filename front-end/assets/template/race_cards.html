@@ -1,51 +1,478 @@
-<div class="col-md-3 mt-2">
-    <div id="race_card_[CARD_ID]" class="card p-3 mb-2" style="background: #5c5c70;">
-      <div class="d-flex justify-content-between league_details">
-        <div class="ms-2 d-flex flex-row align-items-center">
-          <input class="" type="checkbox" name="launch">
-          <div class="c-details">
-            <p class="ms-2 mb-0">League : <span>[LEAGUE]</span></p> 
-          </div>
+<html>
+
+<head>
+  <title>NovaRally Helper - Bulk Race</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src='./assets/js/waxjs.js'></script>
+  <!-- Matomo -->
+  <script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+      var u="https://novahelperprofreakstech.matomo.cloud/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src='//cdn.matomo.cloud/novahelperprofreakstech.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+  
+      // Initialize tooltips
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function(element){
+          return new bootstrap.Tooltip(element);
+      });
+  
+      // Include nav
+      $(function(){
+          $("#nav").load("./assets/template/navigation.html"); 
+          $("#sub_nav").load("./assets/template/sub-nav.html"); 
+      }); 
+  </script>
+  <!-- End Matomo Code -->
+</head>
+
+<body>
+  <div id="root">
+    <!-- Main navigation -->
+    <nav id="nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
+    <!-- Sub Menu -->
+    <nav id="sub_nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
+
+
+
+    <div class="container">
+      <div class="row mt-3"> 
+        <div class="col-3" style="display: flex;">
+          <button id="set_up_bulk" onclick="setUpBulkRace()">Set up bulk</button>
+          <button id="launch_races" onclick="loopBulk()">Launch Races</button>
         </div>
-        <div id="card_status" class="badge rounded-pill" style="background: lightgray;height: fit-content;color: #000;">
-          [STATUS]
+        
+        <div class="col-3">
+          <div class="row m-0">
+            <div class="col-6" style="font-size: 12px;display: flex;align-items: center;justify-content: space-evenly;">
+              <input id="default_selection" type="checkbox">
+              <label>Default<br>Selected</label>
+            </div>
+            <div class="col-6">
+              <button id="select_all" onclick="selectAll()" disabled="">Select All</button>
+            </div>
+          </div>       
         </div>
-      </div>
-      <div class="d-flex justify-content-between">
-        <div class="ms-2">
-          <div class="c-details">
-            <input class="" type="checkbox" name="fuel">
-            <label>Use boost</label> 
-          </div>
+        <div class="col-3">
+          <label>Gear</label>
+          <select class="form-select" id="gear" name="gear" style="width: auto;display: inline-block;">
+            <option value="0">Free Race</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>        
         </div>
-      </div>
-      <div class="mt-2 row text-center assets_details">
-        <div class="col-4" data-id="[CAR_ID]">
-          <img src="https://atomichub-ipfs.com/ipfs/[CAR_IMG]">
-          <br>[CAR_NAME]
-        </div>
-        <div class="col-4" data-id="[DRIVER_ID]">
-          <img src="https://atomichub-ipfs.com/ipfs/[DRIVER_IMG]">
-          <br>[DRIVER_NAME]
-        </div>
-        <div class="col-4" data-id="[COPILOTE_ID]">
-          <img src="https://atomichub-ipfs.com/ipfs/[COPILOTE_IMG]">
-          <br>[COPILOTE_NAME]
-        </div>
-        <div class="mt-2 col-12">
-          <div>
-            <p class="free_race_count hidden mb-0" style="font-size: 12px;">[FREE_RACE_COUNT]/3</p>
-            <p class="text1 mb-0">
-              Race Cost : 
-              <span class="race_price text2">[RACE_COST]</span>
-            </p>
-          </div>
+        <div class="col-3">
+          Global Race cost<br>
+          <span id="global_race_cost">
+          </span>
         </div>
         <div class="col-12">
-          <p class="error_msg">
+          <div id="list_card" class="row">
 
-          </p>
-        </div>
+          </div>
+        </div>        
       </div>
     </div>
+    <div id="loader" class="hidden">
+      <img src="./assets/medias/step-loader.gif" alt="loader">
+    </div>
+
   </div>
+
+</body>
+<script type="text/javascript" src="./assets/js/utils.js"></script>
+<script type="text/javascript" src='./assets/js/scriptBulk.js'></script>
+<script type="module" src=" /node/script-table"></script>
+
+<script type="text/javascript">
+  var arr = {}; 
+  var myAssets = {};
+  var runningAssetsList = {};
+  var raceArray = [];
+  var globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
+  var gearValue;
+  var cardTemplate = "";
+
+  $(document).ready(() => {
+    resetTable()
+
+    if(sessionStorage.getItem('userAccount') != null){
+      //getInfos()
+      //loop()
+    }
+    getTokensPrice()
+    
+    if(checkLogin()){
+      if($("#btnSetBulk")[0]!= undefined)
+        $("#btnSetBulk")[0].classList.remove("hidden");
+    }
+  });
+
+function selectAll(){
+  if($("#select_all")[0].innerHTML == "Select All"){
+    $("#list_card input[name='launch']").prop( "checked", true );
+    $("#select_all")[0].innerHTML = "Remove All"
+  }else{
+    $("#list_card input[name='launch']").prop( "checked", false );
+    $("#select_all")[0].innerHTML = "Select All"
+  }
+  changeRacePrice()
+}
+
+function setUpBulkRace(){
+  resetTable()
+  //resetSelection
+  raceArray = []
+  globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
+
+  $("#select_all")[0].innerHTML = "Select All";
+  $("#loader")[0].classList.remove("hidden");
+  
+  //GET all assets 
+  laterAssets().then((assetsList) => {
+    myAssets = assetsList
+    //Get assets that are being used and remove them
+    getRunningAssets(myAssets).then((assetClean)=>{
+      //Create Array of bulk race from All assets availible
+      randomRacesArray(assetClean).then(()=>{
+        logDebug("Array created")
+        $("#select_all").prop("disabled",false)
+        $("#launch_races").prop("disabled",false)
+      })
+
+    })
+  })
+}
+
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
+async function getRunningAssets(assets){
+  return new Promise(async resolve => {
+    runningAssets().then((assetsToRemove)=>{
+      if(assetsToRemove+"" != ""){
+        assetsToRemove.forEach(element => {
+            var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
+            assets.vehicles.splice(indexVehicles,1)
+            
+            var indexDrivers1 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver1_asset_id);
+            assets.drivers.splice(indexDrivers1,1)
+
+            var indexDrivers2 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver2_asset_id);
+            assets.drivers.splice(indexDrivers2,1)
+        });
+      }
+      resolve(assets);
+    })
+  });
+}
+
+async function randomRacesArray(assetsListe){
+  return new Promise(async resolve => {
+    resetTable()
+    var thisAssetsListe = assetsListe;
+    raceArray = [];
+    //Get driver + 2 random asset that are not the same name 
+    //Get id + name + img + league 
+    var nbVechicles = thisAssetsListe.vehicles.length;
+    for(i=0;i<nbVechicles; i++){
+      try {
+        var tmpRace = {vehicle : {},driver1 : {},driver2 : {},league : {}};
+
+        //Get last time freerace 02/12/2022 15:25:58
+        //Get date now UTC 05/12/2022 09:47:45 -> get previous day at 00:00 => 04/12/2022 00:00:00 = previouse reset
+        //Compare the two if timeFreerace is before than the previous reset -> Run 
+                          // Else if free race count is lower than 3 -> Run 
+                          // Else -> no more free race
+        var timeFreeraceDateRaw =  new Date(thisAssetsListe.vehicles[i].last_free_race*1000)
+        var rawDate = new Date()
+        var previousResetRaw = rawDate;
+        previousResetRaw.setHours(0)
+        previousResetRaw.setMinutes(0)
+        previousResetRaw.setSeconds(0)
+        previousResetRaw.setMilliseconds(0)
+
+        var freeRace = thisAssetsListe.vehicles[i].free_races_counter;
+        if(timeFreeraceDateRaw.getTime() <= previousResetRaw.getTime()){
+          freeRace = 0;
+        }       
+
+        tmpRace.vehicle.id = thisAssetsListe.vehicles[i].id;
+        tmpRace.vehicle.name = thisAssetsListe.vehicles[i].name;
+        tmpRace.vehicle.league = thisAssetsListe.vehicles[i].league;
+        tmpRace.vehicle.img = thisAssetsListe.vehicles[i].img;
+        tmpRace.vehicle.free_races_counter = freeRace;
+
+        
+        driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+        var driver1 = thisAssetsListe.drivers[driverNumber];
+        thisAssetsListe.drivers.splice(driverNumber,1)
+
+        tmpRace.driver1.id = driver1.id;
+        tmpRace.driver1.name = driver1.name;
+        tmpRace.driver1.league = driver1.league;
+        tmpRace.driver1.img = driver1.img;
+        
+        driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+        var driver2 = thisAssetsListe.drivers[driverNumber];
+        thisAssetsListe.drivers.splice(driverNumber,1)
+
+        tmpRace.driver2.id = driver2.id;
+        tmpRace.driver2.name = driver2.name;
+        tmpRace.driver2.league = driver2.league;
+        tmpRace.driver2.img = driver2.img;
+
+        if(tmpRace.driver1.league == tmpRace.driver2.league && tmpRace.driver2.league == tmpRace.vehicle.league){
+          tmpRace.league = tmpRace.vehicle.league.toLowerCase();
+        }
+        else{
+          tmpRace.league = "rookie";
+        }
+
+        raceArray.push(tmpRace)
+
+      } catch (error) {
+        console.log(error) 
+      }
+    }
+    $("#loader")[0].classList.add("hidden");
+    //$("#btnLaunchBulk")[0].classList.remove("hidden");
+    //$("#btnSetBulk")[0].innerHTML = "Change bulk selection";
+
+    sortDisplayRaceArray(raceArray)
+    resolve('resolved');
+  });
+}
+
+
+async function sortDisplayRaceArray(races){
+
+  await $.get("./assets/template/race_cards.html", function(html_string){
+      cardTemplate =  html_string
+  })
+
+  races.sort(function(a, b) {
+    var x = a.league.toLowerCase(), y = b.league.toLowerCase();
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
+  var i = 0;
+
+  races.forEach(element => {
+    var newCard = cardTemplate;
+
+    newCard = newCard.replace("[CARD_ID]",i)
+    newCard = newCard.replace("[LEAGUE]",element.league)
+    newCard = newCard.replace("[STATUS]","Pending")
+    var fuel;
+    switch(element.league){
+      case "rookie": fuel = "SNAKOIL"; break;
+      case "intermediate": fuel = "SNAKGAS"; break;
+      case "veteran": fuel = "SNAKPOW"; break;
+      case "master": fuel = "SNAKVEN"; break;
+    }
+    var race_cost_oil = OilCost[''+element.league+''][$("#gear").val()-1]
+
+    if($("#gear").val() == "0"){
+      newCard = newCard.replace("[RACE_COST]","Free Race")
+    }else{
+      newCard = newCard.replace("[RACE_COST]",race_cost_oil+" "+fuel)
+    }
+
+    newCard = newCard.replace("[CAR_IMG]",element.vehicle.img)
+    newCard = newCard.replace("[CAR_NAME]",element.vehicle.name)
+    newCard = newCard.replace("[CAR_ID]",element.vehicle.id)
+    newCard = newCard.replace("[FREE_RACE_COUNT]",element.vehicle.free_races_counter)
+
+    newCard = newCard.replace("[DRIVER_IMG]",element.driver1.img)
+    newCard = newCard.replace("[DRIVER_NAME]",element.driver1.name)
+    newCard = newCard.replace("[DRIVER_ID]",element.driver1.id)
+    
+    newCard = newCard.replace("[COPILOTE_IMG]",element.driver2.img)
+    newCard = newCard.replace("[COPILOTE_NAME]",element.driver2.name)
+    newCard = newCard.replace("[COPILOTE_ID]",element.driver2.id)
+    
+    var row = createElementFromHTML(newCard);   
+    
+    if($("#default_selection")[0].checked){
+      row.childNodes[1].childNodes[1].childNodes[1].childNodes[1].checked = true
+      if($("#gear").val() != "0"){
+        globalRaceCost[fuel] += race_cost_oil;
+      }else{
+        $(".free_race_count").removeClass("hidden")
+      }
+    }
+
+    $("#list_card").append(row);
+    i++;
+  });
+
+  displayGlobalRacePrice(globalRaceCost)
+}
+
+
+
+//Changement de gear => on recalcule le cost des toute les races 1/1
+$( "#gear" ).change(function() {
+  $("#gear").prop("disabled",true)
+  changeRacePrice();
+});
+
+function changeRacePrice(){
+  globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
+
+  
+  Array.from($('[id^=race_card]')).forEach(element => {
+    var id = element.id
+    
+    var ischecked = $("#"+id+" [name='launch']")[0].checked
+    console.log(id)
+    var league = $("#"+id+" .league_details span")[0].innerHTML;
+    var fuel;
+    switch(league){
+      case "rookie": fuel = "SNAKOIL"; break;
+      case "intermediate": fuel = "SNAKGAS"; break;
+      case "veteran": fuel = "SNAKPOW"; break;
+      case "master": fuel = "SNAKVEN"; break;
+    }
+    var race_cost_oil = OilCost[''+league+''][$("#gear").val()-1]
+
+    if($("#gear").val() == "0"){
+      $(".free_race_count").removeClass("hidden")
+
+      $("#"+id+" .race_price")[0].innerHTML = "Free Race"
+    }else{
+      $(".free_race_count").addClass("hidden")
+
+      $("#"+id+" .race_price")[0].innerHTML = race_cost_oil+" "+fuel
+      if(ischecked)
+        globalRaceCost[fuel] += race_cost_oil;
+    }
+  });
+  displayGlobalRacePrice(globalRaceCost)
+  $("#gear").prop("disabled",false)
+}
+
+function displayGlobalRacePrice(arrCost){
+  var arr = Object.keys(arrCost).map(function (key) { return arrCost[key]; }); 
+  $("#global_race_cost")[0].innerHTML = ""
+
+  $.each(arr , function( index, value ) {
+    if(value !=0 ){
+      var oilLabel = "";
+
+      switch(index){
+        case 0: oilLabel = "SnakOil" ;break
+        case 1: oilLabel = "SnakGas" ;break
+        case 2: oilLabel = "SnakPow" ;break
+        case 3: oilLabel = "SnakVen" ;break
+      }
+
+      $("#global_race_cost").append(oilLabel+" "+value+"<br>")
+    }
+  });
+}
+
+//Au check d'un case on calcul ajout sa valeur au cost preview total
+$( ".league_details input:checkbox" ).change(function() {
+ //console.log("check")
+});
+//Lorsque l'on check toute les case 
+
+
+async function loopBulk(){
+  //Number of card / loop => $("#list_card>div").length
+  var selected = [];  
+  $("#list_card").parent().find(':checkbox:checked').each(function(i){                         
+    selected.push($(this.parentElement.parentElement.parentElement).attr('id'));
+  })
+
+  launchBulkRace(selected)
+}
+
+async function launchBulkRace(arrOfRace){
+  //Get first row & first race in the array
+  element = arrOfRace[0];
+
+  try {
+
+    var league = $("#"+element+" .league_details span")[0].innerHTML
+    var car_id = $("#"+element+" .assets_details").children()[0].dataset['id']
+    var driver_id = $("#"+element+" .assets_details").children()[1].dataset['id']
+    var copilote_id = $("#"+element+" .assets_details").children()[2].dataset['id']
+    var boost = $("#"+element+" [name='fuel']")[0].checked;
+    //var result = await sign(element.driver1.id, element.driver2.id,element.vehicle.id,element.league.toLowerCase())    
+    //If boost = true => Burn assets
+    var result;
+    if(boost){
+      await burnAsset(sessionStorage.getItem('userAccount')).then(async(assetburn)=>{
+        if(assetburn == "success"){
+          result = await sign(driver_id,copilote_id,car_id,league.toLowerCase(),boost)    
+        }else{
+          result = assetburn;
+        }
+      })  
+    }else{
+      result = await sign(driver_id,copilote_id,car_id,league.toLowerCase(),false)    
+    }
+    console.log("la")
+
+    $("#"+element+" .badge").removeClass("bg-success")
+    $("#"+element+" .badge").removeClass("bg-danger")
+    $("#"+element+" .error_msg")[0].innerHTML = "";
+
+    if(result == "success"){
+      //Light up the row on display when the race is launched
+      $("#"+element+" .badge")[0].innerHTML = "Launched";
+      $("#"+element+" .badge").addClass("bg-success")
+
+    }else{
+      logError("Cannot launch the race : "+result)
+      //Light up the row on display when the race is launched.league_details span
+      $("#"+element+" .badge")[0].innerHTML = "Failed";
+      $("#"+element+" .badge").addClass("bg-danger")
+      $("#"+element+" .error_msg")[0].innerHTML = result
+    }
+
+  } catch (error) {
+    logError("Cannot launch the race : "+element+"- "+error)
+    //Light up the row on display when the race is launched
+    $("#"+element+" .badge")[0].innerHTML = "Failed";
+    $("#"+element+" .badge").addClass("bg-danger")
+    $("#"+element+" .error_msg")[0].innerHTML = error
+
+  }
+
+  //Remove first row of the raceArray
+  logDebug("delete last row")
+  arrOfRace.splice(0,1)
+
+  //Relaunch if the array is not empty
+  if(arrOfRace.length != 0){
+    logDebug("Launching next race")
+    setTimeout(() => {launchBulkRace(arrOfRace)}, 1000);
+  }else{
+    logDebug("Ended All races launched")
+  }
+}
+
+</script>
+</html>
