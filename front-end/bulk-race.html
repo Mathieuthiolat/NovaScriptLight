@@ -251,6 +251,7 @@ async function randomRacesArray(assetsListe){
         raceArray.push(tmpRace)
 
       } catch (error) {
+        logError(error+" user "+sessionStorage.getItem('userAccount'))
         console.log(error) 
       }
     }
@@ -445,7 +446,7 @@ async function launchBulkRace(arrOfRace){
       $("#"+element+" .badge").addClass("bg-success")
 
     }else{
-      logError("Cannot launch the race : "+result)
+      logError("Cannot launch the race  "+result)
       //Light up the row on display when the race is launched.league_details span
       $("#"+element+" .badge")[0].innerHTML = "Failed";
       $("#"+element+" .badge").addClass("bg-danger")
@@ -453,7 +454,7 @@ async function launchBulkRace(arrOfRace){
     }
 
   } catch (error) {
-    logError("Cannot launch the race : "+element+"- "+error)
+    logError("Cannot launch the race  "+element+"- "+error)
     //Light up the row on display when the race is launched
     $("#"+element+" .badge")[0].innerHTML = "Failed";
     $("#"+element+" .badge").addClass("bg-danger")

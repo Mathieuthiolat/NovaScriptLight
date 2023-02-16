@@ -78,7 +78,7 @@ app.get('/getInnerBalance/:user_name/:rpc',function(req,res){
 
 app.get('/logError/:data',function(req,res){
     var data = req.params.data
-    utils.storeData(data,"./logs/error.json");
+    utils.storeData(new Date().toLocaleString("fr-FR")+" : "+data,"./logs/error.log");
 });
 
 
