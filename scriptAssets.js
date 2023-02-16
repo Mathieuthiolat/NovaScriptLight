@@ -133,9 +133,9 @@ async function getTemplateInfo(collection_name,template_id) {
 }
 
 
-async function getInnerBalance(user = "",rpcKey = ""){
+async function getInnerBalance(user = ""){
   return new Promise((resolve) => {
-    var rpc = new JsonRpc(rpcList[rpcKey], { fetch });
+    var rpc = new JsonRpc(rpcList[0], { fetch });
 
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json
