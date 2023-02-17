@@ -10,10 +10,11 @@
 
         //normal login. Triggers a popup for non-whitelisted dapps
         async function checkLogin(){
-
             if(sessionStorage.getItem("userAccount") != null){
                 $("#set_up_bulk").prop("disabled",false)
                 $("#launch_races").prop("disabled",false)
+                $(".connected_content").removeClass("hidden");
+                $(".non_connected_content").addClass("hidden");
                 return true;
             }
             else{
@@ -192,7 +193,7 @@ async function runningAssets(){
     let resultRunning;
     try {
         resultRunning = await $.ajax({
-            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
+            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
         });
         return resultRunning;
     } catch (error) {
@@ -206,7 +207,7 @@ async function innerBalance(){
     let innerBalance;
     try {
         innerBalance = await $.ajax({
-            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')+'/'+$("#endpoint")[0].value
+            url: 'getInnerBalance/'+sessionStorage.getItem('userAccount')
         });
         if(innerBalance.balances != null || innerBalance.balances != undefined)
             return innerBalance;

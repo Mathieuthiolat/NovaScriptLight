@@ -11,6 +11,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--color-primary);
 }
+/* Navigation */
 .navbar {
   border-bottom: 1px solid var(--color-secondary);
   display: block;
@@ -35,6 +36,31 @@ a,.nav-tabs .nav-link {
   font-weight: 700;
   color: var(--link);
 }
+#sub_nav{
+  font-size: 12px;
+}
+
+.listing-token{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 15px;
+}
+.listing-token .navbar-nav{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+@media (max-width:750px) {
+  .listing-token{
+    justify-content: flex-start;
+  }
+}
+
+/* End Navigation */
+
 button{
   transition: all 0.2s ease;
 }
