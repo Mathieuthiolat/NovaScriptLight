@@ -62,7 +62,7 @@ async function getQueueRaces(){
   return new Promise((resolve) => {
     utils.storeData(new Date().toLocaleString("fr-FR")+" : call races queue","./logs/error.log");
 
-    var rpc = new JsonRpc(rpcList[rpcKey], { fetch });
+    var rpc = new JsonRpc(rpcList[0], { fetch });
 
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json
