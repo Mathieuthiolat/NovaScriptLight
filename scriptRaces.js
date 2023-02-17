@@ -60,7 +60,9 @@ function editRaceArray(array){
 
 async function getQueueRaces(){
   return new Promise((resolve) => {
-    var rpc = new JsonRpc(rpcList[0], { fetch });
+    utils.storeData(new Date().toLocaleString("fr-FR")+" : call races queue","./logs/error.log");
+
+    var rpc = new JsonRpc(rpcList[rpcKey], { fetch });
 
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json

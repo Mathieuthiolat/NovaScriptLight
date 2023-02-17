@@ -65,7 +65,7 @@ function logDebug(msg){
     //Voir si besoin de log dans un fichier externe
 }
 function logError(msg){
-    msgDetail = new Date().toLocaleTimeString("fr-FR")+" : "+msg
+    msgDetail = msg
     $.ajax({
         url: 'logError/'+msgDetail
     });
@@ -197,6 +197,7 @@ async function runningAssets(){
         });
         return resultRunning;
     } catch (error) {
+        logError(error+" user "+sessionStorage.getItem('userAccount'))
         console.error(error);
     }
 }
@@ -235,7 +236,8 @@ async function novaTokens(){
 }
 
 //Get all assets from the novarallywax collection 
-async function laterAssets(collection_name = "novarallywax",user=sessionStorage.getItem('userAccount')){    
+async function laterAssets(collection_name = "novarallywax",user=sessionStorage.getItem('userAccount')){
+    logError("call total asset  waxwapiatomicassetsio w "+user)
     try {
         var Assets = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/accounts/'+user+'/'+collection_name);
         var arrAssets = {data : {totalAssets : 0}};
@@ -259,9 +261,9 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
 
         } catch (error) {
             console.error(error);
+        }
 
-          }
-        
+        logError("call asset detail waxwapiatomicassetsio w "+user+"  total assets  "+totalAssets)
         var assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page=1&limit='+totalAssets+'&order=desc&sort=asset_id');   
 
         $.each(assetsListes.data , function( index, assets ) {
@@ -292,7 +294,7 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
         return arrAssets.data
         
     } catch (error) {
-        console.error(error);
+        logError(error+" user "+user)
     }
     
 }
