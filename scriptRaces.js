@@ -23,7 +23,7 @@ async function getRaces(user="",nbRaces = 10,pageNb = 0) {
       });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }
@@ -43,7 +43,7 @@ async function getRaceDetail(race_id) {
        });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }
@@ -60,8 +60,6 @@ function editRaceArray(array){
 
 async function getQueueRaces(){
   return new Promise((resolve) => {
-    utils.storeData(new Date().toLocaleString("fr-FR")+" : call races queue","./logs/error.log");
-
     var rpc = new JsonRpc(rpcList[0], { fetch });
 
     const json = rpc.get_table_rows({

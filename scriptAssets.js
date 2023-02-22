@@ -46,7 +46,7 @@ async function getAssetNumber(user) {
       });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }
@@ -67,7 +67,7 @@ async function getAllAssets(totalAssets,user){
       });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }
@@ -108,7 +108,7 @@ async function getAssetInfo(asset_id) {
       });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }
@@ -127,7 +127,7 @@ async function getTemplateInfo(collection_name,template_id) {
       });
 
     }).on("error", (err) => {
-      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+      utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
     });
   })
 }

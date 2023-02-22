@@ -39,7 +39,7 @@
                 $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
                 checkLogin()
             } catch (e) {
-                utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.json")
+                utils.storeData(new Date().toLocaleTimeString("fr-FR")+" SERVER SIDE : "+err.message,"./logs/error.log")
             }
         } 
     /****/
@@ -64,12 +64,13 @@ function logDebug(msg){
     console.log(new Date().toLocaleTimeString("fr-FR")+" DBG : "+msg)
     //Voir si besoin de log dans un fichier externe
 }
-function logError(msg){
+function logError(msg,dbg=false){
     msgDetail = msg
     $.ajax({
         url: 'logError/'+msgDetail
     });
-    console.log(msgDetail)
+    if(dbg)
+        console.log(msgDetail)
     //Voir si besoin de log dans un fichier externe
 }
 
@@ -264,7 +265,34 @@ async function laterAssets(collection_name = "novarallywax",user=sessionStorage.
         }
 
         logError("call asset detail waxwapiatomicassetsio w "+user+"  total assets  "+totalAssets)
-        var assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page=1&limit='+totalAssets+'&order=desc&sort=asset_id');   
+        var assetsListes = { success: "", data: "", query_time: "" };
+        if(totalAssets>999){
+            var loop = Math.ceil(1205 / 999)
+            let nbKeys = 0;
+
+            var batch = 999,page = 1,assetsListes = { success: "", data: "", query_time: "" },key="";
+
+            assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page='+page+'&limit='+batch+'&order=desc&sort=asset_id');
+            for(let key in assetsListes.data) {++nbKeys;}
+            batch = ((totalAssets-999)>999)?999:totalAssets-999;
+            page++;
+
+            for(i=1;i<loop;i++){
+                tmpliste = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page='+page+'&limit='+batch+'&order=desc&sort=asset_id');
+                for (y=0;y<nbKeys;y++){
+                    key = Object.keys(assetsListes.data)[y];
+                    if( $.type(assetsListes.data[key]) === "number"){
+                        assetsListes.data[key] = assetsListes.data[key] + tmpliste[key]
+
+                    }else if($.type(assetsListes.data[key]) === "array"){
+                        assetsListes.data[key] = $.merge(ssetsListes.data[key],tmpliste[key])
+                    }
+                }
+                page++;
+                batch = ((totalAssets-999)>999)?999:totalAssets-999;
+            }
+        }else
+            assetsListes = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/assets?collection_name='+collection_name+'&owner='+user+'&page=1&limit='+totalAssets+'&order=desc&sort=asset_id');
 
         $.each(assetsListes.data , function( index, assets ) {
             if(assets.schema.schema_name == "vehicles" || assets.schema.schema_name == "drivers" ){
