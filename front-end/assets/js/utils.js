@@ -76,9 +76,9 @@ function logError(msg){
 async function getInfos(){
     runningAssets().then((usedCars) => {
         laterAssets().then((totalCars) => {
-
             //logDebug("Total Car : "+totalCars.vehicles.length)
-            $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
+            if(totalCars !== undefined)
+                $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
         });
     });
     innerBalance().then((resources)=>{
