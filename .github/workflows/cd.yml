@@ -16,7 +16,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Steps represent a sequence of tasks that will be executed as part of the jobgi
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js 16.x
@@ -38,7 +38,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd /var/www/html
+          cd /var/www/novahelper
           sudo git reset --hard
           sudo git pull
           git status
