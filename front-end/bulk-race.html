@@ -133,6 +133,7 @@ function selectAll(){
 
 function setUpBulkRace(){
   resetTable()
+  console.log("ici")
   //resetSelection
   raceArray = []
   globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
@@ -141,11 +142,14 @@ function setUpBulkRace(){
   $("#loader")[0].classList.remove("hidden");
   
   //GET all assets 
+  console.log("laterAssets")
   laterAssets().then((assetsList) => {
     myAssets = assetsList
     //Get assets that are being used and remove them
+    console.log("getRunningAssets")
     getRunningAssets(myAssets).then((assetClean)=>{
       //Create Array of bulk race from All assets availible
+      console.log("randomRacesArray")
       randomRacesArray(assetClean).then(()=>{
         logDebug("Array created")
         $("#select_all").prop("disabled",false)
@@ -163,6 +167,8 @@ function getKeyByValue(object, value) {
 async function getRunningAssets(assets){
   return new Promise(async resolve => {
     runningAssets().then((assetsToRemove)=>{
+      console.log("runningAssets")
+
       if(assetsToRemove+"" != ""){
         assetsToRemove.forEach(element => {
             var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
@@ -228,6 +234,13 @@ async function randomRacesArray(assetsListe){
         
         driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
         var driver2 = thisAssetsListe.drivers[driverNumber];
+
+        while(driver2.name == driver1.name){
+          console.log("repickDriver 2")
+          driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+          driver2 = thisAssetsListe.drivers[driverNumber];
+        }
+
         thisAssetsListe.drivers.splice(driverNumber,1)
 
         tmpRace.driver2.id = driver2.id;

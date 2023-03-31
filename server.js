@@ -56,14 +56,26 @@ app.get('/getAssets/:user_name',function(req,res){
 });
 app.get('/getAssetsRuning/:user_name',function(req,res){
     var user = req.params.user_name
+    console.log(user)
+
     racesJS.getQueueRaces().then((assets) => {
         var assetsRunning = "";
+
         assets.rows.forEach(async races =>{
             if(races.player == user){
                 assetsRunning = races.joins;
             }
-        })  
+        })
+
         res.send(assetsRunning);      
+    })
+});
+
+app.get('/getDMAssets/:user_name',function(req,res){
+    var user = req.params.user_name
+
+    racesJS.getDMStakedAssets(user).then((assets) => {
+        res.send(assets);
     })
 });
 
@@ -78,6 +90,8 @@ app.get('/logError/:data',function(req,res){
     var data = req.params.data
     utils.storeData(new Date().toLocaleString("fr-FR")+" : "+data,"./logs/error.log");
 });
+
+
 
 
 

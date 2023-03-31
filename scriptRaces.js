@@ -61,12 +61,26 @@ function editRaceArray(array){
 async function getQueueRaces(){
   return new Promise((resolve) => {
     var rpc = new JsonRpc(rpcList[0], { fetch });
-
+    console.log("la")
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json
       code: 'iraces.nova',      // Contract that we target
       scope: 'iraces.nova',         // Account that owns the data
       table: 'queue',        // Table name
+      limit: 200
+    });
+    resolve(json)
+  })
+}
+
+async function getDMStakedAssets(user){
+  return new Promise((resolve) => {
+    var rpc = new JsonRpc(rpcList[0], { fetch });
+    const json = rpc.get_table_rows({
+      json: true,               // Get the response as json
+      code: 'wombatmaster',      // Contract that we target
+      scope: user,         // Account that owns the data
+      table: 'staked',        // Table name
       limit: 200
     });
     resolve(json)
@@ -107,4 +121,4 @@ const getAllFirst = async (lsJson = "", position = "false",league = "false") => 
   return arr;
 }
 
-module.exports = { getAllFirst,getRaces,getRaceDetail,getQueueRaces};
+module.exports = { getAllFirst,getRaces,getRaceDetail,getQueueRaces,getDMStakedAssets};
