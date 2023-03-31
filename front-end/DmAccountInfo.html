@@ -42,7 +42,7 @@
 
 <script>
 
-  var myAssets = {};
+  var myAssets = [];
   var stackabledTemplate;
 
   $(document).ready(function() {
@@ -50,58 +50,66 @@
   })
 
     async function fetchData(){
-    user = $('#user').val();
-    var json = await DmAssets(user)
+      user = $('#user').val();
+      var json = await DmAssets(user)
 
 
-    for (const line of json.rows) {
-      //Get template id + collection name from them
-      var detail = await detailAssets(line.asset_id)
+      for (const line of json.rows) {
+        var tmpLine = {assets_id : {},template_id : {},collection : {},price : {},mining_power : {},ratio : {}};
 
-      var collectionName = detail.data.collection.collection_name
-      var templateID = detail.data.template.template_id
+        //Get template id + collection name from them
+        tmpLine.assets_id = line.asset_id;
+        var detail = await detailAssets(line.asset_id)
 
-      var jsonInfo = await searchAssetsInfo(templateID)
+        tmpLine.collection = detail.data.collection.collection_name
+        tmpLine.template_id = detail.data.template.template_id
 
-      var waxPrice = await ajaxPrice(templateID, collectionName);
+        var jsonInfo = await searchAssetsInfo(tmpLine.template_id)
+        tmpLine.mining_power = jsonInfo['Mining power']
 
-      var valMpWax = waxPrice/jsonInfo['Mining power'];
+        var priceTmp = await ajaxPrice(tmpLine.template_id, tmpLine.collection);
+        var mulipli = 1;
+        if(priceTmp.data[0] != undefined){
+          for(i = 0;i<priceTmp.data[0].price.token_precision;i++){
+            mulipli=mulipli*10;
+          }
+          tmpLine.price = result.data[0].price.amount/mulipli
 
-      console.log("id : "+templateID+"| Price: "+waxPrice +"| Ratio: "+valMpWax)
+        }else{
+          tmpLine.price = 0
+        }
 
-      arrayTmp.push(line)
+
+        tmpLine.ratio = tmpLine.price/tmpLine.mining_power;
+
+        console.log("id : "+tmpLine.template_id+"| Price: "+tmpLine.price +"| Ratio: "+tmpLine.ratio)
+
+        myAssets.push(tmpLine)
+
+        setTimeout(() => {}, 500);
+      }
+
+      // Trier les données par ordre croissant de la puissance minière
+      myAssets.sort(function(a, b) {
+       return a.ratio - b.ratio;
+      });
+
+      var items = [];
+
+      $.each(myAssets, function(key, val) {
+       if(val.waxPrice == undefined || isNaN(val.waxPrice))
+         return true;
+
+       var link = "https://wax.atomichub.io/explorer/asset/"+val.assets_id
+       items.push("<tr>");
+       items.push("<td><a href='" + link + "' target='_blank'>" + val.assets_id  + "</a></td>");
+       items.push("<td>" + val.price + "</td>");
+       items.push("<td>" + val.mining_power + "</td>");
+       items.push("<td>" + val.ratio + "</td>");
+       items.push("</tr>");
+      });
+      $("#myTable tbody").html(items.join(""));
     }
-    // await data.forEach(async function(item) {
-    //     item.waxPrice = await calculateMiningPower(item['Template ID'], item['Mining power']);
-    //});
-    //
-    //   myJsonString = JSON.parse(JSON.stringify(arrayTmp));
-    //
-    // // Trier les données par ordre croissant de la puissance minière
-    // myJsonString.sort(function(a, b) {
-    //   return a.valMpWax - b.valMpWax;
-    // });
-    //
-    // var items = [];
-    // $.each(myJsonString, function(key, val) {
-    //   if(val.waxPrice == undefined || isNaN(val.waxPrice))
-    //     return true;
-    //
-    //   var link = "https://wax.atomichub.io/explorer/template/wax-mainnet/"+val.Collection+"/"+val['Template ID']+""
-    //   items.push("<tr>");
-    //   items.push("<td>" + val.Collection + "</td>");
-    //   items.push("<td>" + val.Name + "</td>");
-    //   items.push("<td><a href='"+link+"' target='_blank'>" + val['Template ID'] + "</a></td>");
-    //   items.push("<td>" + val.Material + "</td>");
-    //   items.push("<td>" + val.waxPrice + "</td>");
-    //   items.push("<td>" + val['Mining power'] + "</td>");
-    //   items.push("<td>" + val.valMpWax + "</td>");
-    //   items.push("</tr>");
-    // });
-    // $("#myTable tbody").html(items.join(""));
-    //
-    // console.log(tmp)
-  }
 
   function getStackabledTemplate(){
     $.getJSON("./assets/dm_template_S9.json", function(data) {
