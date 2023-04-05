@@ -56,8 +56,6 @@ app.get('/getAssets/:user_name',function(req,res){
 });
 app.get('/getAssetsRuning/:user_name',function(req,res){
     var user = req.params.user_name
-    console.log(user)
-
     racesJS.getQueueRaces().then((assets) => {
         var assetsRunning = "";
 

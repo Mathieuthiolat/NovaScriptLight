@@ -32,34 +32,29 @@
     <!-- Sub Menu -->
     <nav id="sub_nav" class="navbar navbar-expand-lg bg-light">
     </nav>
+    <div class="container connected_content hidden">
+      <div class="row mt-3">
+        <div class="col-12" style="display: flex;">
+          <div style="text-align: center;margin: 15px 0px;">
+            <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
+            <!--<input id="nbRace" name="nbRace" type="number" placeholder="10" style="color: black;width: 80px;"/>-->
+            <button id="fetch_user" onclick="fetchData()">Fetch user data</button>
+            <span class="mx-3">Wax Gain : <span id="totalGain"></span></span>
+            <span class="mx-3">Charm's Gain : <span id="totalGainCharm"></span></span>
+          </div>
+        </div>
+        <div class="col-12">
+          <div id="list_card" class="row">
 
-    <div style="margin-bottom: 150px;">
-      <div style="text-align: center;margin: 15px 0px;">
-        <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
-        <!--<input id="nbRace" name="nbRace" type="number" placeholder="10" style="color: black;width: 80px;"/>-->
-        <button id="fetch_user" onclick="fetchData()">Fetch user data</button>
+          </div>
+        </div>
       </div>
-      <table class="table" id="resultDisplay">
-        <thead>
-          <tr>
-            <th scope="col" >Date</th>
-            <th scope="col" >Cars</th>
-            <th scope="col" >Driver</th>
-            <th scope="col" >Copilote</th>
-            <th scope="col" >League</th>
-            <th scope="col" >Gear</th>
-            <th scope="col" >Position</th>
-            <th scope="col" >Reward</th>
-            <th scope="col" data-bs-toggle="tooltip" data-bs-placement="right" title="This price is determined with the current price of token" >Gain/lost</th>
-          </tr>  
-        </thead>
-      </table>  
-      <div id="load-more" class="hidden"><button onclick="fetchData(false)">Load more</button></div>
-      <div id="loader" class="hidden">
-        <img src="./assets/medias/step-loader.gif" alt="loader">
-        <br>
-        <span id="loaderCount"></span>
-      </div>
+    </div>
+    <div id="load-more" class="hidden"><button onclick="fetchData(false)">Load more</button></div>
+    <div id="loader" class="hidden">
+      <img src="./assets/medias/step-loader.gif" alt="loader">
+      <br>
+      <span id="loaderCount"></span>
     </div>
   </div>
 <footer>
@@ -76,8 +71,8 @@
 
   $(document).ready(() => {
     if(sessionStorage.getItem('userAccount') != null){
-      getInfos(),
-      loop()
+      getInfos();
+      //loop()
     }
     getTokensPrice()
 

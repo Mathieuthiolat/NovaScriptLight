@@ -170,6 +170,8 @@ async function later(asset_id){
         result = await $.ajax({
             url: 'getAssetsDetail/'+asset_id
         });
+        await new Promise(r => setTimeout(r, 500));
+
         return result.data;
     } catch (error) {
         console.error(error);

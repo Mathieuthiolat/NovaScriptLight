@@ -61,7 +61,6 @@ function editRaceArray(array){
 async function getQueueRaces(){
   return new Promise((resolve) => {
     var rpc = new JsonRpc(rpcList[0], { fetch });
-    console.log("la")
     const json = rpc.get_table_rows({
       json: true,               // Get the response as json
       code: 'iraces.nova',      // Contract that we target

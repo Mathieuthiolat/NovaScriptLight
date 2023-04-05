@@ -148,10 +148,17 @@ footer{
   font-weight: bold;
 }
 
+.card .assets_details p{
+
+}
+.card .assets_details p>span{
+  display: inline-block;
+}
 .card .assets_details img{
-  width: 100%;
+  width: auto;
   max-height: 105px;
   object-fit: contain;
+  margin-right: 5px;
 }
 .card .assets_details>div.col-4{
   font-size: 12px;
