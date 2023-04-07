@@ -1,0 +1,205 @@
+:root {
+  --bg-primary: #14141f;
+  --color-primary: #c7c7d1;
+  --color-secondary: #5c5c70;
+  --link: #f5f5a5;
+  --link-hover: #3e738e;
+}
+body {
+  margin: 0 0 32px;
+  font-family: monospace;
+  background-color: var(--bg-primary);
+  color: var(--color-primary);
+}
+/* Navigation */
+.navbar {
+  border-bottom: 1px solid var(--color-secondary);
+  display: block;
+  padding: 6px;
+  margin-bottom: 0px;
+  background-color: unset !important;
+}
+.navbar .active{
+  text-decoration: underline;
+}
+
+.navbar .nav-item {
+  padding: 0 15px;
+} 
+
+.navbar a {
+  padding: 6px;
+  border-right: 1px solid var(--color-secondary);
+}
+a,.nav-tabs .nav-link {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--link);
+}
+#sub_nav{
+  font-size: 12px;
+}
+
+.listing-token{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 15px;
+}
+.listing-token .navbar-nav{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+@media (max-width:750px) {
+  .listing-token{
+    justify-content: flex-start;
+  }
+}
+
+/* End Navigation */
+
+button{
+  transition: all 0.2s ease;
+}
+button:active {
+  background: #5c5c70;
+  font-weight: bold;
+  color: var(--link);
+}
+button:hover {
+  color: var(--link);
+}
+.sub-navbar{
+  padding: 14px 6px;
+}
+.spliter{
+  border-right: 1px solid var(--color-secondary);
+  margin: 0 25px;
+}
+button,input[type=button]{
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-family: monospace;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 4px auto;
+  padding: 8px;
+}
+button:disabled, input[type="button"]:disabled,select:disabled {
+  background-color: #393939;
+  color: #8a8a8a;
+  cursor: no-drop;
+}
+
+#login-btn,#login-info{
+  display: inline-block;
+}
+#loader{
+  /*position: absolute;*/
+  top: 50%;
+  left: 50%;
+  text-align: center;
+}
+.hidden{
+  display: none!important;
+}
+#resultDisplay{
+  width: 75%;
+  margin: auto;
+  margin-bottom: 50px;
+  color: var(--color-primary);  
+
+}
+#load-more{
+  width: 150px;
+  margin: auto;
+  text-align: center;
+}
+footer{
+  background-color: var(--bg-primary);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-secondary);
+  text-align: center;
+  font-size: 12px;
+  padding: 8px;
+}
+.currencie{
+  display: none;
+}
+
+.refuel_btn button{
+  border: none;
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+  border: 1px solid #888;
+
+}
+.refuel_btn button:hover{
+  border: 1px solid var(--link);
+  color: var(--link);
+  font-weight: bold;
+}
+
+.card .assets_details p{
+
+}
+.card .assets_details p>span{
+  display: inline-block;
+}
+.card .assets_details img{
+  width: auto;
+  max-height: 105px;
+  object-fit: contain;
+  margin-right: 5px;
+}
+.card .assets_details>div.col-4{
+  font-size: 12px;
+  min-height: 160px;
+}
+.card .assets_details .error_msg{
+  margin:0px;
+}
+
+.card.card-body {
+  background: #272727;
+    background-color: rgb(39, 39, 39);
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-image: none;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    color: var(--color-primary);
+  }
+  .nav-custom-flex{
+    display: flex!important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .nav-custom-flex-right{
+    display: flex!important;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .small_button{
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+    padding: 0;
+  }
+  
+  #global_race_cost{
+    font-size: 12px;
+  }

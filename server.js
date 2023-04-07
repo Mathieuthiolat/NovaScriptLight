@@ -8,7 +8,7 @@ const assetsJS = require('./scriptAssets')
 const racesJS = require('./scriptRaces')
 const utils = require('./utils')
 //const resultRace = require('./result/selection_result.json')
-require('./routes')(app,path);
+require('./routes/main')(app,path);
 app.use(express.static(__dirname + '/front-end'));
 
 app.get('/getRaceDetail/:race_id',function(req,res){
@@ -56,11 +56,17 @@ app.get('/getAssets/:user_name',function(req,res){
 });
 app.get('/getAssetsRuning/:user_name',function(req,res){
     var user = req.params.user_name
+    console.log("CALL")
+
     racesJS.getQueueRaces().then((assets) => {
-        var assetsRunning = "";
+        console.log("DEB")
+        console.log(assets)
+        console.log("FIN")
+        var assetsRunning = "null";
 
         assets.rows.forEach(async races =>{
-            if(races.player == user){
+            if(races.player === user){
+                console.log(user);
                 assetsRunning = races.joins;
             }
         })

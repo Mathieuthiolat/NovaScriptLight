@@ -53,10 +53,11 @@ function resetTable() {
     $("#resultDisplay tbody").remove()
 }
 
-function loop(){
-    setInterval(async function() { 
-        getInfos()
-    }, 60000);
+function disableButton(isEnable) {
+    $("#select_all").prop("disabled",isEnable)
+    $("#set_up_bulk").prop("disabled",isEnable)
+    $("#launch_races").prop("disabled",isEnable)
+
 }
 
 //DBG 
@@ -75,14 +76,13 @@ function logError(msg,dbg=false){
 }
 
 async function getInfos(){
-    runningAssets().then((usedCars) => {
-        laterAssets().then((totalCars) => {
+    disableButton(true)
+    usedCars = await runningAssets()
+    totalCars = await laterAssets()
 
-            //logDebug("Total Car : "+totalCars.vehicles.length)
-            $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
-        });
-    });
-    innerBalance().then((resources)=>{
+    $("#carsAvailable").html( (totalCars.vehicles.length - usedCars.length ) + " / "+ totalCars.vehicles.length )
+
+    await innerBalance().then((resources)=>{
         if(!resources)
             return;
         var elements = Array.from($(".innerBalance"))
@@ -107,7 +107,7 @@ async function getInfos(){
             }
         }
     })
-    novaTokens().then((userTokenArray)=>{
+    await novaTokens().then((userTokenArray)=>{
         if(userTokenArray!=null){
             var walletDiv = Array.from($(".walletBalance"))
             for (let index = 0; index < userTokenArray.length; index++) {
@@ -129,6 +129,7 @@ async function getInfos(){
             }
         }
     })
+    disableButton(false)
 }
 
 var tokens = 
@@ -150,7 +151,6 @@ async function getTokensPrice(){
   })
     
 }
-getTokensPrice()
 
 async function ajaxTokenPrice(token_id){    
     try {
@@ -192,22 +192,34 @@ async function getTemplateInfo(collection_name = "novarallywax",template_id){
 }
 
 //Get list of assets begin used
+var prev_request = false;
+var resultRunning;
 async function runningAssets(){
-    let resultRunning;
-    console.log("runningAssets")
-    try {
-        console.log("ICI")
-
-        resultRunning = await $.ajax({
-            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount')
+    return new Promise((resolve,reject) => {
+        console.log("CALL FRONT")
+        if(prev_request == true)
+        {
+            resultRunning.abort();
+        }
+        resultRunning = $.ajax({
+            url: 'getAssetsRuning/'+sessionStorage.getItem('userAccount'),
+            beforeSend: function( xhr ) {
+                prev_request = true;
+            },
+            error: function(){
+                console.log("pas bien")
+            },
+            success: function(){
+                console.log("OK")
+            },
+            complete: function( xhr ) {
+                prev_request = false;
+            }
         })
-        console.log(resultRunning)
 
-        return resultRunning;
-    } catch (error) {
-        logError(error+" user "+sessionStorage.getItem('userAccount'))
-        console.error(error);
-    }
+        resolve(resultRunning)
+
+    });
 }
 
 //Get list of inner resources

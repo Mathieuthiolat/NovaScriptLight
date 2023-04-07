@@ -52,7 +52,6 @@ async function refuel() {
         showMsg("Refuel succes : "+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)
 
         logDebug("Refuel succes : "+$("#fuel_amount")[0].value+' '+$("#fuel_type")[0].value)    
-        getInfos()
         resolve('success');
       }
     } catch(e) {
@@ -116,7 +115,6 @@ async function claimToken() {
 
         showMsg("Claim succes : "+$("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)
         logDebug("Refuel succes : "+$("#claim_token_amount")[0].value+' '+$("#claim_token_type")[0].value)    
-        getInfos()
         resolve('success');
       }else{
 
@@ -224,7 +222,6 @@ async function sign(driver1, driver2, vehicle,league,boost=false, user = session
         expireSeconds: 1200,
       });
       logDebug("Run launched succes "+vehicle+" - "+driver1+" - "+driver2)    
-      getInfos()
       resolve('success');
     } catch(e) {
       logError(e.message)     

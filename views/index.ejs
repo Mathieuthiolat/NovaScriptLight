@@ -1,0 +1,131 @@
+<html>
+<head>
+    <title>NovaRally Helper - Dashboard</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='/js/waxjs.js'></script>
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(element){
+            return new bootstrap.Tooltip(element);
+        });
+
+        // Include nav
+        $(function(){
+            $("#nav").load("/template/navigation.html");
+            $("#sub_nav").load("/template/sub-nav.html");
+        });
+    </script>
+
+</head>
+
+
+<body>
+<div id="root">
+    <!-- Main navigation -->
+    <nav id="nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
+    <!-- Sub Menu -->
+    <nav id="sub_nav" class="navbar navbar-expand-lg bg-light">
+    </nav>
+    <div class="container connected_content hidden">
+        <div class="row mt-3">
+            <div class="col-12" style="display: flex;">
+                <div style="text-align: center;margin: 15px 0px;">
+                    <input id="user" name="user" type="text" placeholder="user name" style="color: black;"/>
+                    <!--<input id="nbRace" name="nbRace" type="number" placeholder="10" style="color: black;width: 80px;"/>-->
+                    <button id="fetch_user" onclick="fetchData()">Fetch user data</button>
+                    <span class="mx-3">Wax Gain : <span id="totalGain"></span></span>
+                    <span class="mx-3">Charm's Gain : <span id="totalGainCharm"></span></span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div id="list_card" class="row">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="load-more" class="hidden"><button onclick="fetchData(false)">Load more</button></div>
+    <div id="loader" class="hidden">
+        <img src="/medias/step-loader.gif" alt="loader">
+        <br>
+        <span id="loaderCount"></span>
+    </div>
+</div>
+<footer>
+    <div >Created By <a href="https://wax.bloks.io/account/unrsi.wam" target="_blank">FreeQyMat#4039</a> | <a href="https://github.com/Mathieuthiolat/NovaScriptLight" target="_blank">Github project </a> </div>
+</footer>
+
+
+</body>
+<script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src='/js/scriptDashboard.js'></script>
+
+<script>
+    var nbRaces = 10;
+
+    $(document).ready(() => {
+        if(sessionStorage.getItem('userAccount') != null){
+            getInfos();
+            //loop()
+        }
+        getTokensPrice()
+
+        if(checkLogin() == true){
+            $("#user")[0].placeholder = sessionStorage.getItem("userAccount")
+        }
+    });
+
+    async function fetchData(reset = true){
+        if(!checkLogin()){
+            return;
+        }
+        if(reset){
+            resetTable()
+            nbRaces = 10;
+            var tmpGainTotal = 0
+            var tmpGainCharm = 0
+
+        }else{
+            nbRaces += 10;
+            var tmpGainTotal = parseFloat($("#totalGain").html())
+            var tmpGainCharm = parseFloat($("#totalGainCharm").html())
+        }
+
+        $("#load-more")[0].classList.add("hidden");
+        $("#loader")[0].classList.remove("hidden");
+
+        user = ($('#user').val() != "")? $('#user').val() : sessionStorage.getItem('userAccount');
+
+        await asyncCall(nbRaces).then(async (response)=>{
+
+            if(nbRaces > 10){
+                /*
+                Si j'ai plus de 10 race
+                c'est que je load more
+                donc => on get les 10 next
+                exemple 20
+                je prende de 10 => 20
+
+                */
+
+                var min = nbRaces-10;
+
+                $("#loader")[0].classList.remove("hidden");
+                console.log("get from "+min+" to  "+nbRaces)
+                await createMyRaces(response.data.slice(min, nbRaces));
+                $("#totalGainCharm").html(Math.round((parseFloat($("#totalGainCharm").html())+tmpGainCharm)*100)/100)
+                $("#totalGain").html(Math.round((parseFloat($("#totalGain").html())+tmpGainTotal)*100)/100)
+
+            }else{
+                await createMyRaces(response.data);
+            }
+        });
+    }
+</script>
+</html>

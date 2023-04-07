@@ -133,7 +133,6 @@ function selectAll(){
 
 function setUpBulkRace(){
   resetTable()
-  console.log("ici")
   //resetSelection
   raceArray = []
   globalRaceCost = {"SNAKOIL":0,"SNAKGAS":0,"SNAKPOW":0,"SNAKVEN":0,};
@@ -142,14 +141,12 @@ function setUpBulkRace(){
   $("#loader")[0].classList.remove("hidden");
   
   //GET all assets 
-  console.log("laterAssets")
   laterAssets().then((assetsList) => {
     myAssets = assetsList
     //Get assets that are being used and remove them
-    console.log("getRunningAssets")
     getRunningAssets(myAssets).then((assetClean)=>{
+      console.log("la")
       //Create Array of bulk race from All assets availible
-      console.log("randomRacesArray")
       randomRacesArray(assetClean).then(()=>{
         logDebug("Array created")
         $("#select_all").prop("disabled",false)
@@ -164,26 +161,34 @@ function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 }
 
-async function getRunningAssets(assets){
-  return new Promise(async resolve => {
-    runningAssets().then((assetsToRemove)=>{
-      console.log("runningAssets")
+async function getRunningAssets(assets,){
+  return new Promise(async (resolve)  => {
 
-      if(assetsToRemove+"" != ""){
+    try {
+      if(prev_request == true)
+      {
+        resultRunning.abort();
+      }
+      assetsToRemove = await runningAssets()
+      console.log(assetsToRemove)
+      if(assetsToRemove !== "null" && assetsToRemove !== null && assetsToRemove !== undefined){
         assetsToRemove.forEach(element => {
-            var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
-            assets.vehicles.splice(indexVehicles,1)
-            
-            var indexDrivers1 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver1_asset_id);
-            assets.drivers.splice(indexDrivers1,1)
+          var indexVehicles = (myAssets.vehicles).findIndex(obj => obj.id ===  element.vehicle_asset_id);
+          assets.vehicles.splice(indexVehicles,1)
 
-            var indexDrivers2 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver2_asset_id);
-            assets.drivers.splice(indexDrivers2,1)
+          var indexDrivers1 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver1_asset_id);
+          assets.drivers.splice(indexDrivers1,1)
+
+          var indexDrivers2 = (myAssets.drivers).findIndex(obj => obj.id ===  element.driver2_asset_id);
+          assets.drivers.splice(indexDrivers2,1)
         });
       }
       resolve(assets);
-    })
-  });
+    } catch (e) {
+      console.log(e);
+      return assets;
+    }
+  }).catch(assets);
 }
 
 async function randomRacesArray(assetsListe){
@@ -191,7 +196,9 @@ async function randomRacesArray(assetsListe){
     resetTable()
     var thisAssetsListe = assetsListe;
     raceArray = [];
-    //Get driver + 2 random asset that are not the same name 
+    console.log("parla")
+    console.log(thisAssetsListe)
+    //Get driver + 2 random asset that are not the same name
     //Get id + name + img + league 
     var nbVechicles = thisAssetsListe.vehicles.length;
     for(i=0;i<nbVechicles; i++){
@@ -236,7 +243,6 @@ async function randomRacesArray(assetsListe){
         var driver2 = thisAssetsListe.drivers[driverNumber];
 
         while(driver2.name == driver1.name){
-          console.log("repickDriver 2")
           driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
           driver2 = thisAssetsListe.drivers[driverNumber];
         }
@@ -267,6 +273,7 @@ async function randomRacesArray(assetsListe){
     //$("#btnSetBulk")[0].innerHTML = "Change bulk selection";
 
     sortDisplayRaceArray(raceArray)
+    console.log("finished")
     resolve('resolved');
   });
 }
@@ -277,6 +284,7 @@ async function sortDisplayRaceArray(races){
   await $.get("./assets/template/race_cards.html", function(html_string){
       cardTemplate =  html_string
   })
+  console.log("display")
 
   races.sort(function(a, b) {
     var x = a.league.toLowerCase(), y = b.league.toLowerCase();
@@ -352,7 +360,6 @@ function changeRacePrice(){
     var id = element.id
     
     var ischecked = $("#"+id+" [name='launch']")[0].checked
-    console.log(id)
     var league = $("#"+id+" .league_details span")[0].innerHTML;
     var fuel;
     switch(league){
@@ -401,7 +408,6 @@ function displayGlobalRacePrice(arrCost){
 
 //Au check d'un case on calcul ajout sa valeur au cost preview total
 $( ".league_details input:checkbox" ).change(function() {
- //console.log("check")
 });
 //Lorsque l'on check toute les case 
 
@@ -441,7 +447,6 @@ async function launchBulkRace(arrOfRace){
     }else{
       result = await sign(driver_id,copilote_id,car_id,league.toLowerCase(),false)    
     }
-    console.log("la")
 
     $("#"+element+" .badge").removeClass("bg-success")
     $("#"+element+" .badge").removeClass("bg-danger")

@@ -68,6 +68,7 @@ async function getQueueRaces(){
       table: 'queue',        // Table name
       limit: 200
     });
+
     resolve(json)
   })
 }

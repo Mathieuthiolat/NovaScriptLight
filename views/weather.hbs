@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ cityName }} Weather</title>
+</head>
+<body>
+<h1>{{ cityName }} Weather</h1>
+<p>{{ weather }}</p>
+<p>{{ temp }}°C</p>
+<button id="refresh-button">Refresh</button>
+
+<script>
+    const refreshButton = document.getElementById('refresh-button');
+
+    refreshButton.addEventListener('click', async () => {
+        const response = await fetch(`/weather/{{cityName}}`);
+        const data = await response.json();
+        document.querySelector('p:first-of-type').textContent = data.weather[0].description;
+            document.querySelector('p:last-of-type').textContent = `${data.main.temp}°C`;
+    });
+</script>
+</body>
+</html>

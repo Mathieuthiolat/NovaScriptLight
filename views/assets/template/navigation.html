@@ -1,0 +1,30 @@
+<div class="container-fluid">
+    <div class="col-12">
+        <ul class="navbar-nav" style="display: flex;flex-direction: row;">
+            <li>
+            <a href="./">Dashboard</a>
+            </li>
+            <li>
+            <a href="./bulk-race">BulkRace</a>
+            </li>
+        </ul>
+    </div>
+    <div class="hidden">
+        <ul class="navbar-nav">
+            <li>
+                End-Point
+                <select class="form-select" id="endpoint" name="endpoint" style="width: auto;display: inline-block;font-size: 12px;padding: 1px 35px 1px 5px;">
+                    <option value="0">wax.greymass</option>
+                    <option value="1">wax.eu.eosamsterdam</option>
+                  </select>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<script>
+    const {
+        host, hostname, href, origin, pathname, port, protocol, search
+    } = window.location 
+    $("a[href$='"+pathname+"']").addClass("active")
+</script>

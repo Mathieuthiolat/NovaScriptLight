@@ -144,7 +144,7 @@
     checkLogin().then((connected)=>{
       if(connected){
         getInfos();
-        
+
         $("#login-btn")[0].classList.add("hidden");
         $("#login-info")[0].classList.remove("hidden");
         $("#account-name")[0].innerHTML = sessionStorage.getItem("userAccount");
