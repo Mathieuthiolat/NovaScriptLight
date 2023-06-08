@@ -228,6 +228,10 @@ async function randomRacesArray(assetsListe){
         
         driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
         var driver2 = thisAssetsListe.drivers[driverNumber];
+        while(driver2.name == driver1.name){
+          driverNumber = Math.floor(Math.random()*(thisAssetsListe.drivers.length-1));
+          driver2 = thisAssetsListe.drivers[driverNumber];
+        }
         thisAssetsListe.drivers.splice(driverNumber,1)
 
         tmpRace.driver2.id = driver2.id;

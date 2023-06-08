@@ -238,7 +238,7 @@ async function novaTokens(){
 
 //Get all assets from the novarallywax collection 
 async function laterAssets(collection_name = "novarallywax",user=sessionStorage.getItem('userAccount')){
-    logError("call total asset  waxwapiatomicassetsio w "+user)
+    //logError("call total asset  waxwapiatomicassetsio w "+user)
     try {
         var Assets = await $.getJSON('https://wax.api.atomicassets.io/atomicassets/v1/accounts/'+user+'/'+collection_name);
         var arrAssets = {data : {totalAssets : 0}};
