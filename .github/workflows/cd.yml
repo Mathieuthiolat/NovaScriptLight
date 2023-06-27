@@ -38,7 +38,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd /var/www/html
+          cd /var/www/novahelper
           sudo git reset --hard
           sudo git pull
           git status
